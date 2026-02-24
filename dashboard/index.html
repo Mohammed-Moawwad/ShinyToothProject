@@ -1,0 +1,360 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ShinyTooth Dental Clinic Dashboard</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <!-- Navigation Menu -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="#homePage" class="nav-logo">
+        <div class="nav-logo-icon">🦷</div>
+        <span>ShinyTooth</span>
+      </a>
+      <ul class="nav-menu">
+        <li><a href="#services" class="nav-link">Services</a></li>
+        <li><a href="#team" class="nav-link">Team</a></li>
+        <li><a href="#why-us" class="nav-link">Why Us</a></li>
+        <li><a href="#contact" class="nav-link">Contact</a></li>
+      </ul>
+      <div class="search-box">
+        <input type="text" class="search-input" placeholder="Search services...">
+        <button class="search-btn">🔍</button>
+      </div>
+      <button id="loginBtn" class="login-btn">🔐 Login</button>
+    </div>
+  </nav>
+
+  <!-- Home/Landing Page -->
+  <main id="homePage" class="home-page">
+    <section class="hero" id="hero">
+      <div class="hero-content">
+        <h2>Welcome to ShinyTooth Dental Clinic</h2>
+        <p>Your smile is our priority. Excellence in dental care since 2015.</p>
+      </div>
+    </section>
+
+    <section class="services-menu" id="services">
+      <div class="services-header">
+        <h3>Our Services</h3>
+        <p class="services-subtitle">Comprehensive dental care tailored to your needs</p>
+      </div>
+      <div class="services-showcase">
+        <div class="service-card service-card-1">
+          <div class="card-accent-line"></div>
+          <div class="service-icon">📅</div>
+          <h4>Book Appointment</h4>
+          <p>Easy scheduling with our experienced dentists at your convenience</p>
+          <div class="card-hover-text">Quick & Simple Booking</div>
+        </div>
+        <div class="service-card service-card-2">
+          <div class="card-accent-line"></div>
+          <div class="service-icon">🔍</div>
+          <h4>Check-up & Cleaning</h4>
+          <p>Professional examination and thorough cleaning for optimal health</p>
+          <div class="card-hover-text">Preventive Excellence</div>
+        </div>
+        <div class="service-card service-card-3">
+          <div class="card-accent-line"></div>
+          <div class="service-icon">🦷</div>
+          <h4>Restorative Care</h4>
+          <p>Expert fillings, crowns, and implants for lasting restoration</p>
+          <div class="card-hover-text">Restore Your Smile</div>
+        </div>
+        <div class="service-card service-card-4">
+          <div class="card-accent-line"></div>
+          <div class="service-icon">✨</div>
+          <h4>Cosmetic Dentistry</h4>
+          <p>Teeth whitening and smile design for your perfect look</p>
+          <div class="card-hover-text">Enhance Your Smile</div>
+        </div>
+        <div class="service-card service-card-5">
+          <div class="card-accent-line"></div>
+          <div class="service-icon">🚨</div>
+          <h4>Emergency Care</h4>
+          <p>Urgent dental treatment available 24/7 when you need it most</p>
+          <div class="card-hover-text">Always Available</div>
+        </div>
+        <div class="service-card service-card-6">
+          <div class="card-accent-line"></div>
+          <div class="service-icon">👨‍⚕️</div>
+          <h4>Preventive Care</h4>
+          <p>Regular maintenance and education for lifelong healthy smiles</p>
+          <div class="card-hover-text">Prevention First</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="why-us" id="why-us">
+      <div class="why-us-split">
+        <div class="why-us-visual">
+          <div class="benefit-badge">✨</div>
+          <h3>Why Choose<br>ShinyTooth?</h3>
+          <p class="tagline">Excellence meets comfort</p>
+        </div>
+        <div class="why-us-benefits">
+          <div class="benefit-item">
+            <div class="benefit-icon">🔬</div>
+            <div class="benefit-text">
+              <h4>Advanced Technology</h4>
+              <p>State-of-the-art equipment for accurate diagnosis</p>
+            </div>
+          </div>
+          <div class="benefit-item">
+            <div class="benefit-icon">👥</div>
+            <div class="benefit-text">
+              <h4>Expert Team</h4>
+              <p>Experienced dentists dedicated to your care</p>
+            </div>
+          </div>
+          <div class="benefit-item">
+            <div class="benefit-icon">😊</div>
+            <div class="benefit-text">
+              <h4>Patient Comfort</h4>
+              <p>Relaxing environment with sedation options</p>
+            </div>
+          </div>
+          <div class="benefit-item">
+            <div class="benefit-icon">💎</div>
+            <div class="benefit-text">
+              <h4>Premium Quality</h4>
+              <p>Award-winning clinic with 4.9★ rating</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="team-section" id="team">
+      <h3>Meet Our Expert Team</h3>
+      <p class="team-intro">Highly qualified professionals dedicated to your smile</p>
+      <div class="team-carousel">
+        <div class="team-card team-card-1">
+          <div class="card-header" style="background: linear-gradient(135deg, #1e9b8b, #16b499);">
+            <div class="member-avatar">👨‍⚕️</div>
+          </div>
+          <div class="card-body">
+            <h4>Dr. James Smith</h4>
+            <p class="specialty">General Dentistry</p>
+            <p class="bio">15+ years restoring smiles</p>
+          </div>
+        </div>
+        <div class="team-card team-card-2">
+          <div class="card-header" style="background: linear-gradient(135deg, #1e3a5f, #2a5180);">
+            <div class="member-avatar">👩‍⚕️</div>
+          </div>
+          <div class="card-body">
+            <h4>Dr. Sarah Johnson</h4>
+            <p class="specialty">Cosmetic Dentistry</p>
+            <p class="bio">Smile design specialist</p>
+          </div>
+        </div>
+        <div class="team-card team-card-3">
+          <div class="card-header" style="background: linear-gradient(135deg, #1e9b8b, #16b499);">
+            <div class="member-avatar">👨‍⚕️</div>
+          </div>
+          <div class="card-body">
+            <h4>Dr. Michael Brown</h4>
+            <p class="specialty">Orthodontics</p>
+            <p class="bio">Alignment expert</p>
+          </div>
+        </div>
+        <div class="team-card team-card-4">
+          <div class="card-header" style="background: linear-gradient(135deg, #1e3a5f, #2a5180);">
+            <div class="member-avatar">👩‍⚕️</div>
+          </div>
+          <div class="card-body">
+            <h4>Dr. Emily Davis</h4>
+            <p class="specialty">Pediatric Dentistry</p>
+            <p class="bio">Child care specialist</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="testimonials">
+      <h3>Real Patient Stories</h3>
+      <div class="testimonials-wrapper">
+        <div class="testimonial-bubble testimonial-1">
+          <div class="avatar">👩</div>
+          <p class="quote">"Professional and painless! Best experience ever."</p>
+          <p class="author">Michelle R.</p>
+          <div class="stars">⭐⭐⭐⭐⭐</div>
+        </div>
+        <div class="testimonial-bubble testimonial-2">
+          <div class="avatar">👨</div>
+          <p class="quote">"My smile transformation was incredible. Highly recommend!"</p>
+          <p class="author">John T.</p>
+          <div class="stars">⭐⭐⭐⭐⭐</div>
+        </div>
+        <div class="testimonial-bubble testimonial-3">
+          <div class="avatar">👩‍🦰</div>
+          <p class="quote">"Friendly staff and amazing results. Worth every penny!"</p>
+          <p class="author">Lisa M.</p>
+          <div class="stars">⭐⭐⭐⭐⭐</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="role-selector">
+      <h3>View As</h3>
+      <div class="role-buttons">
+        <button class="role-btn" data-role="admin">
+          <div class="role-icon">👨‍💼</div>
+          <div class="role-name">Admin</div>
+          <div class="role-desc">Clinic Overview</div>
+        </button>
+        <button class="role-btn" data-role="dentist">
+          <div class="role-icon">👨‍⚕️</div>
+          <div class="role-name">Dentist</div>
+          <div class="role-desc">Schedule & Patients</div>
+        </button>
+        <button class="role-btn" data-role="patient">
+          <div class="role-icon">😁</div>
+          <div class="role-name">Patient</div>
+          <div class="role-desc">My Profile</div>
+        </button>
+      </div>
+    </section>
+
+    <section class="info-section" id="contact">
+      <div class="contact-container">
+        <h3>Get In Touch</h3>
+        <p class="contact-intro">We'd love to hear from you. Visit us or get in touch today!</p>
+        <div class="info-grid">
+          <div class="info-card">
+            <div class="info-icon">📍</div>
+            <h4>Location</h4>
+            <p>123 Smile Street<br>Dental District<br>City, 12345</p>
+          </div>
+          <div class="info-card">
+            <div class="info-icon">🕐</div>
+            <h4>Hours</h4>
+            <p>Mon-Fri: 9AM - 6PM<br>Saturday: 9AM - 2PM<br>Sunday: Closed</p>
+          </div>
+          <div class="info-card">
+            <div class="info-icon">📞</div>
+            <h4>Contact</h4>
+            <p>Phone: (555) 123-4567<br>Email: info@shinytooth.com<br>Emergency: 24/7</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Main Dashboard (shown when user selects a role) -->
+  <main id="app" class="container hidden">
+    <button id="homeBtn" class="home-btn">← Back to Home</button>
+    <!-- ADMIN VIEW -->
+    <div id="adminView" class="role-view hidden">
+      <h2>Admin Dashboard</h2>
+      <section class="kpis">
+        <div class="card">
+          <div class="label">👥 Total Patients</div>
+          <div id="admin-patients" class="value">—</div>
+        </div>
+        <div class="card">
+          <div class="label">👨‍⚕️ Active Dentists</div>
+          <div id="admin-dentists" class="value">—</div>
+        </div>
+        <div class="card">
+          <div class="label">📅 Appointments Today</div>
+          <div id="admin-appts" class="value">—</div>
+        </div>
+        <div class="card">
+          <div class="label">💰 Daily Revenue</div>
+          <div id="admin-revenue" class="value">—</div>
+        </div>
+      </section>
+      <section class="chart-card">
+        <h3>Appointments by Dentist (This Week)</h3>
+        <canvas id="adminChart" height="80"></canvas>
+      </section>
+    </div>
+
+    <!-- DENTIST VIEW -->
+    <div id="dentistView" class="role-view hidden">
+      <h2>Dentist Dashboard</h2>
+      <section class="kpis">
+        <div class="card">
+          <div class="label">👥 My Patients (Total)</div>
+          <div id="dentist-patients" class="value">—</div>
+        </div>
+        <div class="card">
+          <div class="label">📅 My Appointments Today</div>
+          <div id="dentist-appts" class="value">—</div>
+        </div>
+        <div class="card">
+          <div class="label">✅ Completed Today</div>
+          <div id="dentist-completed" class="value">—</div>
+        </div>
+        <div class="card">
+          <div class="label">⏳ Pending Treatments</div>
+          <div id="dentist-pending" class="value">—</div>
+        </div>
+      </section>
+      <section class="chart-card">
+        <h3>Your Appointment Schedule (This Week)</h3>
+        <canvas id="dentistChart" height="80"></canvas>
+      </section>
+    </div>
+
+    <!-- PATIENT VIEW -->
+    <div id="patientView" class="role-view hidden">
+      <h2>My Dental Profile</h2>
+      <section class="kpis">
+        <div class="card">
+          <div class="label">📅 Next Appointment</div>
+          <div id="patient-next" class="value">—</div>
+        </div>
+        <div class="card">
+          <div class="label">👨‍⚕️ My Dentist</div>
+          <div id="patient-dentist" class="value">—</div>
+        </div>
+        <div class="card">
+          <div class="label">📝 Total Visits</div>
+          <div id="patient-visits" class="value">—</div>
+        </div>
+        <div class="card">
+          <div class="label">⚠️ Pending Work</div>
+          <div id="patient-pending" class="value">—</div>
+        </div>
+      </section>
+      <section class="chart-card">
+        <h3>Your Last 6 Visits</h3>
+        <canvas id="patientChart" height="80"></canvas>
+      </section>
+    </div>
+  </main>
+
+  <!-- Login Modal -->
+  <div id="loginModal" class="modal hidden">
+    <div class="modal-content">
+      <button class="close-modal">✕</button>
+      <div class="modal-logo">🦷</div>
+      <h2>Staff Access</h2>
+      <p class="modal-desc">Login with your credentials</p>
+      <label>
+        Username
+        <input id="username" type="text" placeholder="Enter username" />
+      </label>
+      <label>
+        Password
+        <input id="password" type="password" placeholder="Enter password" />
+      </label>
+      <div class="actions">
+        <button id="submitLogin" class="btn-primary">Login</button>
+        <button id="cancelLogin" class="btn-secondary">Cancel</button>
+      </div>
+      <div id="loginError" class="error"></div>
+      <p class="demo-credentials">Demo: admin/admin • dentist/pass • patient/pass</p>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

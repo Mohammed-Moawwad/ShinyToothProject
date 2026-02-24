@@ -1,0 +1,45 @@
+{
+  "admin": {
+    "totalPatients": 342,
+    "activeDentists": 8,
+    "apptToday": 24,
+    "dailyRevenue": 3250,
+    "appointmentsByDentist": [
+      { "dentist": "Dr. Smith", "count": 6 },
+      { "dentist": "Dr. Johnson", "count": 5 },
+      { "dentist": "Dr. Williams", "count": 7 },
+      { "dentist": "Dr. Brown", "count": 4 },
+      { "dentist": "Dr. Davis", "count": 3 }
+    ]
+  },
+  "dentist": {
+    "myPatients": 48,
+    "apptToday": 6,
+    "completedToday": 3,
+    "pendingTreatments": 12,
+    "weekSchedule": [
+      { "day": "Monday", "count": 6 },
+      { "day": "Tuesday", "count": 5 },
+      { "day": "Wednesday", "count": 7 },
+      { "day": "Thursday", "count": 5 },
+      { "day": "Friday", "count": 4 },
+      { "day": "Saturday", "count": 2 },
+      { "day": "Sunday", "count": 0 }
+    ]
+  },
+  "patient": {
+    "nextAppt": "March 5, 2026 at 2:30 PM",
+    "dentistName": "Dr. Sarah Johnson",
+    "totalVisits": 8,
+    "pendingWork": "Root canal treatment scheduled",
+    "visitHistory": [
+      { "date": "Feb 1", "cost": 150 },
+      { "date": "Jan 15", "cost": 200 },
+      { "date": "Jan 1", "cost": 120 },
+      { "date": "Dec 10", "cost": 180 },
+      { "date": "Nov 20", "cost": 95 },
+      { "date": "Oct 15", "cost": 220 }
+    ]
+  }
+}
+
