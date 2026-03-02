@@ -1,0 +1,39 @@
+name: Build Composer Dependencies
+
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - "app/composer.json"
+      - "app/composer.lock"
+
+jobs:
+  build-vendor:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.2"
+          extensions: mbstring, pdo, pdo_mysql
+
+      - name: Install Composer dependencies
+        working-directory: ./app
+        run: |
+          composer install --no-dev --optimize-autoloader
+
+      - name: Create Vendor Archive
+        run: |
+          cd app
+          zip -r ../vendor-laravel-11.zip vendor/ -q
+          cd ..
+
+      - name: Upload vendor as artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: vendor-folder
+          path: vendor-laravel-11.zip
+          retention-days: 30
