@@ -150,6 +150,44 @@ git push origin feature/your-feature-name
 
 ---
 
+## Running GitHub Actions Workflows
+
+### Automatic Triggers
+
+The repository includes a **Build Composer Dependencies** workflow (`.github/workflows/build-vendor.yml`) that runs automatically when:
+
+- You push changes to `main` or `develop` branches
+- The push includes changes to `app/composer.json` or `app/composer.lock`
+
+### Running a Workflow Manually
+
+You can also trigger workflows manually from the GitHub Actions UI:
+
+1. Go to the repository on GitHub
+2. Click the **"Actions"** tab
+3. In the left sidebar, select the workflow you want to run (e.g., **Build Composer Dependencies**)
+4. Click the **"Run workflow"** button on the right side
+5. Select the branch to run the workflow on (e.g., `main` or `develop`)
+6. Click **"Run workflow"** to start it
+
+### Monitoring Workflow Runs
+
+1. Go to the **"Actions"** tab to see all workflow runs
+2. Click on a specific run to see its details and logs
+3. Each job shows its status: ✅ success, ❌ failure, or 🟡 in progress
+4. Click on a job to view step-by-step logs
+
+### Downloading Workflow Artifacts
+
+The build workflow produces a `vendor-folder` artifact (a zip of Composer dependencies):
+
+1. Go to the **"Actions"** tab
+2. Click on a completed workflow run
+3. Scroll to the **"Artifacts"** section at the bottom
+4. Click on **"vendor-folder"** to download
+
+---
+
 ## GitHub Issues & Project Board
 
 ### Create Issues for Tasks:
