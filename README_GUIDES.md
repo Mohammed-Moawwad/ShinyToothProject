@@ -239,7 +239,7 @@ HTTPS/SSL (Automatic)
 Use this to track team progress through the 8 weeks:
 
 ```
-Week 1: Setup & Planning          [████████░░░░░░░░░░] 0%
+Week 1: Setup & Planning          [█████ ██░░░░░░░░░░] 0%
 Week 2-3: Database & Auth         [████████░░░░░░░░░░] 0%
 Week 3-4: Frontend Foundation     [████████░░░░░░░░░░] 0%
 Week 5-6: Core Features           [████████░░░░░░░░░░] 0%
