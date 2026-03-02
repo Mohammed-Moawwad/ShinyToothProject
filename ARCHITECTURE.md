@@ -9,7 +9,7 @@
 ## Technology Stack
 
 ### Frontend
-
+- **abc**
 - **Framework:** HTML5, CSS3, Bootstrap 5
 - **Interactivity:** JavaScript (Vanilla/ES6+)
 - **Build tool:** Webpack (via Laravel Mix/Vite)
