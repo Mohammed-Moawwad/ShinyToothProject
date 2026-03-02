@@ -33,8 +33,7 @@ jobs:
           cd ..
 
       - name: Upload vendor as artifact
-        uses: actions/upload-artifact@v3
-        with:
+      uses: actions/upload-artifact@v4
           name: vendor-folder
           path: vendor-laravel-11.zip
           retention-days: 30
