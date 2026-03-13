@@ -1,0 +1,43 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class Patient extends Model
+{
+    protected $fillable = [
+        'name',
+        'email',
+        'password',
+        'phone',
+        'date_of_birth',
+        'gender',
+        'address',
+        'blood_type',
+        'place_of_birth',
+        'nationality',
+    ];
+
+    protected $hidden = ['password'];
+
+    protected $casts = [
+        'date_of_birth' => 'date',
+        'password'      => 'hashed',
+    ];
+
+    public function appointments()
+    {
+        return $this->hasMany(Appointment::class);
+    }
+
+    public function payments()
+    {
+        return $this->hasMany(Payment::class);
+    }
+
+    public function ratings()
+    {
+        return $this->hasMany(DoctorRating::class);
+    }
+}
