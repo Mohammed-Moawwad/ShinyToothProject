@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PatientController;
 use App\Http\Controllers\DentistController;
 use App\Http\Controllers\SpecializationController;
@@ -19,29 +20,54 @@ use App\Http\Controllers\FinancialController;
 | Example: Route::get('/patients') → http://localhost/api/patients
 */
 
-// Patients
-Route::apiResource('patients', PatientController::class);
+// ─── Public Auth Routes ───────────────────────────────────────────────────────
 
-// Dentists
-Route::apiResource('dentists', DentistController::class);
+// Patient auth
+Route::post('/auth/patient/register', [AuthController::class, 'registerPatient']);
+Route::post('/auth/patient/login',    [AuthController::class, 'loginPatient']);
 
-// Specializations
-Route::apiResource('specializations', SpecializationController::class);
+// Dentist auth
+Route::post('/auth/dentist/register', [AuthController::class, 'registerDentist']);
+Route::post('/auth/dentist/login',    [AuthController::class, 'loginDentist']);
 
-// Services
-Route::apiResource('services', ServiceController::class);
+// Public read-only routes (no auth required)
+Route::apiResource('specializations', SpecializationController::class)->only(['index', 'show']);
+Route::apiResource('services', ServiceController::class)->only(['index', 'show']);
 
-// Appointments
-Route::apiResource('appointments', AppointmentController::class);
+// ─── Protected Routes (require valid Sanctum token) ───────────────────────────
 
-// Payments
-Route::apiResource('payments', PaymentController::class);
+Route::middleware('auth:sanctum')->group(function () {
 
-// Doctor Ratings
-Route::apiResource('ratings', DoctorRatingController::class);
+    // Auth Management
+    Route::post('/auth/patient/logout',  [AuthController::class, 'logoutPatient']);
+    Route::post('/auth/dentist/logout',  [AuthController::class, 'logoutDentist']);
+    Route::get('/auth/me',               [AuthController::class, 'me']);
 
-// Reports
-Route::apiResource('reports', ReportController::class);
+    // Patients (full CRUD)
+    Route::apiResource('patients', PatientController::class);
 
-// Financial Records
-Route::apiResource('financials', FinancialController::class);
+    // Dentists (full CRUD)
+    Route::apiResource('dentists', DentistController::class);
+
+    // Specializations (write operations protected)
+    Route::apiResource('specializations', SpecializationController::class)->except(['index', 'show']);
+
+    // Services (write operations protected)
+    Route::apiResource('services', ServiceController::class)->except(['index', 'show']);
+
+    // Appointments
+    Route::apiResource('appointments', AppointmentController::class);
+
+    // Payments
+    Route::apiResource('payments', PaymentController::class);
+
+    // Doctor Ratings
+    Route::apiResource('ratings', DoctorRatingController::class);
+
+    // Reports
+    Route::apiResource('reports', ReportController::class);
+
+    // Financial Records
+    Route::apiResource('financials', FinancialController::class);
+});
+
