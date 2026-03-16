@@ -20,7 +20,7 @@ class PaymentController extends Controller
             'amount'         => 'required|numeric|min:0',
             'payment_date'   => 'required|date',
             'payment_method' => 'required|in:cash,credit_card,debit_card',
-            'status'         => 'nullable|in:pending,paid,refunded',
+            'status'         => 'nullable|in:pending,completed,refunded',
         ]);
 
         $payment = Payment::create($validated);
@@ -41,7 +41,7 @@ class PaymentController extends Controller
             'amount'         => 'sometimes|numeric|min:0',
             'payment_date'   => 'sometimes|date',
             'payment_method' => 'sometimes|in:cash,credit_card,debit_card',
-            'status'         => 'nullable|in:pending,paid,refunded',
+            'status'         => 'nullable|in:pending,completed,refunded',
         ]);
 
         $payment->update($validated);

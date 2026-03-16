@@ -11,11 +11,15 @@ class Service extends Model
         'description',
         'price',
         'duration_minutes',
+        'image',
+        'category',
+        'is_special_offer',
     ];
 
     protected $casts = [
         'price'            => 'decimal:2',
         'duration_minutes' => 'integer',
+        'is_special_offer' => 'boolean',
     ];
 
     public function appointments()
