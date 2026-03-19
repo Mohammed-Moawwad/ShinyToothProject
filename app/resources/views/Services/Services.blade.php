@@ -1005,7 +1005,7 @@
                             <i class="bi bi-clock"></i> {{ $service->duration_minutes }} min
                         </span>
                     </div>
-                    <a href="/book?service={{ $service->id }}" class="btn-book">
+                    <a href="/services/{{ $service->id }}" class="btn-book">
                         Book! <i class="bi bi-arrow-right-circle-fill"></i>
                     </a>
                 </div>

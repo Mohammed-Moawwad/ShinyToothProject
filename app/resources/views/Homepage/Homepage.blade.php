@@ -639,6 +639,49 @@
         .delay-2 { transition-delay: .24s; }
         .delay-3 { transition-delay: .36s; }
         .delay-4 { transition-delay: .48s; }
+
+        /* ══════════════════════════════════════════
+           PROMO POPUP STYLES
+        ══════════════════════════════════════════ */
+        #promoOverlay { position: fixed; inset: 0; background: rgba(0,20,50,.65); backdrop-filter: blur(4px); z-index: 9998; opacity: 0; pointer-events: none; transition: opacity .4s ease; }
+        #promoOverlay.show { opacity: 1; pointer-events: all; }
+        #promoPopup { position: fixed; bottom: -100%; left: 50%; transform: translateX(-50%); z-index: 9999; width: min(520px, 94vw); transition: bottom .5s cubic-bezier(.34,1.4,.64,1), opacity .4s ease; opacity: 0; pointer-events: none; }
+        #promoPopup.show { bottom: 50%; transform: translateX(-50%) translateY(50%); opacity: 1; pointer-events: all; }
+
+        .pp-wrap { background: linear-gradient(145deg, #001e3c 0%, #003263 50%, #044d45 100%); border-radius: 24px; overflow: hidden; box-shadow: 0 32px 80px rgba(0,0,0,.55), 0 0 0 1px rgba(5,147,134,.35); font-family: 'Segoe UI', system-ui, sans-serif; position: relative; }
+        .pp-deco-ring { position: absolute; border-radius: 50%; border: 1.5px solid rgba(5,147,134,.2); pointer-events: none; }
+        .pp-deco-ring-1 { width: 280px; height: 280px; top: -100px; right: -80px; }
+        .pp-deco-ring-2 { width: 180px; height: 180px; top: -50px; right: -30px; border-color: rgba(255,255,255,.07); }
+        .pp-close-btn { position: absolute; top: 14px; right: 16px; background: rgba(255,255,255,.1); border: none; color: rgba(255,255,255,.65); border-radius: 50%; width: 32px; height: 32px; font-size: 1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background .2s, color .2s; z-index: 2; }
+        .pp-close-btn:hover { background: rgba(255,255,255,.2); color: #fff; }
+
+        .pp-header { padding: 30px 32px 0; display: flex; align-items: flex-end; gap: 16px; position: relative; z-index: 1; }
+        .pp-char { width: 100px; flex-shrink: 0; filter: drop-shadow(0 8px 20px rgba(5,147,134,.4)); animation: ppFloat 3s ease-in-out infinite; }
+        @keyframes ppFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+        .pp-badge { display: inline-flex; align-items: center; gap: 6px; background: linear-gradient(90deg, #059386, #07c5b3); color: #fff; font-size: .72rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; padding: 4px 12px; border-radius: 20px; margin-bottom: 10px; box-shadow: 0 3px 12px rgba(5,147,134,.45); }
+        .pp-title { color: #fff; font-size: 1.6rem; font-weight: 900; line-height: 1.2; margin: 0 0 6px; }
+        .pp-title span { color: #07c5b3; }
+        .pp-sub { color: rgba(255,255,255,.62); font-size: .88rem; margin: 0; }
+
+        .pp-body { padding: 20px 32px 28px; position: relative; z-index: 1; }
+
+        .pp-perks { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 18px 0 22px; }
+        .pp-perk { background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.1); border-radius: 12px; padding: 12px 14px; display: flex; align-items: center; gap: 10px; }
+        .pp-perk-icon { width: 34px; height: 34px; border-radius: 10px; background: rgba(5,147,134,.25); display: flex; align-items: center; justify-content: center; font-size: 1rem; color: #07c5b3; flex-shrink: 0; }
+        .pp-perk-text { font-size: .82rem; color: rgba(255,255,255,.78); font-weight: 500; line-height: 1.3; }
+
+        .pp-price-row { display: flex; align-items: center; gap: 14px; background: rgba(5,147,134,.15); border: 1px solid rgba(5,147,134,.3); border-radius: 14px; padding: 14px 18px; margin-bottom: 20px; }
+        .pp-price-old { font-size: 1.1rem; color: rgba(255,255,255,.4); text-decoration: line-through; font-weight: 600; }
+        .pp-price-new { font-size: 2rem; font-weight: 900; color: #07c5b3; line-height: 1; }
+        .pp-price-label { font-size: .8rem; color: rgba(255,255,255,.55); margin-top: 2px; }
+        .pp-price-divider { width: 1px; height: 40px; background: rgba(255,255,255,.15); }
+
+        .pp-btn-book { width: 100%; padding: 15px; background: linear-gradient(90deg, #059386 0%, #07c5b3 100%); border: none; border-radius: 14px; color: #fff; font-size: 1rem; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none; box-shadow: 0 6px 24px rgba(5,147,134,.45); transition: transform .2s, box-shadow .2s; margin-bottom: 10px; }
+        .pp-btn-book:hover { transform: translateY(-2px); box-shadow: 0 10px 32px rgba(5,147,134,.55); color: #fff; }
+        .pp-btn-maybe { width: 100%; padding: 10px; background: transparent; border: 1px solid rgba(255,255,255,.15); border-radius: 12px; color: rgba(255,255,255,.45); font-size: .85rem; cursor: pointer; transition: all .2s; }
+        .pp-btn-maybe:hover { border-color: rgba(255,255,255,.3); color: rgba(255,255,255,.7); }
+
+        .pp-disclaimer { text-align: center; color: rgba(255,255,255,.3); font-size: .73rem; margin-top: 10px; }
     </style>
 </head>
 <body>
@@ -661,7 +704,7 @@
 
             {{-- Nav Links --}}
             <div class="d-none d-md-flex align-items-center gap-1">
-                <a href="#services"   class="nav-link-custom">Services</a>
+                <a href="/services"   class="nav-link-custom">Services</a>
                 <a href="#doctors"    class="nav-link-custom">Doctors</a>
                 <a href="#who-we-are" class="nav-link-custom">Who are we</a>
                 <a href="#contact"    class="nav-link-custom">Contact us</a>
@@ -705,7 +748,7 @@
                 </p>
 
                 <div class="d-flex flex-wrap gap-3 mb-5 justify-content-center">
-                    <a href="/register" class="btn-hero-primary">
+                    <a href="/services" class="btn-hero-primary">
                         <i class="bi bi-calendar-check-fill"></i> Book Appointment
                     </a>
                 </div>
@@ -840,16 +883,18 @@
             @if ($services && count($services) > 0)
                 @foreach ($services as $index => $service)
                     <div class="col-md-6 col-lg-6 fade-up @if ($index == 0) delay-1 @elseif ($index == 1) delay-2 @elseif ($index == 2) delay-3 @else delay-4 @endif">
-                        <div class="service-card" @if($service->image) style="background-image: url('{{ asset($service->image) }}')" @endif>
-                            <div class="service-content">
-                                <h5 class="service-name">{{ $service->name }}</h5>
-                                <div class="service-price">
-                                    <span class="price-currency">$</span>
-                                    <span class="price-amount">{{ number_format($service->price, 0) }}</span>
+                        <a href="/services/{{ $service->id }}" style="text-decoration: none;">
+                            <div class="service-card" @if($service->image) style="background-image: url('{{ asset($service->image) }}')" @endif>
+                                <div class="service-content">
+                                    <h5 class="service-name">{{ $service->name }}</h5>
+                                    <div class="service-price">
+                                        <span class="price-currency">$</span>
+                                        <span class="price-amount">{{ number_format($service->price, 0) }}</span>
+                                    </div>
+                                    <p class="service-price-label">Starting Price</p>
                                 </div>
-                                <p class="service-price-label">Starting Price</p>
                             </div>
-                        </div>
+                        </a>
                     </div>
                 @endforeach
             @else
@@ -903,7 +948,7 @@
                         <span>Full Smile Makeovers</span>
                     </li>
                 </ul>
-                <a href="/register" class="btn-cta">
+                <a href="/services/35" class="btn-cta">
                     <i class="bi bi-calendar-check-fill"></i> Book a Free Consultation
                 </a>
                 <img src="{{ asset('images/BlueToothSurprisedPointingAtTheRight.png') }}" alt="BlueTooth Character" class="ba-character">
@@ -1234,6 +1279,75 @@
     </div>
 </footer>
 
+{{-- ══════════════════════════════════════════════════════════════
+     PROMO POPUP — Free 5-Minute Consultation
+══════════════════════════════════════════════════════════════ --}}
+<div id="promoOverlay"></div>
+
+<div id="promoPopup">
+
+    <div class="pp-wrap">
+        {{-- Decorative rings --}}
+        <div class="pp-deco-ring pp-deco-ring-1"></div>
+        <div class="pp-deco-ring pp-deco-ring-2"></div>
+
+        {{-- Close button --}}
+        <button id="promoClose" class="pp-close-btn" aria-label="Close">
+            <i class="bi bi-x-lg"></i>
+        </button>
+
+        {{-- Header --}}
+        <div class="pp-header">
+            <img src="{{ asset('images/BlueToothGivingThumbsUp.png') }}" alt="BlueTooth Character" class="pp-char">
+            <div>
+                <div class="pp-badge"><i class="bi bi-stars"></i> Limited Offer</div>
+                <h2 class="pp-title">Get Your <span>Free</span><br>5-Min Consultation</h2>
+                <p class="pp-sub">No credit card. No commitment. Just expert advice.</p>
+            </div>
+        </div>
+
+        {{-- Body --}}
+        <div class="pp-body">
+            <div class="pp-perks">
+                <div class="pp-perk">
+                    <div class="pp-perk-icon"><i class="bi bi-person-check-fill"></i></div>
+                    <div class="pp-perk-text">Expert Dentist Review</div>
+                </div>
+                <div class="pp-perk">
+                    <div class="pp-perk-icon"><i class="bi bi-shield-check"></i></div>
+                    <div class="pp-perk-text">No Obligation</div>
+                </div>
+                <div class="pp-perk">
+                    <div class="pp-perk-icon"><i class="bi bi-lightning-charge-fill"></i></div>
+                    <div class="pp-perk-text">Quick & Easy Booking</div>
+                </div>
+                <div class="pp-perk">
+                    <div class="pp-perk-icon"><i class="bi bi-emoji-smile-fill"></i></div>
+                    <div class="pp-perk-text">Personalized Advice</div>
+                </div>
+            </div>
+
+            <div class="pp-price-row">
+                <div>
+                    <div class="pp-price-old">$50 value</div>
+                    <div class="pp-price-new">FREE</div>
+                    <div class="pp-price-label">5-minute consultation</div>
+                </div>
+                <div class="pp-price-divider"></div>
+                <div style="font-size:.83rem; color:rgba(255,255,255,.6); line-height:1.5;">
+                    Speak with a qualified dentist about your dental concerns — completely free, no strings attached.
+                </div>
+            </div>
+
+            <a href="/services/34" id="promoBook" class="pp-btn-book">
+                <i class="bi bi-calendar-check-fill"></i> Claim My Free Consultation
+            </a>
+            <button id="promoMaybe" class="pp-btn-maybe">Maybe later — take me to the site</button>
+            <p class="pp-disclaimer">Offer valid for new visitors. One appointment per patient.</p>
+        </div>
+    </div>
+</div>
+
 
 <!-- Bootstrap JS Bundle (includes Popper) -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -1314,6 +1428,60 @@ window.addEventListener('scroll', function () {
     document.querySelectorAll('.fade-up').forEach(function (el) {
         observer.observe(el);
     });
+})();
+
+/* ── PROMO POPUP ─────────────────────────────────────── */
+(function () {
+    // Check if popup should be shown (only once per session)
+    if (sessionStorage.getItem('promoSeen')) {
+        console.log('Promo already seen this session');
+        return;
+    }
+
+    // Wait for DOM to be ready
+    function showPopup() {
+        var popup  = document.getElementById('promoPopup');
+        var overlay = document.getElementById('promoOverlay');
+
+        if (!popup || !overlay) {
+            console.error('Popup elements not found');
+            return;
+        }
+
+        // Show popup after 1.8 seconds
+        setTimeout(function () {
+            overlay.classList.add('show');
+            popup.classList.add('show');
+        }, 1800);
+
+        // Close functionality
+        function closePopup() {
+            popup.classList.remove('show');
+            overlay.classList.remove('show');
+            sessionStorage.setItem('promoSeen', '1');
+        }
+
+        // Event listeners
+        var closeBtn = document.getElementById('promoClose');
+        var maybeBtn = document.getElementById('promoMaybe');
+        var bookBtn  = document.getElementById('promoBook');
+
+        if (closeBtn) closeBtn.addEventListener('click', closePopup);
+        if (maybeBtn) maybeBtn.addEventListener('click', closePopup);
+        if (overlay) overlay.addEventListener('click', closePopup);
+        if (bookBtn) {
+            bookBtn.addEventListener('click', function () {
+                sessionStorage.setItem('promoSeen', '1');
+            });
+        }
+    }
+
+    // Execute immediately (DOM should be ready at this point)
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', showPopup);
+    } else {
+        showPopup();
+    }
 })();
 </script>
 
