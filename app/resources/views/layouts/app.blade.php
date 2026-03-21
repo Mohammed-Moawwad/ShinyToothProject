@@ -107,8 +107,11 @@
     @endif
     
     <!-- Main Content -->
-    <main class="py-4">
-        <div class="container-lg">
+    <main>
+        @if (in_array(Route::currentRouteName(), ['login', 'register']))
+            @yield('content')
+        @else
+        <div class="container-lg py-4">
             <!-- Flash Messages -->
             @if ($errors->any())
                 <div class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -139,9 +142,11 @@
             <!-- Page Content -->
             @yield('content')
         </div>
+        @endif
     </main>
     
-    <!-- Footer -->
+    <!-- Footer (hidden on auth pages) -->
+    @if(!in_array(Route::currentRouteName(), ['login', 'register']))
     <footer class="mt-auto" style="background: linear-gradient(135deg, #003263 0%, #047a6e 100%); color: #fff;">
         <div class="container-lg py-5">
             <div class="row">
@@ -167,6 +172,7 @@
             <hr style="border-color: rgba(255,255,255,.2); margin: 2rem 0;">
         </div>
     </footer>
+    @endif
     
     <!-- Livewire Scripts -->
     @livewireScripts

@@ -12,6 +12,58 @@
         padding: 0;
     }
 
+    /* Navbar */
+    .main-nav {
+        background: linear-gradient(90deg, #003263 0%, #059386 100%);
+        padding: 14px 0;
+        position: sticky;
+        top: 0;
+        z-index: 1050;
+        box-shadow: 0 2px 10px rgba(0,0,0,.15);
+    }
+    .nav-link-custom {
+        color: rgba(255,255,255,.88) !important;
+        font-weight: 500;
+        padding: 6px 14px;
+        border-radius: 8px;
+        transition: background .2s, color .2s;
+        text-decoration: none;
+    }
+    .nav-link-custom:hover {
+        color: #fff !important;
+        background: rgba(255,255,255,.12);
+    }
+    .btn-nav-login {
+        border: 2px solid rgba(255,255,255,.75);
+        color: #fff;
+        border-radius: 25px;
+        padding: 8px 22px;
+        font-weight: 600;
+        background: transparent;
+        text-decoration: none;
+        transition: all .2s;
+        font-size: .95rem;
+    }
+    .btn-nav-login:hover {
+        background: rgba(255,255,255,.15);
+        color: #fff;
+    }
+    .btn-nav-signup {
+        background: #fff;
+        color: var(--dark-blue) !important;
+        border-radius: 25px;
+        padding: 8px 22px;
+        font-weight: 700;
+        text-decoration: none;
+        transition: all .2s;
+        font-size: .95rem;
+    }
+    .btn-nav-signup:hover {
+        background: #dff6f3;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(0,0,0,.15);
+    }
+
     .auth-wrapper {
         display: flex;
         min-height: 100vh;
@@ -88,25 +140,31 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        padding: 50px 40px;
+        padding: 30px 24px;
         overflow-y: auto;
         max-height: 100vh;
     }
 
     .auth-form-container {
         width: 100%;
-        max-width: 700px;
+        max-width: 480px;
     }
 
     .form-header {
-        margin-bottom: 3rem;
+        margin-bottom: 1.5rem;
     }
 
     .form-header h1 {
-        font-size: 2rem;
+        font-size: 1.5rem;
         font-weight: 700;
         color: var(--dark-blue);
-        margin: 0 0 0.8rem 0;
+        margin: 0 0 0.4rem 0;
+    }
+
+    .form-header p {
+        color: #6b7280;
+        font-size: 0.88rem;
+        margin: 0;
     }
 
     .form-header p {
@@ -116,23 +174,23 @@
     }
 
     .form-group {
-        margin-bottom: 1.6rem;
+        margin-bottom: 1rem;
     }
 
     .form-label {
         display: block;
         color: var(--dark-blue);
         font-weight: 600;
-        margin-bottom: 0.8rem;
-        font-size: 0.95rem;
+        margin-bottom: 0.45rem;
+        font-size: 0.85rem;
     }
 
     .form-control {
         width: 100%;
         border: 1.5px solid #e0e7ff;
-        border-radius: 10px;
-        padding: 14px 18px;
-        font-size: 0.98rem;
+        border-radius: 9px;
+        padding: 10px 14px;
+        font-size: 0.9rem;
         transition: all 0.3s ease;
         background: #f8fafc;
         box-sizing: border-box;
@@ -154,6 +212,50 @@
 
     .error-text.active {
         display: block;
+    }
+
+    /* Radio checklist for gender & blood type */
+    .radio-group {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 4px;
+    }
+
+    .radio-option {
+        display: none;
+    }
+
+    .radio-label {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 6px 14px;
+        border: 1.5px solid #e0e7ff;
+        border-radius: 20px;
+        font-size: 0.82rem;
+        cursor: pointer;
+        background: #f8fafc;
+        color: #374151;
+        transition: all 0.2s ease;
+        user-select: none;
+        white-space: nowrap;
+    }
+
+    .radio-option:checked + .radio-label {
+        background: var(--teal);
+        border-color: var(--teal);
+        color: #fff;
+        font-weight: 600;
+    }
+
+    .radio-label:hover {
+        border-color: var(--teal);
+        color: var(--teal);
+    }
+
+    .radio-option:checked + .radio-label:hover {
+        color: #fff;
     }
 
     .form-check {
@@ -192,9 +294,9 @@
         border: none;
         color: #fff;
         font-weight: 700;
-        padding: 14px 28px;
-        border-radius: 10px;
-        font-size: 1.05rem;
+        padding: 11px 24px;
+        border-radius: 9px;
+        font-size: 0.95rem;
         transition: all 0.3s ease;
         cursor: pointer;
         box-shadow: 0 4px 16px rgba(5, 147, 134, 0.25);
@@ -226,15 +328,15 @@
     }
 
     .form-footer {
-        margin-top: 2rem;
-        padding-top: 1.8rem;
+        margin-top: 1.2rem;
+        padding-top: 1.2rem;
         border-top: 1px solid #d0d5dd;
         text-align: center;
     }
 
     .footer-text {
         color: var(--dark-blue);
-        font-size: 0.95rem;
+        font-size: 0.88rem;
         margin: 0;
     }
 
@@ -251,26 +353,48 @@
 
     /* Password Visibility Toggle */
     .password-wrapper {
-        position: relative;
+        display: flex;
+        border: 1.5px solid #e0e7ff;
+        border-radius: 9px;
+        overflow: hidden;
+        background: #f8fafc;
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .password-wrapper:focus-within {
+        border-color: var(--teal);
+        background: #fff;
+        box-shadow: 0 0 0 3px rgba(5, 147, 134, 0.1);
+    }
+
+    .password-wrapper .form-control {
+        border: none !important;
+        background: transparent !important;
+        box-shadow: none !important;
+        border-radius: 0 !important;
+        flex: 1;
+        min-width: 0;
+    }
+
+    .password-wrapper .form-control:focus {
+        outline: none;
+        box-shadow: none !important;
+        border: none !important;
     }
 
     .password-toggle {
-        position: absolute;
-        right: 16px;
-        top: 50%;
-        transform: translateY(-50%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 42px;
+        flex-shrink: 0;
         cursor: pointer;
         color: #6b7280;
         font-size: 1.1rem;
         transition: color 0.2s ease;
-        background: none;
+        background: transparent;
         border: none;
         padding: 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 24px;
-        height: 24px;
     }
 
     .password-toggle:hover {
@@ -346,6 +470,28 @@
     }
 </style>
 
+<nav class="main-nav" id="mainNav">
+    <div class="container">
+        <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+            <a href="/" class="d-flex align-items-center gap-2 text-decoration-none">
+                <img src="{{ asset('images/logo.png') }}" alt="ShinyTooth Logo" height="60"
+                     style="border-radius:8px; object-fit:contain;">
+                <span style="color:#fff; font-size:1.2rem; font-weight:800; letter-spacing:-.3px;">ShinyTooth</span>
+            </a>
+            <div class="d-none d-md-flex align-items-center gap-1">
+                <a href="/#services"   class="nav-link-custom">Services</a>
+                <a href="/#doctors"    class="nav-link-custom">Doctors</a>
+                <a href="/#who-we-are" class="nav-link-custom">Who are we</a>
+                <a href="/#contact"    class="nav-link-custom">Contact us</a>
+            </div>
+            <div class="d-flex align-items-center gap-2">
+                <a href="/login"    class="btn-nav-login">Login</a>
+                <a href="/register" class="btn-nav-signup">Sign Up</a>
+            </div>
+        </div>
+    </div>
+</nav>
+
 <div class="auth-wrapper">
     <!-- Left Side - Branding -->
     <div class="auth-branding">
@@ -357,7 +503,7 @@
                 <div class="branding-logo">
                     <img src="{{ asset('images/logo.png') }}" alt="ShinyTooth Logo">
                 </div>
-                <h1 class="branding-title">ShinyTooth</h1>
+                <p class="branding-title">ShinyTooth</p>
             </div>
         </div>
     </div>
@@ -375,127 +521,181 @@
             <form id="register-form">
                 @csrf
 
-                <div class="form-group">
-                    <label for="first_name" class="form-label">First Name</label>
-                    <input 
-                        type="text" 
-                        class="form-control" 
-                        id="first_name" 
-                        name="first_name" 
-                        placeholder="John" 
-                        required
-                    >
-                    <small class="error-text" id="first_name-error"></small>
+                <div class="row g-3">
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label for="first_name" class="form-label">First Name</label>
+                            <input type="text" class="form-control" id="first_name" name="first_name" placeholder="John" required>
+                            <small class="error-text" id="first_name-error"></small>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label for="last_name" class="form-label">Second Name</label>
+                            <input type="text" class="form-control" id="last_name" name="last_name" placeholder="Doe" required>
+                            <small class="error-text" id="last_name-error"></small>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="form-group">
-                    <label for="last_name" class="form-label">Last Name</label>
-                    <input 
-                        type="text" 
-                        class="form-control" 
-                        id="last_name" 
-                        name="last_name" 
-                        placeholder="Doe" 
-                        required
-                    >
-                    <small class="error-text" id="last_name-error"></small>
+                    <label for="address" class="form-label">Address</label>
+                    <input type="text" class="form-control" id="address" name="address" placeholder="123 Main St, City" required>
+                    <small class="error-text" id="address-error"></small>
+                </div>
+
+                <div class="row g-3">
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label for="nationality" class="form-label">Nationality</label>
+                            <input type="text" class="form-control" id="nationality" name="nationality" placeholder="e.g. Saudi" required>
+                            <small class="error-text" id="nationality-error"></small>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label class="form-label">Gender</label>
+                            <div class="radio-group" id="gender-group">
+                                <input type="radio" class="radio-option" name="gender" id="gender-male" value="male">
+                                <label class="radio-label" for="gender-male">Male</label>
+                                <input type="radio" class="radio-option" name="gender" id="gender-female" value="female">
+                                <label class="radio-label" for="gender-female">Female</label>
+                            </div>
+                            <small class="error-text" id="gender-error"></small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row g-3">
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label class="form-label">Blood Type</label>
+                            <div class="radio-group" id="blood_type-group">
+                                <input type="radio" class="radio-option" name="blood_type" id="bt-ap" value="A+">
+                                <label class="radio-label" for="bt-ap">A+</label>
+                                <input type="radio" class="radio-option" name="blood_type" id="bt-am" value="A-">
+                                <label class="radio-label" for="bt-am">A−</label>
+                                <input type="radio" class="radio-option" name="blood_type" id="bt-bp" value="B+">
+                                <label class="radio-label" for="bt-bp">B+</label>
+                                <input type="radio" class="radio-option" name="blood_type" id="bt-bm" value="B-">
+                                <label class="radio-label" for="bt-bm">B−</label>
+                                <input type="radio" class="radio-option" name="blood_type" id="bt-abp" value="AB+">
+                                <label class="radio-label" for="bt-abp">AB+</label>
+                                <input type="radio" class="radio-option" name="blood_type" id="bt-abm" value="AB-">
+                                <label class="radio-label" for="bt-abm">AB−</label>
+                                <input type="radio" class="radio-option" name="blood_type" id="bt-op" value="O+">
+                                <label class="radio-label" for="bt-op">O+</label>
+                                <input type="radio" class="radio-option" name="blood_type" id="bt-om" value="O-">
+                                <label class="radio-label" for="bt-om">O−</label>
+                            </div>
+                            <small class="error-text" id="blood_type-error"></small>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="form-group">
-                    <label for="email" class="form-label">Email Address</label>
-                    <input 
-                        type="email" 
-                        class="form-control" 
-                        id="email" 
-                        name="email" 
-                        placeholder="your@email.com" 
-                        required
-                    >
-                    <small class="error-text" id="email-error"></small>
+                    <label for="place_of_birth" class="form-label">Place of Birth</label>
+                    <input type="text" class="form-control" id="place_of_birth" name="place_of_birth" placeholder="City, Country" required>
+                    <small class="error-text" id="place_of_birth-error"></small>
+                </div>
+
+                <div class="form-group">
+                    <label for="date_of_birth" class="form-label">Date of Birth</label>
+                    <input type="date" class="form-control" id="date_of_birth" name="date_of_birth" required>
+                    <small class="error-text" id="date_of_birth-error"></small>
                 </div>
 
                 <div class="form-group">
                     <label for="phone" class="form-label">Phone Number</label>
-                    <input 
-                        type="tel" 
-                        class="form-control" 
-                        id="phone" 
-                        name="phone" 
-                        placeholder="05X XXXX XXXX" 
-                        pattern="05[0-9]{8}"
-                        maxlength="10"
-                        inputmode="numeric"
-                        required
-                    >
-                    <small style="color: #059386; font-size: 0.8rem; margin-top: 0.3rem; display: block;">Only 10 numbers allowed (e.g: 0512345678)</small>
+                    <input type="tel" class="form-control" id="phone" name="phone" placeholder="05X XXXX XXXX" pattern="05[0-9]{8}" maxlength="10" inputmode="numeric" required>
+                    <small style="color:#059386; font-size:0.8rem; margin-top:0.3rem; display:block;">Only 10 numbers (e.g: 0512345678)</small>
                     <small class="error-text" id="phone-error">Phone must start with 05 followed by 8 digits</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="email" class="form-label">Email Address</label>
+                    <input type="email" class="form-control" id="email" name="email" placeholder="your@email.com" required>
+                    <small class="error-text" id="email-error"></small>
                 </div>
 
                 <div class="form-group">
                     <label for="password" class="form-label">Password</label>
                     <div class="password-wrapper">
-                        <input 
-                            type="password" 
-                            class="form-control" 
-                            id="password" 
-                            name="password" 
-                            placeholder="••••••••" 
-                            required
-                        >
-                        <button type="button" class="password-toggle" id="password-toggle">
-                            <i class="bi bi-eye"></i>
+                        <input type="password" class="form-control" id="password" name="password" placeholder="••••••••" required>
+                        <button type="button" class="password-toggle" id="password-toggle" tabindex="0">
+                            <i class="bi bi-eye" id="password-eye-icon"></i>
                         </button>
                     </div>
                     <div class="password-requirements" id="password-requirements">
-                        <div class="requirement-item" id="req-length">
-                            <span class="requirement-icon">✓</span>
-                            <span>At least 8 characters</span>
-                        </div>
-                        <div class="requirement-item" id="req-uppercase">
-                            <span class="requirement-icon">✓</span>
-                            <span>One uppercase letter (A-Z)</span>
-                        </div>
-                        <div class="requirement-item" id="req-lowercase">
-                            <span class="requirement-icon">✓</span>
-                            <span>One lowercase letter (a-z)</span>
-                        </div>
-                        <div class="requirement-item" id="req-number">
-                            <span class="requirement-icon">✓</span>
-                            <span>One number (0-9)</span>
-                        </div>
-                        <div class="requirement-item" id="req-special">
-                            <span class="requirement-icon">✓</span>
-                            <span>One special character (!@#$%^&*)</span>
-                        </div>
+                        <div class="requirement-item" id="req-length"><span class="requirement-icon">✓</span><span>At least 8 characters</span></div>
+                        <div class="requirement-item" id="req-uppercase"><span class="requirement-icon">✓</span><span>One uppercase letter (A-Z)</span></div>
+                        <div class="requirement-item" id="req-lowercase"><span class="requirement-icon">✓</span><span>One lowercase letter (a-z)</span></div>
+                        <div class="requirement-item" id="req-number"><span class="requirement-icon">✓</span><span>One number (0-9)</span></div>
+                        <div class="requirement-item" id="req-special"><span class="requirement-icon">✓</span><span>One special character (!@#$%^&*)</span></div>
                     </div>
                     <small class="error-text" id="password-error"></small>
                 </div>
 
                 <div class="form-group">
                     <label for="password_confirmation" class="form-label">Confirm Password</label>
-                    <input 
-                        type="password" 
-                        class="form-control" 
-                        id="password_confirmation" 
-                        name="password_confirmation" 
-                        placeholder="••••••••" 
-                        required
-                    >
+                    <input type="password" class="form-control" id="password_confirmation" name="password_confirmation" placeholder="••••••••" required>
                     <small class="error-text" id="passwordConfirm-error"></small>
                 </div>
 
                 <button type="submit" id="register-btn" class="btn-auth">Create Account</button>
             </form>
-
-            <div class="form-footer">
-                <p class="footer-text">
-                    Already have an account? 
-                    <a href="{{ route('login') }}" class="auth-link">Sign in</a>
-                </p>
-            </div>
         </div>
     </div>
 </div>
+
+<!-- Footer -->
+<footer class="main-footer" style="background: linear-gradient(135deg, #003263 0%, #047a6e 100%); color: #fff; margin-top: auto;">
+    <div class="container" style="padding: 50px 0;">
+        <div class="row g-4">
+            {{-- Brand column --}}
+            <div class="col-lg-4">
+                <div class="d-flex align-items-center gap-2 mb-3">
+                    <img src="{{ asset('images/logo.png') }}" alt="ShinyTooth"
+                         height="60" style="border-radius:8px; object-fit:contain;">
+                    <span style="color: #fff; font-size: 1.2rem; font-weight: 800;">ShinyTooth</span>
+                </div>
+                <p style="color:rgba(255,255,255,.65); font-size:.88rem; line-height:1.75;">
+                    Your trusted dental care partner. We combine world-class expertise with
+                    a warm, welcoming environment — because every smile deserves the best.
+                </p>
+            </div>
+
+            {{-- Quick Links --}}
+            <div class="col-6 col-lg-2 offset-lg-1">
+                <h6 style="color: #fff; font-size: .9rem; font-weight: 700; margin-bottom: 18px;">Quick Links</h6>
+                <a href="/" style="color: rgba(255,255,255,.75); text-decoration: none; display: block; margin-bottom: 8px; transition: color .2s;">Home</a>
+                <a href="#" style="color: rgba(255,255,255,.75); text-decoration: none; display: block; margin-bottom: 8px; transition: color .2s;">Services</a>
+                <a href="/login" style="color: rgba(255,255,255,.75); text-decoration: none; display: block; margin-bottom: 8px; transition: color .2s;">Login</a>
+            </div>
+
+            {{-- Contact --}}
+            <div class="col-lg-4">
+                <h6 style="color: #fff; font-size: .9rem; font-weight: 700; margin-bottom: 18px;">Contact Us</h6>
+                <div class="d-flex align-items-start gap-2 mb-3" style="color:rgba(255,255,255,.65); font-size:.87rem;">
+                    <i class="bi bi-telephone-fill" style="color:#059386; flex-shrink:0; margin-top:2px;"></i>
+                    <span>+1 (800) 744-6983</span>
+                </div>
+                <div class="d-flex align-items-start gap-2 mb-3" style="color:rgba(255,255,255,.65); font-size:.87rem;">
+                    <i class="bi bi-envelope-fill" style="color:#059386; flex-shrink:0; margin-top:2px;"></i>
+                    <span>hello@shinytooth.com</span>
+                </div>
+                <div class="d-flex align-items-start gap-2" style="color:rgba(255,255,255,.65); font-size:.87rem;">
+                    <i class="bi bi-clock-fill" style="color:#059386; flex-shrink:0; margin-top:2px;"></i>
+                    <span>Mon – Sat | 8:00 AM – 7:00 PM</span>
+                </div>
+            </div>
+        </div>
+        <hr style="border-color: rgba(255,255,255,.15); margin: 30px 0 20px;">
+        <p style="text-align: center; color: rgba(255,255,255,.5); font-size: 0.85rem; margin: 0;">
+            &copy; 2026 ShinyTooth Dental Clinic. All rights reserved.
+        </p>
+    </div>
+</footer>
 
 <script src="{{ asset('js/auth.js') }}"></script>
 <script>

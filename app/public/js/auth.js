@@ -77,19 +77,12 @@ function setupRegisterForm() {
     const passwordInput = document.getElementById('password');
     const passwordToggle = document.getElementById('password-toggle');
     if (passwordToggle && passwordInput) {
-        passwordToggle.addEventListener('click', function(e) {
-            e.preventDefault();
-            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-            passwordInput.setAttribute('type', type);
-            
-            // Toggle icon
-            const icon = this.querySelector('i');
-            if (type === 'text') {
-                icon.classList.remove('bi-eye');
-                icon.classList.add('bi-eye-slash');
-            } else {
-                icon.classList.remove('bi-eye-slash');
-                icon.classList.add('bi-eye');
+        passwordToggle.addEventListener('click', function() {
+            const isHidden = passwordInput.type === 'password';
+            passwordInput.type = isHidden ? 'text' : 'password';
+            const icon = document.getElementById('password-eye-icon') || this.querySelector('i');
+            if (icon) {
+                icon.className = isHidden ? 'bi bi-eye-slash' : 'bi bi-eye';
             }
         });
     }
@@ -105,10 +98,7 @@ function setupRegisterForm() {
     const phoneInput = document.getElementById('phone');
     if (phoneInput) {
         phoneInput.addEventListener('input', function(e) {
-            // Remove non-numeric characters
             this.value = this.value.replace(/[^0-9]/g, '');
-            
-            // Limit to 10 digits
             if (this.value.length > 10) {
                 this.value = this.value.slice(0, 10);
             }
@@ -120,41 +110,41 @@ function setupRegisterForm() {
 
         // Clear previous errors
         document.getElementById('register-error').classList.remove('active');
-        clearFieldError('first_name');
-        clearFieldError('last_name');
-        clearFieldError('email');
-        clearFieldError('phone');
-        clearFieldError('password');
-        clearFieldError('passwordConfirm');
+        ['first_name','last_name','address','nationality','gender','blood_type',
+         'place_of_birth','date_of_birth','phone','email','password','passwordConfirm']
+            .forEach(f => clearFieldError(f));
 
         // Get form values
-        const first_name = document.getElementById('first_name').value.trim();
-        const last_name = document.getElementById('last_name').value.trim();
-        const email = document.getElementById('email').value.trim();
-        const phone = document.getElementById('phone').value.trim();
-        const password = document.getElementById('password').value;
+        const first_name     = document.getElementById('first_name').value.trim();
+        const last_name      = document.getElementById('last_name').value.trim();
+        const address        = document.getElementById('address').value.trim();
+        const nationality    = document.getElementById('nationality').value.trim();
+        const genderEl       = document.querySelector('input[name="gender"]:checked');
+        const gender         = genderEl ? genderEl.value : '';
+        const bloodTypeEl    = document.querySelector('input[name="blood_type"]:checked');
+        const blood_type     = bloodTypeEl ? bloodTypeEl.value : '';
+        const place_of_birth = document.getElementById('place_of_birth').value.trim();
+        const date_of_birth  = document.getElementById('date_of_birth').value;
+        const phone          = document.getElementById('phone').value.trim();
+        const email          = document.getElementById('email').value.trim();
+        const password       = document.getElementById('password').value;
         const passwordConfirm = document.getElementById('password_confirmation').value;
-        const role = 'patient'; // Default to patient
 
-        // Validate
-        if (!validateRegisterForm(first_name, last_name, email, phone, password, passwordConfirm)) {
+        if (!validateRegisterForm(first_name, last_name, address, nationality, gender,
+            blood_type, place_of_birth, date_of_birth, phone, email, password, passwordConfirm)) {
             return;
         }
 
         try {
-            // Disable button
             const submitBtn = form.querySelector('button[type="submit"]');
             submitBtn.disabled = true;
             submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Creating account...';
 
-            // Make API call
-            const endpoint = '/auth/patient/register';
-            const response = await fetch(`${API_BASE}${endpoint}`, {
+            const response = await fetch(`${API_BASE}/auth/patient/register`, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ first_name, last_name, email, phone, password }),
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ first_name, last_name, address, nationality, gender,
+                    blood_type, place_of_birth, date_of_birth, phone, email, password }),
             });
 
             const data = await response.json();
@@ -163,17 +153,13 @@ function setupRegisterForm() {
                 throw new Error(data.message || 'Registration failed. Please try again.');
             }
 
-            // Store auth data
             localStorage.setItem('auth_token', data.token);
-            localStorage.setItem('user_role', role);
-            if (data.user) {
-                localStorage.setItem('user_data', JSON.stringify(data.user));
-            }
+            localStorage.setItem('user_role', 'patient');
+            if (data.user) localStorage.setItem('user_data', JSON.stringify(data.user));
 
-            // Redirect to dashboard
-            const dashboard = '/patient/dashboard';
-            window.location.href = dashboard;
+            window.location.href = '/patient/dashboard';
         } catch (error) {
+            const submitBtn = form.querySelector('button[type="submit"]');
             submitBtn.disabled = false;
             submitBtn.innerHTML = 'Create Account';
             showRegisterError(error.message);
@@ -209,33 +195,42 @@ function validateLoginForm(email, password) {
 /**
  * Validate Register Form
  */
-function validateRegisterForm(first_name, last_name, email, phone, password, passwordConfirm) {
+function validateRegisterForm(first_name, last_name, address, nationality, gender,
+    blood_type, place_of_birth, date_of_birth, phone, email, password, passwordConfirm) {
     let isValid = true;
 
-    if (!first_name) {
-        showFieldError('first_name', 'First name is required');
-        isValid = false;
-    } else if (first_name.length < 2) {
+    if (!first_name || first_name.length < 2) {
         showFieldError('first_name', 'First name must be at least 2 characters');
         isValid = false;
     }
-
-    if (!last_name) {
-        showFieldError('last_name', 'Last name is required');
-        isValid = false;
-    } else if (last_name.length < 2) {
-        showFieldError('last_name', 'Last name must be at least 2 characters');
+    if (!last_name || last_name.length < 2) {
+        showFieldError('last_name', 'Second name must be at least 2 characters');
         isValid = false;
     }
-
-    if (!email) {
-        showFieldError('email', 'Email is required');
-        isValid = false;
-    } else if (!isValidEmail(email)) {
-        showFieldError('email', 'Please enter a valid email');
+    if (!address) {
+        showFieldError('address', 'Address is required');
         isValid = false;
     }
-
+    if (!nationality) {
+        showFieldError('nationality', 'Nationality is required');
+        isValid = false;
+    }
+    if (!gender) {
+        showFieldError('gender', 'Please select a gender');
+        isValid = false;
+    }
+    if (!blood_type) {
+        showFieldError('blood_type', 'Please select a blood type');
+        isValid = false;
+    }
+    if (!place_of_birth) {
+        showFieldError('place_of_birth', 'Place of birth is required');
+        isValid = false;
+    }
+    if (!date_of_birth) {
+        showFieldError('date_of_birth', 'Date of birth is required');
+        isValid = false;
+    }
     if (!phone) {
         showFieldError('phone', 'Phone number is required');
         isValid = false;
@@ -243,15 +238,20 @@ function validateRegisterForm(first_name, last_name, email, phone, password, pas
         showFieldError('phone', 'Phone must start with 05 followed by 8 digits');
         isValid = false;
     }
-
+    if (!email) {
+        showFieldError('email', 'Email is required');
+        isValid = false;
+    } else if (!isValidEmail(email)) {
+        showFieldError('email', 'Please enter a valid email');
+        isValid = false;
+    }
     if (!password) {
         showFieldError('password', 'Password is required');
         isValid = false;
     } else if (!isPasswordValid(password)) {
-        showFieldError('password', 'Password must meet all requirements (8+ chars, uppercase, lowercase, number, special char)');
+        showFieldError('password', 'Password must meet all requirements');
         isValid = false;
     }
-
     if (!passwordConfirm) {
         showFieldError('passwordConfirm', 'Please confirm your password');
         isValid = false;
