@@ -16,17 +16,21 @@ class AuthController extends Controller
     public function registerPatient(Request $request)
     {
         $data = $request->validate([
-            'name'           => 'required|string|max:255',
+            'full_name'      => 'required|string|max:255',
             'email'          => 'required|email|unique:patients,email',
             'password'       => 'required|string|min:8|confirmed',
-            'phone'          => 'nullable|string|max:20',
-            'date_of_birth'  => 'nullable|date',
-            'gender'         => 'nullable|in:male,female',
+            'phone'          => 'required|string|max:20',
+            'date_of_birth'  => 'required|date',
+            'gender'         => 'required|in:male,female',
             'address'        => 'nullable|string',
-            'blood_type'     => 'nullable|in:A+,A-,B+,B-,AB+,AB-,O+,O-',
-            'place_of_birth' => 'nullable|string|max:255',
-            'nationality'    => 'nullable|string|max:100',
+            'blood_type'     => 'required|in:A+,A-,B+,B-,AB+,AB-,O+,O-',
+            'place_of_birth' => 'required|string|max:255',
+            'nationality'    => 'required|string|max:100',
         ]);
+
+        // Map full_name to name for the Patient model
+        $data['name'] = $data['full_name'];
+        unset($data['full_name']);
 
         $data['password'] = Hash::make($data['password']);
         $patient = Patient::create($data);
@@ -40,7 +44,8 @@ class AuthController extends Controller
     }
 
     /**
-     * Login a patient.
+     * Login - handles both patients and dentists (unified login).
+     * Tries dentist first, then patient.
      */
     public function loginPatient(Request $request)
     {
@@ -49,6 +54,21 @@ class AuthController extends Controller
             'password' => 'required|string',
         ]);
 
+        // First try to find a dentist (doctor) with this email
+        $dentist = Dentist::where('email', $request->email)->first();
+        
+        if ($dentist && Hash::check($request->password, $dentist->password)) {
+            $token = $dentist->createToken('dentist-token')->plainTextToken;
+            
+            return response()->json([
+                'dentist' => $dentist,
+                'token'   => $token,
+                'user_type' => 'dentist',
+                'redirect' => '/doctor/dashboard',
+            ]);
+        }
+
+        // Then try to find a patient with this email
         $patient = Patient::where('email', $request->email)->first();
 
         if (! $patient || ! Hash::check($request->password, $patient->password)) {
@@ -62,6 +82,8 @@ class AuthController extends Controller
         return response()->json([
             'patient' => $patient,
             'token'   => $token,
+            'user_type' => 'patient',
+            'redirect' => '/patient/dashboard',
         ]);
     }
 

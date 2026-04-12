@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.auth')
 
 @section('content')
 <style>
@@ -73,7 +73,7 @@
     /* Left Side - Branding */
     .auth-branding {
         flex: 1;
-        background: linear-gradient(135deg, #002050 0%, #003263 45%, #047a6e 80%, #059386 100%);
+        background: transparent;
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -103,6 +103,45 @@
         height: 300px;
         bottom: -5%;
         left: -5%;
+    }
+
+    /* Image Carousel */
+    .auth-carousel {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 0;
+        overflow: hidden;
+    }
+
+    .carousel-item {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-size: cover;
+        background-position: center;
+        opacity: 0;
+        transition: opacity 1s ease-in-out;
+    }
+
+    .carousel-item.active {
+        opacity: 1;
+    }
+
+    /* Overlay to darken images for better text visibility */
+    .auth-carousel-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, rgba(0, 32, 80, 0.4) 0%, rgba(0, 50, 99, 0.4) 45%, rgba(3, 107, 97, 0.4) 80%, rgba(5, 147, 134, 0.4) 100%);
+        z-index: 1;
+        pointer-events: none;
     }
 
     .branding-content {
@@ -138,11 +177,11 @@
     .auth-form-section {
         flex: 1;
         display: flex;
-        align-items: center;
+        align-items: flex-start;
         justify-content: center;
-        padding: 30px 24px;
+        padding: 60px 24px;
         overflow-y: auto;
-        max-height: 100vh;
+        min-height: 100vh;
     }
 
     .auth-form-container {
@@ -308,8 +347,11 @@
     }
 
     .btn-auth:disabled {
-        opacity: 0.7;
+        opacity: 0.5;
         cursor: not-allowed;
+        background: linear-gradient(90deg, #999999 0%, #666666 100%) !important;
+        box-shadow: none !important;
+        transform: none !important;
     }
 
     .alert-danger {
@@ -493,8 +535,23 @@
 </nav>
 
 <div class="auth-wrapper">
-    <!-- Left Side - Branding -->
+    <!-- Left Side - Branding with Image Carousel -->
     <div class="auth-branding">
+        <!-- Background Image Carousel -->
+        <div class="auth-carousel" id="auth-carousel">
+            <div class="carousel-item active" style="background-image: url('{{ asset('images/SignUpImages/image1.jpg') }}');"></div>
+            <div class="carousel-item" style="background-image: url('{{ asset('images/SignUpImages/image2.jpg') }}');"></div>
+            <div class="carousel-item" style="background-image: url('{{ asset('images/SignUpImages/image3.jpg') }}');"></div>
+            <div class="carousel-item" style="background-image: url('{{ asset('images/SignUpImages/image4.jpg') }}');"></div>
+            <div class="carousel-item" style="background-image: url('{{ asset('images/SignUpImages/image5.jpg') }}');"></div>
+            <div class="carousel-item" style="background-image: url('{{ asset('images/SignUpImages/image6.jpg') }}');"></div>
+            <div class="carousel-item" style="background-image: url('{{ asset('images/SignUpImages/image7.jpg') }}');"></div>
+            <div class="carousel-item" style="background-image: url('{{ asset('images/SignUpImages/image8.jpg') }}');"></div>
+        </div>
+        
+        <!-- Overlay -->
+        <div class="auth-carousel-overlay"></div>
+        
         <div class="auth-circle auth-circle-1"></div>
         <div class="auth-circle auth-circle-2"></div>
         
@@ -521,90 +578,14 @@
             <form id="register-form">
                 @csrf
 
-                <div class="row g-3">
-                    <div class="col-6">
-                        <div class="form-group">
-                            <label for="first_name" class="form-label">First Name</label>
-                            <input type="text" class="form-control" id="first_name" name="first_name" placeholder="John" required>
-                            <small class="error-text" id="first_name-error"></small>
-                        </div>
-                    </div>
-                    <div class="col-6">
-                        <div class="form-group">
-                            <label for="last_name" class="form-label">Second Name</label>
-                            <input type="text" class="form-control" id="last_name" name="last_name" placeholder="Doe" required>
-                            <small class="error-text" id="last_name-error"></small>
-                        </div>
-                    </div>
-                </div>
-
+                <!-- Full Name (Single Field) -->
                 <div class="form-group">
-                    <label for="address" class="form-label">Address</label>
-                    <input type="text" class="form-control" id="address" name="address" placeholder="123 Main St, City" required>
-                    <small class="error-text" id="address-error"></small>
+                    <label for="full_name" class="form-label">Full Name</label>
+                    <input type="text" class="form-control" id="full_name" name="full_name" placeholder="John Doe" required>
+                    <small class="error-text" id="full_name-error"></small>
                 </div>
 
-                <div class="row g-3">
-                    <div class="col-6">
-                        <div class="form-group">
-                            <label for="nationality" class="form-label">Nationality</label>
-                            <input type="text" class="form-control" id="nationality" name="nationality" placeholder="e.g. Saudi" required>
-                            <small class="error-text" id="nationality-error"></small>
-                        </div>
-                    </div>
-                    <div class="col-6">
-                        <div class="form-group">
-                            <label class="form-label">Gender</label>
-                            <div class="radio-group" id="gender-group">
-                                <input type="radio" class="radio-option" name="gender" id="gender-male" value="male">
-                                <label class="radio-label" for="gender-male">Male</label>
-                                <input type="radio" class="radio-option" name="gender" id="gender-female" value="female">
-                                <label class="radio-label" for="gender-female">Female</label>
-                            </div>
-                            <small class="error-text" id="gender-error"></small>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row g-3">
-                    <div class="col-12">
-                        <div class="form-group">
-                            <label class="form-label">Blood Type</label>
-                            <div class="radio-group" id="blood_type-group">
-                                <input type="radio" class="radio-option" name="blood_type" id="bt-ap" value="A+">
-                                <label class="radio-label" for="bt-ap">A+</label>
-                                <input type="radio" class="radio-option" name="blood_type" id="bt-am" value="A-">
-                                <label class="radio-label" for="bt-am">A−</label>
-                                <input type="radio" class="radio-option" name="blood_type" id="bt-bp" value="B+">
-                                <label class="radio-label" for="bt-bp">B+</label>
-                                <input type="radio" class="radio-option" name="blood_type" id="bt-bm" value="B-">
-                                <label class="radio-label" for="bt-bm">B−</label>
-                                <input type="radio" class="radio-option" name="blood_type" id="bt-abp" value="AB+">
-                                <label class="radio-label" for="bt-abp">AB+</label>
-                                <input type="radio" class="radio-option" name="blood_type" id="bt-abm" value="AB-">
-                                <label class="radio-label" for="bt-abm">AB−</label>
-                                <input type="radio" class="radio-option" name="blood_type" id="bt-op" value="O+">
-                                <label class="radio-label" for="bt-op">O+</label>
-                                <input type="radio" class="radio-option" name="blood_type" id="bt-om" value="O-">
-                                <label class="radio-label" for="bt-om">O−</label>
-                            </div>
-                            <small class="error-text" id="blood_type-error"></small>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="place_of_birth" class="form-label">Place of Birth</label>
-                    <input type="text" class="form-control" id="place_of_birth" name="place_of_birth" placeholder="City, Country" required>
-                    <small class="error-text" id="place_of_birth-error"></small>
-                </div>
-
-                <div class="form-group">
-                    <label for="date_of_birth" class="form-label">Date of Birth</label>
-                    <input type="date" class="form-control" id="date_of_birth" name="date_of_birth" required>
-                    <small class="error-text" id="date_of_birth-error"></small>
-                </div>
-
+                <!-- Phone Number -->
                 <div class="form-group">
                     <label for="phone" class="form-label">Phone Number</label>
                     <input type="tel" class="form-control" id="phone" name="phone" placeholder="05X XXXX XXXX" pattern="05[0-9]{8}" maxlength="10" inputmode="numeric" required>
@@ -612,12 +593,78 @@
                     <small class="error-text" id="phone-error">Phone must start with 05 followed by 8 digits</small>
                 </div>
 
+                <!-- Nationality -->
+                <div class="form-group">
+                    <label for="nationality" class="form-label">Nationality</label>
+                    <input type="text" class="form-control" id="nationality" name="nationality" placeholder="e.g. Saudi" required>
+                    <small class="error-text" id="nationality-error"></small>
+                </div>
+
+                <!-- Gender -->
+                <div class="form-group">
+                    <label class="form-label">Gender</label>
+                    <div class="radio-group" id="gender-group">
+                        <input type="radio" class="radio-option" name="gender" id="gender-male" value="male">
+                        <label class="radio-label" for="gender-male">Male</label>
+                        <input type="radio" class="radio-option" name="gender" id="gender-female" value="female">
+                        <label class="radio-label" for="gender-female">Female</label>
+                    </div>
+                    <small class="error-text" id="gender-error"></small>
+                </div>
+
+                <!-- Place of Birth -->
+                <div class="form-group">
+                    <label for="place_of_birth" class="form-label">Place of Birth</label>
+                    <input type="text" class="form-control" id="place_of_birth" name="place_of_birth" placeholder="City, Country" required>
+                    <small class="error-text" id="place_of_birth-error"></small>
+                </div>
+
+                <!-- Date of Birth -->
+                <div class="form-group">
+                    <label for="date_of_birth" class="form-label">Date of Birth</label>
+                    <input type="date" class="form-control" id="date_of_birth" name="date_of_birth" required>
+                    <small class="error-text" id="date_of_birth-error"></small>
+                </div>
+
+                <!-- Blood Type -->
+                <div class="form-group">
+                    <label class="form-label">Blood Type</label>
+                    <div class="radio-group" id="blood_type-group">
+                        <input type="radio" class="radio-option" name="blood_type" id="bt-ap" value="A+">
+                        <label class="radio-label" for="bt-ap">A+</label>
+                        <input type="radio" class="radio-option" name="blood_type" id="bt-am" value="A-">
+                        <label class="radio-label" for="bt-am">A−</label>
+                        <input type="radio" class="radio-option" name="blood_type" id="bt-bp" value="B+">
+                        <label class="radio-label" for="bt-bp">B+</label>
+                        <input type="radio" class="radio-option" name="blood_type" id="bt-bm" value="B-">
+                        <label class="radio-label" for="bt-bm">B−</label>
+                        <input type="radio" class="radio-option" name="blood_type" id="bt-abp" value="AB+">
+                        <label class="radio-label" for="bt-abp">AB+</label>
+                        <input type="radio" class="radio-option" name="blood_type" id="bt-abm" value="AB-">
+                        <label class="radio-label" for="bt-abm">AB−</label>
+                        <input type="radio" class="radio-option" name="blood_type" id="bt-op" value="O+">
+                        <label class="radio-label" for="bt-op">O+</label>
+                        <input type="radio" class="radio-option" name="blood_type" id="bt-om" value="O-">
+                        <label class="radio-label" for="bt-om">O−</label>
+                    </div>
+                    <small class="error-text" id="blood_type-error"></small>
+                </div>
+
+                <!-- Address (Optional) -->
+                <div class="form-group">
+                    <label for="address" class="form-label">Address <span style="color:#999; font-size:0.8rem;">(Optional)</span></label>
+                    <input type="text" class="form-control" id="address" name="address" placeholder="123 Main St, City">
+                    <small class="error-text" id="address-error"></small>
+                </div>
+
+                <!-- Email -->
                 <div class="form-group">
                     <label for="email" class="form-label">Email Address</label>
                     <input type="email" class="form-control" id="email" name="email" placeholder="your@email.com" required>
                     <small class="error-text" id="email-error"></small>
                 </div>
 
+                <!-- Password -->
                 <div class="form-group">
                     <label for="password" class="form-label">Password</label>
                     <div class="password-wrapper">
@@ -636,13 +683,14 @@
                     <small class="error-text" id="password-error"></small>
                 </div>
 
+                <!-- Confirm Password -->
                 <div class="form-group">
                     <label for="password_confirmation" class="form-label">Confirm Password</label>
                     <input type="password" class="form-control" id="password_confirmation" name="password_confirmation" placeholder="••••••••" required>
                     <small class="error-text" id="passwordConfirm-error"></small>
                 </div>
 
-                <button type="submit" id="register-btn" class="btn-auth">Create Account</button>
+                <button type="submit" id="register-btn" class="btn-auth" disabled>Create Account</button>
             </form>
         </div>
     </div>
@@ -700,6 +748,17 @@
 <script src="{{ asset('js/auth.js') }}"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
+        // Image Carousel - pick a random image on load
+        const carousel = document.getElementById('auth-carousel');
+        if (carousel) {
+            const items = carousel.querySelectorAll('.carousel-item');
+            if (items.length > 0) {
+                items.forEach(item => item.classList.remove('active'));
+                const randomIndex = Math.floor(Math.random() * items.length);
+                items[randomIndex].classList.add('active');
+            }
+        }
+
         setupRegisterForm();
     });
 </script>

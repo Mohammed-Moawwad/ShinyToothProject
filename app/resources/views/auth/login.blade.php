@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.auth')
 
 @section('content')
 <style>
@@ -321,7 +321,28 @@
     }
 </style>
 
-<div class="login-page">
+<nav class="main-nav" id="mainNav">
+    <div class="container">
+        <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+            <a href="/" class="d-flex align-items-center gap-2 text-decoration-none">
+                <img src="{{ asset('images/logo.png') }}" alt="ShinyTooth Logo" height="60"
+                     style="border-radius:8px; object-fit:contain;">
+                <span style="color:#fff; font-size:1.2rem; font-weight:800; letter-spacing:-.3px;">ShinyTooth</span>
+            </a>
+            <div class="d-none d-md-flex align-items-center gap-1">
+                <a href="/#services"   class="nav-link-custom">Services</a>
+                <a href="/#doctors"    class="nav-link-custom">Doctors</a>
+                <a href="/#who-we-are" class="nav-link-custom">Who are we</a>
+                <a href="/#contact"    class="nav-link-custom">Contact us</a>
+            </div>
+            <div class="d-flex align-items-center gap-2">
+                <a href="/login"    class="btn-nav-login">Login</a>
+                <a href="/register" class="btn-nav-signup">Sign Up</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="login-page">
 
     <!-- Brand at top -->
     <div class="login-brand">
@@ -440,15 +461,53 @@
     </div>
 </footer>
 
-<script src="{{ asset('js/auth.js') }}"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        setupLoginForm();
+        // ── Login Form Handler ──────────────────────────────────────────
+        const form = document.getElementById('login-form');
+        if (form) {
+            form.addEventListener('submit', async function(e) {
+                e.preventDefault();
 
-        // Password show/hide toggle
-        const toggleBtn = document.getElementById('login-password-toggle');
+                const errorBox = document.getElementById('login-error');
+                if (errorBox) { errorBox.style.display = 'none'; errorBox.textContent = ''; }
+
+                const email    = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+                const csrfToken = document.querySelector('meta[name="csrf-token"]');
+
+                try {
+                    const response = await fetch('/login', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': csrfToken ? csrfToken.content : '',
+                        },
+                        body: JSON.stringify({ email, password }),
+                    });
+
+                    const data = await response.json();
+
+                    if (response.ok) {
+                        localStorage.setItem('auth_token', data.token);
+                        localStorage.setItem('user_type', data.user_type);
+                        const redirect = data.redirect || (data.user_type === 'dentist' ? '/doctor/dashboard' : '/patient/dashboard');
+                        window.location.href = redirect;
+                    } else {
+                        const msg = data.message || (data.errors && data.errors.email ? data.errors.email[0] : 'Invalid credentials.');
+                        if (errorBox) { errorBox.textContent = msg; errorBox.style.display = 'block'; }
+                    }
+                } catch (err) {
+                    console.error('Login error:', err);
+                    if (errorBox) { errorBox.textContent = 'An error occurred. Please try again.'; errorBox.style.display = 'block'; }
+                }
+            });
+        }
+
+        // ── Password show/hide toggle ───────────────────────────────────
+        const toggleBtn   = document.getElementById('login-password-toggle');
         const passwordInput = document.getElementById('password');
-        const passwordIcon = document.getElementById('login-password-icon');
+        const passwordIcon  = document.getElementById('login-password-icon');
 
         if (toggleBtn) {
             toggleBtn.addEventListener('click', function() {

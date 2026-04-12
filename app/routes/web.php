@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ServicesController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\DoctorController;
@@ -25,6 +26,9 @@ Route::middleware('guest')->group(function () {
     Route::get('/register', function () {
         return view('auth.register');
     })->name('register');
+    
+    Route::post('/register', [AuthController::class, 'registerPatient'])->name('register.store');
+    Route::post('/login', [AuthController::class, 'loginPatient'])->name('login.store');
 });
 
 // ─── Protected routes (after login) ──────────────────────────────────────
