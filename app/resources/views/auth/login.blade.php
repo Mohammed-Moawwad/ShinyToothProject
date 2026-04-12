@@ -321,28 +321,7 @@
     }
 </style>
 
-<nav class="main-nav" id="mainNav">
-    <div class="container">
-        <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
-            <a href="/" class="d-flex align-items-center gap-2 text-decoration-none">
-                <img src="{{ asset('images/logo.png') }}" alt="ShinyTooth Logo" height="60"
-                     style="border-radius:8px; object-fit:contain;">
-                <span style="color:#fff; font-size:1.2rem; font-weight:800; letter-spacing:-.3px;">ShinyTooth</span>
-            </a>
-            <div class="d-none d-md-flex align-items-center gap-1">
-                <a href="/#services"   class="nav-link-custom">Services</a>
-                <a href="/#doctors"    class="nav-link-custom">Doctors</a>
-                <a href="/#who-we-are" class="nav-link-custom">Who are we</a>
-                <a href="/#contact"    class="nav-link-custom">Contact us</a>
-            </div>
-            <div class="d-flex align-items-center gap-2">
-                <a href="/login"    class="btn-nav-login">Login</a>
-                <a href="/register" class="btn-nav-signup">Sign Up</a>
-            </div>
-        </div>
-    </div>
-
-    <div class="login-page">
+<div class="login-page">
 
     <!-- Brand at top -->
     <div class="login-brand">
