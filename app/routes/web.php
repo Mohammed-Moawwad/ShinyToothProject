@@ -16,6 +16,28 @@ Route::get('/', [HomeController::class, 'index']);
 Route::get('/services', [ServicesController::class, 'index']);
 Route::get('/services/{id}', [ServicesController::class, 'show'])->where('id', '[0-9]+');
 
+// ─── Authentication routes ──────────────────────────────────────────────
+Route::middleware('guest')->group(function () {
+    Route::get('/login', function () {
+        return view('auth.login');
+    })->name('login');
+
+    Route::get('/register', function () {
+        return view('auth.register');
+    })->name('register');
+});
+
+// ─── Protected routes (after login) ──────────────────────────────────────
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/patient/dashboard', function () {
+        return view('patient.dashboard');
+    })->name('patient.dashboard');
+
+    Route::get('/dentist/dashboard', function () {
+        return view('dentist.dashboard');
+    })->name('dentist.dashboard');
+});
+
 // Step 3 – pick date/time
 Route::get('/book', [BookingController::class, 'selectTime'])->name('booking.time');
 
