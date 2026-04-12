@@ -31,24 +31,22 @@ class DentistSeeder extends Seeder
             ]));
         }
 
-        // Assign specializations to dentists (dentist_id => [specialization_ids])
+        // Assign ONE specialization to each dentist (matches our 8 service categories)
         $assignments = [
-            1 => [1, 3],  // Abdulaziz: General Dentistry, Periodontics
-            2 => [2, 8],  // Hana: Orthodontics, Cosmetic Dentistry
-            3 => [4, 5],  // Tariq: Endodontics, Oral Surgery
-            4 => [6],     // Reem: Pediatric Dentistry
-            5 => [7, 8],  // Faisal: Prosthodontics, Cosmetic Dentistry
+            1 => 1,  // Abdulaziz → Preventive Dentistry
+            2 => 4,  // Hana → Orthodontics
+            3 => 2,  // Tariq → Restorative Dentistry
+            4 => 7,  // Reem → Pediatric Dentistry
+            5 => 3,  // Faisal → Cosmetic Dentistry
         ];
 
-        foreach ($assignments as $dentistId => $specIds) {
-            foreach ($specIds as $specId) {
-                DB::table('dentist_specialization')->insert([
-                    'dentist_id'        => $dentistId,
-                    'specialization_id' => $specId,
-                    'created_at'        => now(),
-                    'updated_at'        => now(),
-                ]);
-            }
+        foreach ($assignments as $dentistId => $specId) {
+            DB::table('dentist_specialization')->insert([
+                'dentist_id'        => $dentistId,
+                'specialization_id' => $specId,
+                'created_at'        => now(),
+                'updated_at'        => now(),
+            ]);
         }
     }
 }

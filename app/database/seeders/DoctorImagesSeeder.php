@@ -12,14 +12,14 @@ class DoctorImagesSeeder extends Seeder
      */
     public function run(): void
     {
-        // Map doctors to available images
-        // Using available images and cycling for extra doctors
+        // First, clear ALL doctor images - reset to NULL
+        Dentist::query()->update(['image' => null]);
+
+        // Then assign images ONLY to doctors that have actual image files
         $doctorImages = [
             'Dr. Abdulaziz Al-Mutairi' => 'images/doctors/dr-abdulaziz-al-mutairi.png',
-            'Dr. Hana Al-Amri'         => 'images/doctors/dr-bajjal-kumar.png',
             'Dr. Tariq Al-Subaie'      => 'images/doctors/dr-tariq-hijazi.png',
-            'Dr. Reem Al-Bishi'        => 'images/doctors/dr-abdulaziz-al-mutairi.png', // Reuse
-            'Dr. Faisal Al-Osaimi'     => 'images/doctors/dr-bajjal-kumar.png', // Reuse
+            // Note: Dr. Hana, Dr. Reem, Dr. Faisal do NOT have images - will show placeholder
         ];
 
         foreach ($doctorImages as $name => $imagePath) {

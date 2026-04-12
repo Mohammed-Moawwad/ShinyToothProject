@@ -14,14 +14,14 @@ class SpecializationSeeder extends Seeder
         DB::statement('SET FOREIGN_KEY_CHECKS=1');
 
         $specializations = [
-            ['name' => 'General Dentistry',    'description' => 'Routine dental care including cleanings, fillings, and exams'],
-            ['name' => 'Orthodontics',         'description' => 'Correction of teeth and jaw alignment using braces and aligners'],
-            ['name' => 'Periodontics',         'description' => 'Treatment of gum disease and supporting structures of teeth'],
-            ['name' => 'Endodontics',          'description' => 'Root canal therapy and treatment of dental pulp'],
-            ['name' => 'Oral Surgery',         'description' => 'Tooth extractions, implants, and jaw surgeries'],
-            ['name' => 'Pediatric Dentistry',  'description' => 'Dental care for children and adolescents'],
-            ['name' => 'Prosthodontics',       'description' => 'Restoration and replacement of teeth with crowns, bridges, and dentures'],
-            ['name' => 'Cosmetic Dentistry',   'description' => 'Aesthetic procedures including whitening and veneers'],
+            ['name' => 'Preventive Dentistry',   'description' => 'Routine dental care including cleanings, exams, X-rays, and preventive treatments'],
+            ['name' => 'Restorative Dentistry',  'description' => 'Tooth restoration with fillings, crowns, bridges, implants, and dentures'],
+            ['name' => 'Cosmetic Dentistry',     'description' => 'Aesthetic procedures including whitening, veneers, bonding, and smile makeovers'],
+            ['name' => 'Orthodontics',           'description' => 'Teeth and jaw alignment correction using braces, aligners, and retainers'],
+            ['name' => 'Periodontics',           'description' => 'Treatment and management of gum disease and supporting tooth structures'],
+            ['name' => 'Specialty Services',     'description' => 'Advanced oral surgery, implantation, TMJ therapy, and emergency dentistry'],
+            ['name' => 'Pediatric Dentistry',    'description' => 'Specialized dental care for children and adolescents'],
+            ['name' => 'Consultation',           'description' => 'Initial consultations and treatment planning for complex cases'],
         ];
 
         foreach ($specializations as $spec) {
