@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Subscription — ShinyTooth</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+    <style>
+        :root {
+            --teal:      #059386;
+            --dark-blue: #003263;
+        }
+
+        * { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            overflow-x: hidden;
+            background: #f6fbfa;
+        }
+
+        /* ── NAVBAR ──────────────────────────────── */
+        .main-nav {
+            background: linear-gradient(90deg, #003263 0%, #059386 100%);
+            padding: 14px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1050;
+            transition: padding .3s ease, box-shadow .3s ease;
+            box-shadow: 0 2px 10px rgba(0,0,0,.15);
+        }
+        .main-nav.scrolled {
+            padding: 8px 0;
+            box-shadow: 0 4px 24px rgba(0,0,0,.25);
+        }
+        .nav-link-custom {
+            color: rgba(255,255,255,.88) !important;
+            font-weight: 500;
+            padding: 6px 14px;
+            border-radius: 8px;
+            transition: background .2s, color .2s;
+            text-decoration: none;
+        }
+        .nav-link-custom:hover {
+            color: #fff !important;
+            background: rgba(255,255,255,.12);
+        }
+        .btn-nav-login {
+            border: 2px solid rgba(255,255,255,.75);
+            color: #fff;
+            border-radius: 25px;
+            padding: 10px 28px;
+            font-weight: 600;
+            background: transparent;
+            text-decoration: none;
+            transition: all .2s;
+            font-size: 1rem;
+        }
+        .btn-nav-login:hover {
+            background: rgba(255,255,255,.15);
+            color: #fff;
+        }
+        .btn-nav-signup {
+            background: #fff;
+            color: var(--dark-blue) !important;
+            border-radius: 25px;
+            padding: 10px 28px;
+            font-weight: 700;
+            text-decoration: none;
+            transition: all .2s;
+            font-size: 1rem;
+        }
+        .btn-nav-signup:hover {
+            background: #dff6f3;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0,0,0,.15);
+        }
+
+        /* ── PAGE HEADER ─────────────────────────── */
+        .page-header {
+            background: linear-gradient(135deg, #002050 0%, #003263 45%, #047a6e 80%, #059386 100%);
+            padding: 60px 0 100px;
+            position: relative;
+            overflow: hidden;
+        }
+        .page-header::before {
+            content: '';
+            position: absolute;
+            top: -30%;
+            right: -8%;
+            width: 450px;
+            height: 450px;
+            background: rgba(255,255,255,.04);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+        .page-header h1 {
+            color: #fff;
+            font-size: clamp(1.6rem, 3vw, 2.4rem);
+            font-weight: 900;
+        }
+        .page-header p {
+            color: rgba(255,255,255,.6);
+            font-size: .95rem;
+        }
+
+        /* ── STATUS BADGE ────────────────────────── */
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 7px 18px;
+            border-radius: 25px;
+            font-size: .8rem;
+            font-weight: 700;
+            letter-spacing: .3px;
+        }
+        .status-active   { background: #d4f5e4; color: #0d7a3e; }
+        .status-pending   { background: #fff4e5; color: #b07a1a; }
+        .status-idle      { background: #e9ecef; color: #555; }
+        .status-completed { background: #e6f5f3; color: var(--teal); }
+
+        /* ── SUBSCRIPTION CARD ───────────────────── */
+        .sub-card {
+            background: #fff;
+            border-radius: 22px;
+            box-shadow: 0 6px 30px rgba(0,50,99,.1);
+            margin-top: -60px;
+            position: relative;
+            z-index: 10;
+        }
+        .sub-card-header {
+            background: linear-gradient(135deg, #003263, #059386);
+            border-radius: 22px 22px 0 0;
+            padding: 28px 32px;
+        }
+        .sub-card-body {
+            padding: 32px;
+        }
+
+        /* ── DOCTOR MINI CARD ────────────────────── */
+        .doctor-mini {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            background: #f9fafb;
+            border-radius: 16px;
+            padding: 18px 20px;
+        }
+        .doctor-mini-avatar {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #003263, #059386);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 1.4rem;
+            font-weight: 700;
+            flex-shrink: 0;
+            overflow: hidden;
+        }
+        .doctor-mini-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* ── PLAN ITEMS ──────────────────────────── */
+        .plan-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 16px 18px;
+            background: #fff;
+            border-radius: 14px;
+            border: 2px solid #f0f2f5;
+            transition: all .2s;
+        }
+        .plan-item:hover { border-color: #dde8e6; }
+        .plan-item.done { border-color: #d4f5e4; background: #f8fdf9; }
+        .plan-item.in-progress { border-color: #c7e0ff; background: #f5f9ff; }
+
+        .plan-step {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: .82rem;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+        .plan-step-pending    { background: #f0f2f5; color: #999; }
+        .plan-step-progress   { background: #e6f0ff; color: var(--dark-blue); }
+        .plan-step-completed  { background: #d4f5e4; color: #0d7a3e; }
+
+        .plan-service-name { font-weight: 600; color: var(--dark-blue); font-size: .92rem; }
+        .plan-service-doc  { font-size: .78rem; color: #888; }
+
+        .plan-item-status {
+            font-size: .72rem;
+            font-weight: 700;
+            padding: 3px 10px;
+            border-radius: 20px;
+            letter-spacing: .3px;
+            margin-left: auto;
+            white-space: nowrap;
+        }
+        .st-completed  { background: #d4f5e4; color: #0d7a3e; }
+        .st-in-progress { background: #e6f0ff; color: #2563eb; }
+        .st-pending     { background: #f0f2f5; color: #888; }
+
+        /* ── ACTION BUTTONS ──────────────────────── */
+        .btn-action {
+            border-radius: 14px;
+            padding: 11px 24px;
+            font-weight: 600;
+            font-size: .88rem;
+            border: none;
+            transition: all .2s;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .btn-action-cancel {
+            background: #fef2f2;
+            color: #dc2626;
+        }
+        .btn-action-cancel:hover {
+            background: #fde8e8;
+            transform: translateY(-2px);
+        }
+        .btn-action-switch {
+            background: #eaf0ff;
+            color: var(--dark-blue);
+        }
+        .btn-action-switch:hover {
+            background: #dde8ff;
+            transform: translateY(-2px);
+        }
+        .btn-action-rate {
+            background: linear-gradient(135deg, #07b89e, #059386);
+            color: #fff;
+        }
+        .btn-action-rate:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(5,147,134,.35);
+        }
+
+        /* ── TIMELINE INDICATOR ──────────────────── */
+        .timeline-wrap {
+            position: relative;
+            padding-left: 22px;
+        }
+        .timeline-wrap::before {
+            content: '';
+            position: absolute;
+            left: 6px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #e8edf2;
+        }
+        .timeline-dot {
+            position: absolute;
+            left: 0;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: #e8edf2;
+            border: 3px solid #fff;
+            box-shadow: 0 0 0 2px #e8edf2;
+            top: 18px;
+        }
+        .timeline-dot.active { background: var(--teal); box-shadow: 0 0 0 2px var(--teal); }
+        .timeline-dot.done   { background: #0d7a3e; box-shadow: 0 0 0 2px #0d7a3e; }
+
+        /* ── EMPTY STATE ─────────────────────────── */
+        .empty-state {
+            text-align: center;
+            padding: 60px 30px;
+        }
+        .empty-state-icon {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: #e6f5f3;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            color: var(--teal);
+            margin: 0 auto 20px;
+        }
+        .btn-explore {
+            background: linear-gradient(90deg, var(--dark-blue), var(--teal));
+            color: #fff;
+            border: none;
+            border-radius: 14px;
+            padding: 13px 32px;
+            font-size: .95rem;
+            font-weight: 700;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all .25s;
+        }
+        .btn-explore:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 24px rgba(5,147,134,.3);
+            color: #fff;
+        }
+
+        /* ── PRICE ROW ───────────────────────────── */
+        .price-row {
+            background: linear-gradient(135deg, #f0faf8, #e6f5f3);
+            border-radius: 14px;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .price-label { color: #666; font-size: .88rem; }
+        .price-value { color: var(--dark-blue); font-size: 1.5rem; font-weight: 900; }
+
+        /* ── PENDING ACTION BANNER ────────────────── */
+        .pending-banner {
+            background: #fff9eb;
+            border: 2px solid #f5dfa0;
+            border-radius: 14px;
+            padding: 14px 18px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .pending-banner-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: #fff4e5;
+            color: #f5a623;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
+
+        /* ── MODALS ──────────────────────────────── */
+        .modal-content {
+            border: none;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+        .modal-header {
+            background: linear-gradient(135deg, #003263, #059386);
+            color: #fff;
+            border: none;
+            padding: 20px 24px;
+        }
+        .modal-header .btn-close { filter: brightness(0) invert(1); }
+        .modal-body { padding: 28px; }
+        .modal-footer { border-top: 1px solid #f0f2f5; padding: 16px 24px; }
+
+        /* ── FOOTER ──────────────────────────────── */
+        .main-footer {
+            background: linear-gradient(135deg, #001a40 0%, #002a55 55%, #033d35 100%);
+            color: rgba(255,255,255,.75);
+            padding: 72px 0 30px;
+        }
+        .footer-brand { color: #fff; font-size: 1.35rem; font-weight: 800; }
+        .footer-h { color: #fff; font-size: .9rem; font-weight: 700; letter-spacing: .5px; margin-bottom: 18px; }
+        .footer-link {
+            color: rgba(255,255,255,.6);
+            text-decoration: none;
+            display: block;
+            margin-bottom: 9px;
+            font-size: .88rem;
+            transition: color .2s, padding-left .2s;
+        }
+        .footer-link:hover { color: #7de8dc; padding-left: 5px; }
+        .footer-hr { border-color: rgba(255,255,255,.1); margin: 32px 0; }
+        .social-icon {
+            width: 40px; height: 40px;
+            background: rgba(255,255,255,.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(255,255,255,.75);
+            text-decoration: none;
+            font-size: 1rem;
+            transition: all .25s;
+        }
+        .social-icon:hover {
+            background: var(--teal);
+            color: #fff;
+            transform: translateY(-3px);
+        }
+
+        /* ── ANIMATIONS ──────────────────────────── */
+        .fade-up {
+            opacity: 0;
+            transform: translateY(32px);
+            transition: opacity .65s ease, transform .65s ease;
+        }
+        .fade-up.visible { opacity: 1; transform: translateY(0); }
+        .delay-1 { transition-delay: .08s; }
+        .delay-2 { transition-delay: .16s; }
+        .delay-3 { transition-delay: .24s; }
+    </style>
+</head>
+<body>
+
+{{-- ═══ NAVBAR ═══ --}}
+<nav class="main-nav" id="mainNav">
+    <div class="container">
+        <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+            <a href="/" class="d-flex align-items-center gap-2 text-decoration-none">
+                <img src="{{ asset('images/logo.png') }}" alt="ShinyTooth Logo" height="88"
+                     style="border-radius:8px; object-fit:contain;">
+                <span style="color:#fff; font-size:1.3rem; font-weight:800; letter-spacing:-.3px;">ShinyTooth</span>
+            </a>
+            <div class="d-none d-md-flex align-items-center gap-1">
+                <a href="/services" class="nav-link-custom">Services</a>
+                <a href="/doctors"  class="nav-link-custom">Doctors</a>
+                <a href="/#who-we-are" class="nav-link-custom">Who are we</a>
+                <a href="/#contact"    class="nav-link-custom">Contact us</a>
+            </div>
+            <div class="d-flex align-items-center gap-2">
+                <a href="/login"    class="btn-nav-login">Login</a>
+                <a href="/register" class="btn-nav-signup">Sign Up</a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+{{-- ═══ PAGE HEADER ═══ --}}
+<section class="page-header">
+    <div class="container position-relative" style="z-index:2;">
+        <div style="display:inline-flex; align-items:center; gap:8px; background:rgba(255,255,255,.1); backdrop-filter:blur(6px); color:#07c5b3; font-size:.78rem; font-weight:700; padding:6px 16px; border-radius:20px; margin-bottom:14px; letter-spacing:.4px;">
+            <i class="bi bi-heart-pulse-fill"></i> MY CARE PLAN
+        </div>
+        <h1>My Subscription</h1>
+        <p>Track your treatment plan progress, rate your experience, and manage your subscription.</p>
+    </div>
+</section>
+
+<div class="container" style="margin-bottom:80px;">
+
+@if ($subscription)
+    @php
+        $doc = $subscription->dentist;
+        $plan = $subscription->plan;
+        $items = $plan ? $plan->items : collect();
+        $completedCount = $items->where('status', 'completed')->count();
+        $totalCount     = $items->count();
+        $progress       = $totalCount > 0 ? round(($completedCount / $totalCount) * 100) : 0;
+    @endphp
+
+    {{-- ═══ MAIN SUBSCRIPTION CARD ═══ --}}
+    <div class="sub-card fade-up">
+        <div class="sub-card-header d-flex align-items-center justify-content-between flex-wrap gap-2">
+            <div>
+                <div style="color:rgba(255,255,255,.6); font-size:.78rem; font-weight:600; letter-spacing:.4px;">SUBSCRIPTION</div>
+                <h4 class="text-white fw-bold mb-0 mt-1">
+                    @switch($subscription->status)
+                        @case('active')   Active Plan @break
+                        @case('pending')  Awaiting Approval @break
+                        @case('idle')     Paused @break
+                        @case('completed') Completed @break
+                    @endswitch
+                </h4>
+            </div>
+            <span class="status-badge status-{{ $subscription->status }}">
+                @switch($subscription->status)
+                    @case('active')   <i class="bi bi-check-circle-fill"></i> Active @break
+                    @case('pending')  <i class="bi bi-hourglass-split"></i> Pending @break
+                    @case('idle')     <i class="bi bi-pause-circle-fill"></i> Idle @break
+                    @case('completed') <i class="bi bi-trophy-fill"></i> Completed @break
+                @endswitch
+            </span>
+        </div>
+
+        <div class="sub-card-body">
+
+            {{-- ── PENDING ACTION BANNER ── --}}
+            @if ($subscription->admin_action_status !== 'none')
+                <div class="pending-banner mb-4">
+                    <div class="pending-banner-icon"><i class="bi bi-clock-history"></i></div>
+                    <div>
+                        <div class="fw-bold" style="color:#b07a1a; font-size:.88rem;">
+                            @if ($subscription->admin_action_status === 'pending_cancel')
+                                Cancellation Request Pending
+                            @elseif ($subscription->admin_action_status === 'pending_switch')
+                                Switch Request Pending
+                            @endif
+                        </div>
+                        <div class="text-muted" style="font-size:.8rem;">Your request is being reviewed by the admin team.</div>
+                    </div>
+                </div>
+            @endif
+
+            {{-- ── DOCTOR INFO ── --}}
+            <div class="doctor-mini mb-4">
+                <div class="doctor-mini-avatar">
+                    @if ($doc && $doc->image)
+                        <img src="{{ asset($doc->image) }}" alt="{{ $doc->name }}">
+                    @else
+                        {{ $doc ? strtoupper(substr($doc->name, 0, 1)) : '?' }}
+                    @endif
+                </div>
+                <div>
+                    <h6 class="fw-bold mb-0" style="color:var(--dark-blue);">Dr. {{ $doc ? $doc->name : 'Unknown' }}</h6>
+                    <div class="d-flex flex-wrap gap-1 mt-1">
+                        @if ($doc)
+                            @foreach ($doc->specializations as $spec)
+                                <span style="font-size:.72rem; background:#e6f5f3; color:var(--teal); padding:2px 8px; border-radius:12px; font-weight:600;">{{ $spec->name }}</span>
+                            @endforeach
+                        @endif
+                    </div>
+                </div>
+                <a href="/doctors/{{ $doc ? $doc->id : '' }}" class="ms-auto text-decoration-none"
+                   style="color:var(--teal); font-size:.85rem; font-weight:600;">
+                    <i class="bi bi-box-arrow-up-right"></i> Profile
+                </a>
+            </div>
+
+            {{-- ── PROGRESS BAR ── --}}
+            @if ($plan && $totalCount > 0)
+                <div class="mb-4">
+                    <div class="d-flex align-items-center justify-content-between mb-2">
+                        <span style="font-size:.85rem; font-weight:600; color:var(--dark-blue);">Treatment Progress</span>
+                        <span style="font-size:.85rem; font-weight:700; color:var(--teal);">{{ $completedCount }}/{{ $totalCount }}</span>
+                    </div>
+                    <div class="progress" style="height:10px; border-radius:8px; background:#f0f2f5;">
+                        <div class="progress-bar" role="progressbar"
+                             style="width:{{ $progress }}%; background:linear-gradient(90deg, #059386, #07c5b3); border-radius:8px;"
+                             aria-valuenow="{{ $progress }}" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                </div>
+            @endif
+
+            {{-- ── PLAN ITEMS ── --}}
+            @if ($plan && $totalCount > 0)
+                <h6 class="fw-bold mb-3" style="color:var(--dark-blue);">
+                    <i class="bi bi-list-check me-1" style="color:var(--teal);"></i> Treatment Plan
+                </h6>
+
+                <div class="d-flex flex-column gap-2 mb-4">
+                    @foreach ($items as $item)
+                        @php
+                            $sClass = match($item->status) {
+                                'completed'   => 'done',
+                                'in_progress' => 'in-progress',
+                                default       => '',
+                            };
+                            $stepClass = match($item->status) {
+                                'completed'   => 'plan-step-completed',
+                                'in_progress' => 'plan-step-progress',
+                                default       => 'plan-step-pending',
+                            };
+                            $stClass = match($item->status) {
+                                'completed'   => 'st-completed',
+                                'in_progress' => 'st-in-progress',
+                                default       => 'st-pending',
+                            };
+                        @endphp
+                        <div class="plan-item {{ $sClass }}">
+                            <div class="plan-step {{ $stepClass }}">
+                                @if ($item->status === 'completed')
+                                    <i class="bi bi-check-lg"></i>
+                                @else
+                                    {{ $item->order_index }}
+                                @endif
+                            </div>
+                            <div>
+                                <div class="plan-service-name">{{ $item->service ? $item->service->service_name : 'Service' }}</div>
+                                @if ($item->assignedDentist && $item->assignedDentist->id !== ($doc ? $doc->id : null))
+                                    <div class="plan-service-doc">
+                                        <i class="bi bi-person-fill"></i> Dr. {{ $item->assignedDentist->name }}
+                                    </div>
+                                @endif
+                            </div>
+                            <span class="plan-item-status {{ $stClass }}">
+                                {{ strtoupper(str_replace('_', ' ', $item->status)) }}
+                            </span>
+                        </div>
+                    @endforeach
+                </div>
+
+                {{-- ── TOTAL PRICE ── --}}
+                @if ($plan->total_price)
+                    <div class="price-row mb-4">
+                        <span class="price-label"><i class="bi bi-receipt me-1"></i> Total Plan Cost</span>
+                        <span class="price-value">${{ number_format($plan->total_price, 2) }}</span>
+                    </div>
+                @endif
+            @elseif ($subscription->status === 'pending')
+                <div class="text-center py-4" style="background:#f9fafb; border-radius:14px;">
+                    <i class="bi bi-clock-history" style="font-size:2rem; color:#ccc;"></i>
+                    <p class="text-muted mt-2 mb-0">Your doctor hasn't created a treatment plan yet.<br>Check back soon!</p>
+                </div>
+            @endif
+
+            {{-- ── ACTION BUTTONS ── --}}
+            @if (in_array($subscription->status, ['active']))
+                <div class="d-flex flex-wrap gap-2 mt-2">
+                    @if ($subscription->admin_action_status === 'none')
+                        <button class="btn-action btn-action-cancel" data-bs-toggle="modal" data-bs-target="#cancelModal">
+                            <i class="bi bi-x-circle"></i> Request Cancellation
+                        </button>
+                        <button class="btn-action btn-action-switch" data-bs-toggle="modal" data-bs-target="#switchModal">
+                            <i class="bi bi-arrow-left-right"></i> Switch Doctor
+                        </button>
+                    @endif
+                </div>
+            @endif
+
+            {{-- ── RATE BUTTON (completed or all items done) ── --}}
+            @if (($subscription->status === 'completed' || ($plan && $completedCount === $totalCount && $totalCount > 0)) && !$subscription->rating)
+                <div class="mt-4 text-center">
+                    <button class="btn-action btn-action-rate" data-bs-toggle="modal" data-bs-target="#rateModal">
+                        <i class="bi bi-star-fill"></i> Rate Your Experience
+                    </button>
+                </div>
+            @endif
+
+            {{-- ── EXISTING RATING ── --}}
+            @if ($subscription->rating)
+                <div class="mt-4 p-3" style="background:#f9fafb; border-radius:14px;">
+                    <div class="d-flex align-items-center gap-2 mb-2">
+                        <span class="fw-bold" style="color:var(--dark-blue); font-size:.9rem;">Your Rating</span>
+                        <div class="stars" style="font-size:.85rem;">
+                            @for ($i = 1; $i <= 5; $i++)
+                                <i class="bi bi-star{{ $i <= $subscription->rating->rating ? '-fill' : '' }}"></i>
+                            @endfor
+                        </div>
+                    </div>
+                    @if ($subscription->rating->review)
+                        <p class="mb-0 text-muted" style="font-size:.88rem;">{{ $subscription->rating->review }}</p>
+                    @endif
+                </div>
+            @endif
+
+        </div>
+    </div>
+
+@else
+
+    {{-- ═══ EMPTY STATE ═══ --}}
+    <div class="sub-card fade-up">
+        <div class="sub-card-body">
+            <div class="empty-state">
+                <div class="empty-state-icon">
+                    <i class="bi bi-heart-pulse"></i>
+                </div>
+                <h4 class="fw-bold" style="color:var(--dark-blue);">No Active Subscription</h4>
+                <p class="text-muted mb-4" style="max-width:400px; margin:0 auto;">
+                    You don't have an active subscription yet. Browse our doctors and subscribe
+                    to get a personalized treatment plan.
+                </p>
+                <a href="/doctors" class="btn-explore">
+                    <i class="bi bi-search-heart"></i> Explore Doctors
+                </a>
+            </div>
+        </div>
+    </div>
+
+@endif
+
+</div>
+
+{{-- ═══ CANCEL MODAL ═══ --}}
+@if ($subscription && $subscription->status === 'active')
+<div class="modal fade" id="cancelModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title fw-bold"><i class="bi bi-x-circle me-2"></i>Request Cancellation</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form action="/subscriptions/{{ $subscription->id }}/cancel-request" method="POST">
+                @csrf
+                <div class="modal-body">
+                    <p class="text-muted mb-3" style="font-size:.9rem;">Please let us know why you'd like to cancel. Your request will be reviewed by our admin team.</p>
+                    <label class="form-label fw-semibold" style="color:var(--dark-blue);">Reason for cancellation</label>
+                    <textarea name="reason" class="form-control" rows="3" required
+                              placeholder="Describe your reason..." style="border-radius:12px; border:2px solid #e8edf2;"></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">Nevermind</button>
+                    <button type="submit" class="btn rounded-pill px-4 fw-bold" style="background:#dc2626; color:#fff;">Submit Request</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{{-- ═══ SWITCH MODAL ═══ --}}
+<div class="modal fade" id="switchModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title fw-bold"><i class="bi bi-arrow-left-right me-2"></i>Switch Doctor</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form action="/subscriptions/{{ $subscription->id }}/switch-request" method="POST">
+                @csrf
+                <div class="modal-body">
+                    <p class="text-muted mb-3" style="font-size:.9rem;">Select the new doctor and explain why you'd like to switch. An admin will review your request.</p>
+                    <label class="form-label fw-semibold" style="color:var(--dark-blue);">New Doctor ID</label>
+                    <input type="number" name="switch_to_dentist_id" class="form-control mb-3" required
+                           placeholder="Enter dentist ID" style="border-radius:12px; border:2px solid #e8edf2;">
+                    <label class="form-label fw-semibold" style="color:var(--dark-blue);">Reason for switching</label>
+                    <textarea name="reason" class="form-control" rows="3" required
+                              placeholder="Describe your reason..." style="border-radius:12px; border:2px solid #e8edf2;"></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">Nevermind</button>
+                    <button type="submit" class="btn rounded-pill px-4 fw-bold" style="background:var(--dark-blue); color:#fff;">Submit Request</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{{-- ═══ RATE MODAL ═══ --}}
+<div class="modal fade" id="rateModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title fw-bold"><i class="bi bi-star-fill me-2"></i>Rate Your Experience</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form action="/subscriptions/{{ $subscription->id }}/rate" method="POST">
+                @csrf
+                <input type="hidden" name="patient_id" value="{{ $patientId }}">
+                <div class="modal-body text-center">
+                    <p class="text-muted mb-3">How was your experience with Dr. {{ $subscription->dentist ? $subscription->dentist->name : '' }}?</p>
+
+                    <div class="d-flex justify-content-center gap-2 mb-4" id="starPicker">
+                        @for ($i = 1; $i <= 5; $i++)
+                            <i class="bi bi-star star-pick" data-value="{{ $i }}"
+                               style="font-size:2rem; cursor:pointer; color:#ddd; transition:color .15s, transform .15s;"></i>
+                        @endfor
+                    </div>
+                    <input type="hidden" name="rating" id="ratingInput" value="" required>
+
+                    <label class="form-label fw-semibold text-start d-block" style="color:var(--dark-blue);">Review (optional)</label>
+                    <textarea name="review" class="form-control" rows="3"
+                              placeholder="Share your experience..." style="border-radius:12px; border:2px solid #e8edf2;"></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn rounded-pill px-4 fw-bold" style="background:var(--teal); color:#fff;" id="rateSubmitBtn" disabled>Submit Rating</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+@endif
+
+{{-- ═══ FOOTER ═══ --}}
+<footer class="main-footer">
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-lg-4">
+                <div class="d-flex align-items-center gap-2 mb-3">
+                    <img src="{{ asset('images/logo.png') }}" alt="ShinyTooth" height="80"
+                         style="border-radius:8px; object-fit:contain;">
+                    <span class="footer-brand">ShinyTooth</span>
+                </div>
+                <p style="color:rgba(255,255,255,.58); font-size:.88rem; line-height:1.75;">
+                    Your trusted dental care partner. We combine world-class expertise with
+                    a warm, welcoming environment.
+                </p>
+                <div class="d-flex gap-2 mt-3">
+                    <a href="#" class="social-icon"><i class="bi bi-facebook"></i></a>
+                    <a href="#" class="social-icon"><i class="bi bi-instagram"></i></a>
+                    <a href="#" class="social-icon"><i class="bi bi-twitter-x"></i></a>
+                    <a href="#" class="social-icon"><i class="bi bi-linkedin"></i></a>
+                </div>
+            </div>
+            <div class="col-6 col-lg-2 offset-lg-1">
+                <h6 class="footer-h">Quick Links</h6>
+                <a href="/"        class="footer-link">Home</a>
+                <a href="/doctors" class="footer-link">Our Doctors</a>
+                <a href="/services" class="footer-link">Services</a>
+                <a href="/login"   class="footer-link">Patient Portal</a>
+            </div>
+            <div class="col-6 col-lg-2">
+                <h6 class="footer-h">Services</h6>
+                <a href="/services" class="footer-link">Dental Cleanings</a>
+                <a href="/services" class="footer-link">Oral Exams</a>
+                <a href="/services" class="footer-link">Fillings</a>
+                <a href="/services" class="footer-link">All Services &rarr;</a>
+            </div>
+            <div class="col-lg-3">
+                <h6 class="footer-h">Contact Us</h6>
+                <div class="d-flex align-items-start gap-2 mb-2" style="color:rgba(255,255,255,.6); font-size:.87rem;">
+                    <i class="bi bi-geo-alt-fill mt-1" style="color:var(--teal); flex-shrink:0;"></i>
+                    <span>123 Dental Avenue, Health City, HC 10001</span>
+                </div>
+                <div class="d-flex align-items-center gap-2 mb-2" style="color:rgba(255,255,255,.6); font-size:.87rem;">
+                    <i class="bi bi-telephone-fill" style="color:var(--teal);"></i>
+                    <span>+1 (800) 744-6983</span>
+                </div>
+                <div class="d-flex align-items-center gap-2" style="color:rgba(255,255,255,.6); font-size:.87rem;">
+                    <i class="bi bi-envelope-fill" style="color:var(--teal);"></i>
+                    <span>hello@shinytooth.com</span>
+                </div>
+            </div>
+        </div>
+        <hr class="footer-hr">
+        <div class="d-flex flex-wrap justify-content-between align-items-center gap-2">
+            <p class="mb-0" style="color:rgba(255,255,255,.45); font-size:.82rem;">
+                &copy; {{ date('Y') }} ShinyTooth. All rights reserved.
+            </p>
+            <div class="d-flex gap-3">
+                <a href="#" class="footer-link d-inline" style="font-size:.82rem;">Privacy Policy</a>
+                <a href="#" class="footer-link d-inline" style="font-size:.82rem;">Terms of Service</a>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+/* ── NAVBAR SCROLL ──────────────────────────────────── */
+window.addEventListener('scroll', function () {
+    document.getElementById('mainNav').classList.toggle('scrolled', window.scrollY > 30);
+});
+
+/* ── FADE-IN OBSERVER ───────────────────────────────── */
+(function () {
+    var observer = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+            if (entry.isIntersecting) entry.target.classList.add('visible');
+        });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+    document.querySelectorAll('.fade-up').forEach(function (el) {
+        observer.observe(el);
+    });
+})();
+
+/* ── STAR PICKER ────────────────────────────────────── */
+(function () {
+    var stars  = document.querySelectorAll('.star-pick');
+    var input  = document.getElementById('ratingInput');
+    var submit = document.getElementById('rateSubmitBtn');
+
+    if (!stars.length) return;
+
+    stars.forEach(function (star) {
+        star.addEventListener('mouseenter', function () {
+            highlightStars(parseInt(star.getAttribute('data-value')));
+        });
+        star.addEventListener('mouseleave', function () {
+            highlightStars(parseInt(input.value) || 0);
+        });
+        star.addEventListener('click', function () {
+            var val = parseInt(star.getAttribute('data-value'));
+            input.value = val;
+            submit.disabled = false;
+            highlightStars(val);
+        });
+    });
+
+    function highlightStars(count) {
+        stars.forEach(function (s, i) {
+            if (i < count) {
+                s.classList.remove('bi-star');
+                s.classList.add('bi-star-fill');
+                s.style.color = '#f5a623';
+                s.style.transform = 'scale(1.15)';
+            } else {
+                s.classList.remove('bi-star-fill');
+                s.classList.add('bi-star');
+                s.style.color = '#ddd';
+                s.style.transform = 'scale(1)';
+            }
+        });
+    }
+})();
+</script>
+
+</body>
+</html>

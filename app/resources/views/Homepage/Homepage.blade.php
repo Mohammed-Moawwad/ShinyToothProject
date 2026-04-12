@@ -705,7 +705,7 @@
             {{-- Nav Links --}}
             <div class="d-none d-md-flex align-items-center gap-1">
                 <a href="/services"   class="nav-link-custom">Services</a>
-                <a href="#doctors"    class="nav-link-custom">Doctors</a>
+                <a href="/doctors"    class="nav-link-custom">Doctors</a>
                 <a href="#who-we-are" class="nav-link-custom">Who are we</a>
                 <a href="#contact"    class="nav-link-custom">Contact us</a>
             </div>
@@ -840,7 +840,7 @@
                                         <span class="specialty-tag">{{ $dentist->university ?? 'General Dentistry' }}</span>
                                     @endif
                                 </div>
-                                <a href="#" class="btn btn-sm btn-outline-secondary rounded-pill px-4">View Profile</a>
+                                <a href="/doctors/{{ $dentist->id }}" class="btn btn-sm btn-outline-secondary rounded-pill px-4">View Profile</a>
                             </div>
                         </div>
                     </div>

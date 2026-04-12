@@ -23,6 +23,7 @@ class Dentist extends Authenticatable
         'experience_years',
         'university',
         'image',
+        'career_description',
     ];
 
     protected $hidden = ['password'];
@@ -47,5 +48,20 @@ class Dentist extends Authenticatable
     public function ratings()
     {
         return $this->hasMany(DoctorRating::class);
+    }
+
+    public function subscriptions()
+    {
+        return $this->hasMany(DoctorSubscription::class);
+    }
+
+    public function subscriptionBonuses()
+    {
+        return $this->hasMany(SubscriptionBonus::class);
+    }
+
+    public function schedules()
+    {
+        return $this->hasMany(DentistSchedule::class);
     }
 }
