@@ -470,6 +470,28 @@
     }
 </style>
 
+<nav class="main-nav" id="mainNav">
+    <div class="container">
+        <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+            <a href="/" class="d-flex align-items-center gap-2 text-decoration-none">
+                <img src="{{ asset('images/logo.png') }}" alt="ShinyTooth Logo" height="60"
+                     style="border-radius:8px; object-fit:contain;">
+                <span style="color:#fff; font-size:1.2rem; font-weight:800; letter-spacing:-.3px;">ShinyTooth</span>
+            </a>
+            <div class="d-none d-md-flex align-items-center gap-1">
+                <a href="/#services"   class="nav-link-custom">Services</a>
+                <a href="/#doctors"    class="nav-link-custom">Doctors</a>
+                <a href="/#who-we-are" class="nav-link-custom">Who are we</a>
+                <a href="/#contact"    class="nav-link-custom">Contact us</a>
+            </div>
+            <div class="d-flex align-items-center gap-2">
+                <a href="/login"    class="btn-nav-login">Login</a>
+                <a href="/register" class="btn-nav-signup">Sign Up</a>
+            </div>
+        </div>
+    </div>
+</nav>
+
 <div class="auth-wrapper">
     <!-- Left Side - Branding -->
     <div class="auth-branding">
@@ -666,6 +688,14 @@
                     <i class="bi bi-clock-fill" style="color:#059386; flex-shrink:0; margin-top:2px;"></i>
                     <span>Mon – Sat | 8:00 AM – 7:00 PM</span>
                 </div>
+            </div>
+        </div>
+        <hr style="border-color: rgba(255,255,255,.15); margin: 30px 0 20px;">
+        <p style="text-align: center; color: rgba(255,255,255,.5); font-size: 0.85rem; margin: 0;">
+            &copy; 2026 ShinyTooth Dental Clinic. All rights reserved.
+        </p>
+    </div>
+</footer>
 
 <script src="{{ asset('js/auth.js') }}"></script>
 <script>

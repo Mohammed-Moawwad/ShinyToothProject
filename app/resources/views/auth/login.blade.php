@@ -321,7 +321,28 @@
     }
 </style>
 
-<div class="login-page">
+<nav class="main-nav" id="mainNav">
+    <div class="container">
+        <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+            <a href="/" class="d-flex align-items-center gap-2 text-decoration-none">
+                <img src="{{ asset('images/logo.png') }}" alt="ShinyTooth Logo" height="60"
+                     style="border-radius:8px; object-fit:contain;">
+                <span style="color:#fff; font-size:1.2rem; font-weight:800; letter-spacing:-.3px;">ShinyTooth</span>
+            </a>
+            <div class="d-none d-md-flex align-items-center gap-1">
+                <a href="/#services"   class="nav-link-custom">Services</a>
+                <a href="/#doctors"    class="nav-link-custom">Doctors</a>
+                <a href="/#who-we-are" class="nav-link-custom">Who are we</a>
+                <a href="/#contact"    class="nav-link-custom">Contact us</a>
+            </div>
+            <div class="d-flex align-items-center gap-2">
+                <a href="/login"    class="btn-nav-login">Login</a>
+                <a href="/register" class="btn-nav-signup">Sign Up</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="login-page">
 
     <!-- Brand at top -->
     <div class="login-brand">
@@ -390,6 +411,55 @@
     </div>
 
 </div>
+
+<!-- Footer -->
+<footer class="main-footer" style="background: linear-gradient(135deg, #003263 0%, #047a6e 100%); color: #fff; margin-top: auto;">
+    <div class="container" style="padding: 50px 0;">
+        <div class="row g-4">
+            {{-- Brand column --}}
+            <div class="col-lg-4">
+                <div class="d-flex align-items-center gap-2 mb-3">
+                    <img src="{{ asset('images/logo.png') }}" alt="ShinyTooth"
+                         height="60" style="border-radius:8px; object-fit:contain;">
+                    <span style="color: #fff; font-size: 1.2rem; font-weight: 800;">ShinyTooth</span>
+                </div>
+                <p style="color:rgba(255,255,255,.65); font-size:.88rem; line-height:1.75;">
+                    Your trusted dental care partner. We combine world-class expertise with
+                    a warm, welcoming environment — because every smile deserves the best.
+                </p>
+            </div>
+
+            {{-- Quick Links --}}
+            <div class="col-6 col-lg-2 offset-lg-1">
+                <h6 style="color: #fff; font-size: .9rem; font-weight: 700; margin-bottom: 18px;">Quick Links</h6>
+                <a href="/" style="color: rgba(255,255,255,.75); text-decoration: none; display: block; margin-bottom: 8px; transition: color .2s;">Home</a>
+                <a href="#" style="color: rgba(255,255,255,.75); text-decoration: none; display: block; margin-bottom: 8px; transition: color .2s;">Services</a>
+                <a href="/register" style="color: rgba(255,255,255,.75); text-decoration: none; display: block; margin-bottom: 8px; transition: color .2s;">Sign Up</a>
+            </div>
+
+            {{-- Contact --}}
+            <div class="col-lg-4">
+                <h6 style="color: #fff; font-size: .9rem; font-weight: 700; margin-bottom: 18px;">Contact Us</h6>
+                <div class="d-flex align-items-start gap-2 mb-3" style="color:rgba(255,255,255,.65); font-size:.87rem;">
+                    <i class="bi bi-telephone-fill" style="color:#059386; flex-shrink:0; margin-top:2px;"></i>
+                    <span>+1 (800) 744-6983</span>
+                </div>
+                <div class="d-flex align-items-start gap-2 mb-3" style="color:rgba(255,255,255,.65); font-size:.87rem;">
+                    <i class="bi bi-envelope-fill" style="color:#059386; flex-shrink:0; margin-top:2px;"></i>
+                    <span>hello@shinytooth.com</span>
+                </div>
+                <div class="d-flex align-items-start gap-2" style="color:rgba(255,255,255,.65); font-size:.87rem;">
+                    <i class="bi bi-clock-fill" style="color:#059386; flex-shrink:0; margin-top:2px;"></i>
+                    <span>Mon – Sat | 8:00 AM – 7:00 PM</span>
+                </div>
+            </div>
+        </div>
+        <hr style="border-color: rgba(255,255,255,.15); margin: 30px 0 20px;">
+        <p style="text-align: center; color: rgba(255,255,255,.5); font-size: 0.85rem; margin: 0;">
+            &copy; 2026 ShinyTooth Dental Clinic. All rights reserved.
+        </p>
+    </div>
+</footer>
 
 <script src="{{ asset('js/auth.js') }}"></script>
 <script>
