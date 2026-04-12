@@ -21,13 +21,15 @@ class Patient extends Authenticatable
         'blood_type',
         'place_of_birth',
         'nationality',
+        'booking_blocked',
     ];
 
     protected $hidden = ['password'];
 
     protected $casts = [
-        'date_of_birth' => 'date',
-        'password'      => 'hashed',
+        'date_of_birth'   => 'date',
+        'password'        => 'hashed',
+        'booking_blocked' => 'boolean',
     ];
 
     public function appointments()
@@ -43,5 +45,16 @@ class Patient extends Authenticatable
     public function ratings()
     {
         return $this->hasMany(DoctorRating::class);
+    }
+
+    public function subscriptions()
+    {
+        return $this->hasMany(DoctorSubscription::class);
+    }
+
+    public function activeSubscription()
+    {
+        return $this->hasOne(DoctorSubscription::class)
+                    ->whereIn('status', ['active', 'pending']);
     }
 }

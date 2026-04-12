@@ -13,12 +13,14 @@ class Appointment extends Model
         'appointment_date',
         'appointment_time',
         'status',
+        'attended',
         'notes',
     ];
 
     protected $casts = [
         'appointment_date' => 'date',
         'appointment_time' => 'datetime:H:i',
+        'attended'         => 'boolean',
     ];
 
     public function patient()

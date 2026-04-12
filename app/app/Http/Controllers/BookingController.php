@@ -6,6 +6,8 @@ use App\Models\Service;
 use App\Models\Dentist;
 use App\Models\Appointment;
 use App\Models\Payment;
+use App\Models\Patient;
+use App\Models\DoctorSubscription;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -145,20 +147,25 @@ class BookingController extends Controller
         ]);
 
         // Find or create a guest patient record
-        $patient = DB::table('patients')->where('email', $request->patient_email)->first();
+        $patient = Patient::where('email', $request->patient_email)->first();
 
         if (!$patient) {
-            $patientId = DB::table('patients')->insertGetId([
-                'name'       => $request->patient_name,
-                'email'      => $request->patient_email,
-                'phone'      => $request->patient_phone,
-                'password'   => bcrypt('guest_' . uniqid()),
-                'created_at' => now(),
-                'updated_at' => now(),
+            $patient = Patient::create([
+                'name'     => $request->patient_name,
+                'email'    => $request->patient_email,
+                'phone'    => $request->patient_phone,
+                'password' => bcrypt('guest_' . uniqid()),
             ]);
-        } else {
-            $patientId = $patient->id;
         }
+
+        // Block check: if patient's account is blocked from booking
+        if ($patient->booking_blocked) {
+            return back()->withErrors([
+                'booking_blocked' => 'Your account is blocked from booking. Please contact administration to unblock your account.',
+            ])->withInput();
+        }
+
+        $patientId = $patient->id;
 
         $appointment = Appointment::create([
             'patient_id'       => $patientId,
@@ -169,6 +176,11 @@ class BookingController extends Controller
             'status'           => 'scheduled',
             'notes'            => $request->input('notes', ''),
         ]);
+
+        // Auto-reactivate idle subscription when patient books a new appointment
+        DoctorSubscription::where('patient_id', $patientId)
+            ->where('status', 'idle')
+            ->update(['status' => 'active']);
 
         // Redirect to payment page with appointment ID
         return redirect()->route('booking.payment', ['appointment' => $appointment->id]);
