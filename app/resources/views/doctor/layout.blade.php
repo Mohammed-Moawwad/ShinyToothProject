@@ -395,13 +395,16 @@
             <a href="/doctor/reports?dentist={{ $dentist->id }}" class="{{ request()->routeIs('doctor.reports') ? 'active' : '' }}">
                 <i class="bi bi-graph-up"></i> Reports
             </a>
+            <a href="/doctor/patient-report?dentist={{ $dentist->id }}" class="{{ request()->routeIs('doctor.patient.report') ? 'active' : '' }}">
+                <i class="bi bi-file-earmark-person"></i> Patient Report
+            </a>
             <a href="/doctor/bonuses?dentist={{ $dentist->id }}" class="{{ request()->routeIs('doctor.bonuses') ? 'active' : '' }}">
                 <i class="bi bi-trophy-fill"></i> Bonuses & Ratings
             </a>
 
             <div class="nav-section">Settings</div>
-            <a href="/doctor/schedule?dentist={{ $dentist->id }}" class="{{ request()->routeIs('doctor.schedule') ? 'active' : '' }}">
-                <i class="bi bi-clock-history"></i> Schedule
+            <a href="/doctor/vacations?dentist={{ $dentist->id }}" class="{{ request()->routeIs('doctor.vacations') ? 'active' : '' }}">
+                <i class="bi bi-calendar2-minus"></i> Vacation Requests
             </a>
             <a href="/doctor/profile?dentist={{ $dentist->id }}" class="{{ request()->routeIs('doctor.profile') ? 'active' : '' }}">
                 <i class="bi bi-person-gear"></i> My Profile

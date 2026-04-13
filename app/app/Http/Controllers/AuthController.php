@@ -61,10 +61,10 @@ class AuthController extends Controller
             $token = $dentist->createToken('dentist-token')->plainTextToken;
             
             return response()->json([
-                'dentist' => $dentist,
-                'token'   => $token,
+                'dentist'   => $dentist,
+                'token'     => $token,
                 'user_type' => 'dentist',
-                'redirect' => '/doctor/dashboard',
+                'redirect'  => '/doctor/dashboard?dentist=' . $dentist->id,
             ]);
         }
 
