@@ -8,6 +8,9 @@
     <!-- CSRF Token for AJAX requests -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
     
+    <!-- Google Fonts - Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
     <!-- Bootstrap 5 CSS from CDN -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
     
@@ -48,7 +51,8 @@
     @stack('styles')
 </head>
 <body>
-    <!-- Navigation Bar -->
+    <!-- Navigation Bar (hidden on auth pages) -->
+    @if (!in_array(Route::currentRouteName(), ['login', 'register']))
     <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom">
         <div class="container-lg">
             <a class="navbar-brand fw-bold" href="/">
@@ -100,10 +104,14 @@
             </div>
         </div>
     </nav>
+    @endif
     
     <!-- Main Content -->
-    <main class="py-4">
-        <div class="container-lg">
+    <main>
+        @if (in_array(Route::currentRouteName(), ['login', 'register']))
+            @yield('content')
+        @else
+        <div class="container-lg py-4">
             <!-- Flash Messages -->
             @if ($errors->any())
                 <div class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -134,43 +142,37 @@
             <!-- Page Content -->
             @yield('content')
         </div>
+        @endif
     </main>
     
-    <!-- Footer -->
-    <footer class="mt-auto">
+    <!-- Footer (hidden on auth pages) -->
+    @if(!in_array(Route::currentRouteName(), ['login', 'register']))
+    <footer class="mt-auto" style="background: linear-gradient(135deg, #003263 0%, #047a6e 100%); color: #fff;">
         <div class="container-lg py-5">
             <div class="row">
-                <div class="col-md-4 mb-4">
-                    <h5 class="mb-3">ShinyTooth Dental Clinic</h5>
-                    <p>Your smile is our priority. Professional dental care in Riyadh.</p>
-                </div>
-                
-                <div class="col-md-4 mb-4">
-                    <h5 class="mb-3">Quick Links</h5>
+                <div class="col-md-6 mb-4">
+                    <h5 class="mb-3" style="font-weight: 700; font-size: 1.1rem;">Quick Links</h5>
                     <ul class="list-unstyled">
-                        <li><a href="/" class="text-decoration-none text-light">Home</a></li>
-                        <li><a href="/services" class="text-decoration-none text-light">Services</a></li>
-                        <li><a href="/dentists" class="text-decoration-none text-light">Dentists</a></li>
+                        <li style="margin-bottom: 0.8rem;"><a href="/" class="text-decoration-none" style="color: rgba(255,255,255,.85); transition: color .2s;">Home</a></li>
+                        <li style="margin-bottom: 0.8rem;"><a href="/services" class="text-decoration-none" style="color: rgba(255,255,255,.85); transition: color .2s;">Services</a></li>
+                        <li><a href="/dentists" class="text-decoration-none" style="color: rgba(255,255,255,.85); transition: color .2s;">Dentists</a></li>
                     </ul>
                 </div>
                 
-                <div class="col-md-4 mb-4">
-                    <h5 class="mb-3">Contact Us</h5>
+                <div class="col-md-6 mb-4">
+                    <h5 class="mb-3" style="font-weight: 700; font-size: 1.1rem;">Contact Us</h5>
                     <ul class="list-unstyled">
-                        <li>📞 +966 11 XXXX XXXX</li>
-                        <li>📧 info@shinytooth.com</li>
-                        <li>📍 Riyadh, Saudi Arabia</li>
+                        <li style="margin-bottom: 0.8rem; color: rgba(255,255,255,.85);">📞 +966 11 XXXX XXXX</li>
+                        <li style="margin-bottom: 0.8rem; color: rgba(255,255,255,.85);">📧 info@shinytooth.com</li>
+                        <li style="color: rgba(255,255,255,.85);">📍 Riyadh, Saudi Arabia</li>
                     </ul>
                 </div>
             </div>
             
-            <hr class="border-secondary">
-            
-            <div class="text-center">
-                <p class="mb-0">&copy; 2026 ShinyTooth Dental Clinic. All rights reserved.</p>
-            </div>
+            <hr style="border-color: rgba(255,255,255,.2); margin: 2rem 0;">
         </div>
     </footer>
+    @endif
     
     <!-- Livewire Scripts -->
     @livewireScripts

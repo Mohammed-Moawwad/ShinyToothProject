@@ -12,7 +12,34 @@ use App\Http\Controllers\PlanController;
 use App\Http\Controllers\AdminSubscriptionController;
 use App\Http\Controllers\AppointmentAttendanceController;
 use App\Http\Controllers\DoctorDashboardController;
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\LogoutController;
+use App\Http\Controllers\WebAuthController;
 
+// Admin routes (protected by IsAdmin middleware)
+Route::middleware('auth', 'admin')->prefix('admin')->group(function () {
+    Route::get('/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
+    Route::get('/users', [AdminController::class, 'users'])->name('admin.users');
+    Route::get('/appointments', [AdminController::class, 'appointments'])->name('admin.appointments');
+    Route::get('/appointments/dentist/{dentistId}', [AdminController::class, 'appointmentsByDentist'])->name('admin.appointments.by-dentist');
+    Route::get('/payments', [AdminController::class, 'payments'])->name('admin.payments');
+    Route::get('/services', [AdminController::class, 'services'])->name('admin.services');
+    Route::get('/analytics', [AdminController::class, 'analytics'])->name('admin.analytics');
+
+    // Doctors CRUD
+    Route::get('/doctors', [AdminController::class, 'doctors'])->name('admin.doctors');
+    Route::post('/doctors', [AdminController::class, 'storeDoctor'])->name('admin.doctors.store');
+    Route::put('/doctors/{id}', [AdminController::class, 'updateDoctor'])->name('admin.doctors.update');
+    Route::delete('/doctors/{id}', [AdminController::class, 'deleteDoctor'])->name('admin.doctors.delete');
+
+    // Patients CRUD
+    Route::get('/patients', [AdminController::class, 'patients'])->name('admin.patients');
+    Route::post('/patients', [AdminController::class, 'storePatient'])->name('admin.patients.store');
+    Route::put('/patients/{id}', [AdminController::class, 'updatePatient'])->name('admin.patients.update');
+    Route::delete('/patients/{id}', [AdminController::class, 'deletePatient'])->name('admin.patients.delete');
+});
+
+// Public routes
 Route::get('/', [HomeController::class, 'index']);
 Route::get('/services', [ServicesController::class, 'index']);
 Route::get('/services/{id}', [ServicesController::class, 'show'])->where('id', '[0-9]+');
@@ -26,7 +53,7 @@ Route::middleware('guest')->group(function () {
     Route::get('/register', function () {
         return view('auth.register');
     })->name('register');
-    
+
     Route::post('/register', [AuthController::class, 'registerPatient'])->name('register.store');
     Route::post('/login', [AuthController::class, 'loginPatient'])->name('login.store');
 });
@@ -42,18 +69,11 @@ Route::middleware('auth:sanctum')->group(function () {
     })->name('dentist.dashboard');
 });
 
+// Logout
+Route::post('/logout', [LogoutController::class, 'logout'])->name('logout');
+
 // Step 3 – pick date/time
 Route::get('/book', [BookingController::class, 'selectTime'])->name('booking.time');
-
-// Step 4 – payment
-Route::get('/book/payment',  [BookingController::class, 'showPayment'])->name('booking.payment');
-Route::post('/book/pay',     [BookingController::class, 'processPayment'])->name('booking.pay');
-
-// Step 5 – confirmation
-Route::get('/book/confirm',        [BookingController::class, 'showConfirm'])->name('booking.confirm');
-Route::post('/book/confirm/submit', [BookingController::class, 'submitConfirm'])->name('booking.confirm.submit');
-
-// Step 6 – done
 Route::get('/book/done', [BookingController::class, 'showDone'])->name('booking.done');
 
 // ─── Doctors (public) ──────────────────────────────────────────────────
