@@ -9,37 +9,37 @@ use Illuminate\Http\Request;
 class AppointmentAttendanceController extends Controller
 {
     /**
-     * Doctor marks an appointment as attended or no-show.
+     * Doctor marks an appointment outcome.
      * POST /doctor/appointments/{id}/mark-attendance
+     * outcome: successful | absent | failed
      */
     public function markAttendance(Request $request, $id)
     {
         $request->validate([
-            'attended' => 'required|boolean',
+            'outcome' => 'required|in:successful,absent,failed',
         ]);
 
         $appointment = Appointment::findOrFail($id);
 
-        if ($request->attended) {
-            // Mark as attended
-            $appointment->update([
-                'attended' => true,
-                'status'   => 'completed',
-            ]);
-        } else {
-            // Mark as no-show
-            $appointment->update([
-                'attended' => false,
-                'status'   => 'no_show',
-            ]);
+        switch ($request->outcome) {
+            case 'successful':
+                $appointment->update(['attended' => true,  'status' => 'completed']);
+                $message = 'Appointment marked as successful.';
+                break;
 
-            // Check if the patient should be blocked from booking
-            $this->checkBookingBlock($appointment->patient_id);
+            case 'absent':
+                $appointment->update(['attended' => false, 'status' => 'no_show']);
+                $this->checkBookingBlock($appointment->patient_id);
+                $message = 'Appointment marked as absent (no-show).';
+                break;
+
+            case 'failed':
+                $appointment->update(['attended' => true,  'status' => 'failed']);
+                $message = 'Appointment marked as failed.';
+                break;
         }
 
-        return back()->with('success', $request->attended
-            ? 'Appointment marked as attended.'
-            : 'Appointment marked as no-show.');
+        return back()->with('success', $message);
     }
 
     /**

@@ -37,6 +37,13 @@
             <div class="stat-label">Cancelled</div>
         </div>
     </div>
+    <div class="col-xl-3 col-md-6">
+        <div class="stat-card">
+            <div class="stat-icon" style="background:#fff0f0; color:#b91c1c;"><i class="bi bi-exclamation-triangle-fill"></i></div>
+            <div class="stat-value">{{ $failedAppointments }}</div>
+            <div class="stat-label">Failed</div>
+        </div>
+    </div>
 </div>
 
 <div class="row g-4">
@@ -132,14 +139,15 @@
                 <h6><i class="bi bi-pie-chart-fill me-2" style="color:var(--teal);"></i>Appointment Success Rate</h6>
             </div>
             @php
-                $resolved = $completedAppointments + $noShowAppointments;
+                $resolved = $completedAppointments + $noShowAppointments + $failedAppointments;
                 $successRate = $resolved > 0 ? round(($completedAppointments / $resolved) * 100) : 0;
+                $circleColor = $successRate >= 75 ? 'var(--teal)' : ($successRate >= 40 ? '#f59e0b' : '#dc3545');
             @endphp
             <div class="text-center py-3">
                 <div style="position:relative; width:120px; height:120px; margin:0 auto;">
                     <svg width="120" height="120" viewBox="0 0 120 120">
                         <circle cx="60" cy="60" r="52" fill="none" stroke="#e9f0f5" stroke-width="12"/>
-                        <circle cx="60" cy="60" r="52" fill="none" stroke="var(--teal)" stroke-width="12"
+                        <circle cx="60" cy="60" r="52" fill="none" stroke="{{ $circleColor }}" stroke-width="12"
                                 stroke-dasharray="{{ $successRate * 3.27 }} {{ 327 - ($successRate * 3.27) }}"
                                 stroke-dashoffset="82" stroke-linecap="round" transform="rotate(-90 60 60)"/>
                     </svg>
@@ -147,7 +155,8 @@
                         <span style="font-size:1.4rem; font-weight:700; color:var(--dark-blue);">{{ $successRate }}%</span>
                     </div>
                 </div>
-                <p class="text-muted mt-2 mb-0" style="font-size:.82rem;">{{ $completedAppointments }} attended / {{ $resolved }} resolved</p>
+                <p class="text-muted mt-2 mb-0" style="font-size:.82rem;">{{ $completedAppointments }} successful / {{ $resolved }} resolved</p>
+                <small class="text-muted" style="font-size:.75rem;">excludes cancelled &amp; scheduled</small>
             </div>
         </div>
 

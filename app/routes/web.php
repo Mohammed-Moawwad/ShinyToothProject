@@ -92,11 +92,15 @@ Route::get('/doctor/appointments',                       [DoctorDashboardControl
 Route::get('/doctor/subscriptions-view',                 [DoctorDashboardController::class, 'subscriptions'])->name('doctor.subscriptions.view');
 Route::get('/doctor/subscriptions/{id}/plan',            [DoctorDashboardController::class, 'planDesigner'])->name('doctor.plan.designer');
 Route::get('/doctor/reports',                            [DoctorDashboardController::class, 'reports'])->name('doctor.reports');
+Route::get('/doctor/patient-report',                     [DoctorDashboardController::class, 'patientReport'])->name('doctor.patient.report');
+Route::post('/doctor/patient-report/report/store',       [DoctorDashboardController::class, 'storeWrittenReport'])->name('doctor.written-report.store');
+Route::post('/doctor/patient-report/report/{id}/submit', [DoctorDashboardController::class, 'submitWrittenReport'])->name('doctor.written-report.submit');
 Route::get('/doctor/bonuses',                            [DoctorDashboardController::class, 'bonuses'])->name('doctor.bonuses');
 Route::get('/doctor/profile',                            [DoctorDashboardController::class, 'profile'])->name('doctor.profile');
 Route::post('/doctor/profile/update',                    [DoctorDashboardController::class, 'updateProfile'])->name('doctor.profile.update');
-Route::get('/doctor/schedule',                           [DoctorDashboardController::class, 'schedule'])->name('doctor.schedule');
-Route::post('/doctor/schedule/update',                   [DoctorDashboardController::class, 'updateSchedule'])->name('doctor.schedule.update');
+Route::get('/doctor/vacations',                          [DoctorDashboardController::class, 'vacations'])->name('doctor.vacations');
+Route::post('/doctor/vacations/store',                   [DoctorDashboardController::class, 'storeVacation'])->name('doctor.vacations.store');
+Route::delete('/doctor/vacations/{id}/cancel',           [DoctorDashboardController::class, 'cancelVacation'])->name('doctor.vacations.cancel');
 
 // ─── Admin subscription management (dashboard-ready) ──────────────────
 Route::get('/admin/subscriptions',                         [AdminSubscriptionController::class, 'index'])->name('admin.subscriptions.index');
