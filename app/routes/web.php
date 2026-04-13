@@ -16,8 +16,14 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\LogoutController;
 use App\Http\Controllers\WebAuthController;
 
+// Admin login (session-based, outside auth middleware)
+Route::get('/admin/login', function () {
+    return view('auth.admin-login');
+})->name('admin.login.form');
+Route::post('/admin/login', [WebAuthController::class, 'loginWeb'])->name('admin.login');
+
 // Admin routes (protected by IsAdmin middleware)
-Route::middleware('auth', 'admin')->prefix('admin')->group(function () {
+Route::middleware('admin')->prefix('admin')->group(function () {
     Route::get('/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
     Route::get('/users', [AdminController::class, 'users'])->name('admin.users');
     Route::get('/appointments', [AdminController::class, 'appointments'])->name('admin.appointments');
@@ -37,6 +43,7 @@ Route::middleware('auth', 'admin')->prefix('admin')->group(function () {
     Route::post('/patients', [AdminController::class, 'storePatient'])->name('admin.patients.store');
     Route::put('/patients/{id}', [AdminController::class, 'updatePatient'])->name('admin.patients.update');
     Route::delete('/patients/{id}', [AdminController::class, 'deletePatient'])->name('admin.patients.delete');
+    Route::post('/patients/{patientId}/unblock', [AdminController::class, 'unblockPatient'])->name('admin.patients.unblock');
 });
 
 // Public routes

@@ -15,10 +15,15 @@ class IsAdmin
      */
     public function handle(Request $request, Closure $next): Response
     {
+        // Redirect to admin login if not authenticated
+        if (auth()->guard('web')->guest()) {
+            return redirect()->route('admin.login.form');
+        }
+
         // Define admin email - change this to your admin email
         $adminEmail = env('ADMIN_EMAIL', 'admin@shinytooth.com');
 
-        if (auth()->guest() || auth()->user()->email !== $adminEmail) {
+        if (auth()->guard('web')->user()->email !== $adminEmail) {
             abort(403, 'Access denied. Admin only.');
         }
 
