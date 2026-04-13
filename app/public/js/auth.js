@@ -5,65 +5,8 @@ const API_BASE = '/api';
  * Setup Login Form Handler
  */
 function setupLoginForm() {
-    const form = document.getElementById('login-form');
-    if (!form) return;
-
-    form.addEventListener('submit', async (e) => {
-        e.preventDefault();
-
-        // Clear previous errors
-        document.getElementById('login-error').classList.remove('active');
-        clearFieldError('email');
-        clearFieldError('password');
-
-        // Get form values
-        const email = document.getElementById('email').value.trim();
-        const password = document.getElementById('password').value;
-        const role = 'patient'; // Default to patient
-
-        // Validate
-        if (!validateLoginForm(email, password)) {
-            return;
-        }
-
-        try {
-            // Disable button
-            const submitBtn = form.querySelector('button[type="submit"]');
-            submitBtn.disabled = true;
-            submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Signing in...';
-
-            // Make API call
-            const endpoint = '/auth/patient/login';
-            const response = await fetch(`${API_BASE}${endpoint}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ email, password }),
-            });
-
-            const data = await response.json();
-
-            if (!response.ok) {
-                throw new Error(data.message || 'Login failed. Please try again.');
-            }
-
-            // Store auth data
-            localStorage.setItem('auth_token', data.token);
-            localStorage.setItem('user_role', role);
-            if (data.user) {
-                localStorage.setItem('user_data', JSON.stringify(data.user));
-            }
-
-            // Redirect to dashboard
-            const dashboard = '/patient/dashboard';
-            window.location.href = dashboard;
-        } catch (error) {
-            submitBtn.disabled = false;
-            submitBtn.innerHTML = 'Sign In';
-            showLoginError(error.message);
-        }
-    });
+    // Form now submits natively via HTML POST action
+    // No JS interception needed
 }
 
 /**

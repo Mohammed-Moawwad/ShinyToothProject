@@ -357,9 +357,11 @@
             <p>Sign in to your account</p>
         </div>
 
-        <div id="login-error" class="alert-danger"></div>
+        @if ($errors->any())
+            <div class="alert-danger active">{{ $errors->first() }}</div>
+        @endif
 
-        <form id="login-form">
+        <form id="login-form" method="POST" action="/login">
             @csrf
 
             <div class="form-group">

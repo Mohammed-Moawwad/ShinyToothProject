@@ -10,6 +10,8 @@ class Patient extends Authenticatable
 {
     use HasApiTokens;
 
+    protected $rememberTokenName = null;
+
     protected $fillable = [
         'name',
         'email',
