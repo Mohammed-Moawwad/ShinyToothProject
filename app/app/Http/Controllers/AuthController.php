@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Patient;
 use App\Models\Dentist;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 
@@ -78,6 +79,20 @@ class AuthController extends Controller
         }
 
         $token = $patient->createToken('patient-token')->plainTextToken;
+
+        // Check if this is the admin account — also establish a web session
+        $adminEmail = env('ADMIN_EMAIL', 'admin@shinytooth.com');
+        if ($patient->email === $adminEmail) {
+            Auth::guard('web')->login($patient);
+            $request->session()->regenerate();
+
+            return response()->json([
+                'patient'   => $patient,
+                'token'     => $token,
+                'user_type' => 'admin',
+                'redirect'  => '/admin/dashboard',
+            ]);
+        }
 
         return response()->json([
             'patient' => $patient,

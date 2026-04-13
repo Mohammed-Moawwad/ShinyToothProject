@@ -503,4 +503,12 @@ class AdminController extends Controller
 
         return redirect()->route('admin.users', ['type' => 'patients'])->with('success', 'Patient deleted successfully.');
     }
+
+    public function unblockPatient($patientId)
+    {
+        $patient = Patient::findOrFail($patientId);
+        $patient->update(['booking_blocked' => false]);
+
+        return redirect()->back()->with('success', 'Patient unblocked successfully.');
+    }
 }
