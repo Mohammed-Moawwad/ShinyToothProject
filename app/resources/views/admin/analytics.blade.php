@@ -1,4 +1,4 @@
-﻿@extends('admin.layout')
+@extends('admin.layout')
 
 @section('page-title', 'Analytics & Reports')
 
@@ -11,7 +11,7 @@
         <div class="col-sm-6 col-xl-3">
             <div class="stat-card">
                 <i class="bi bi-calendar2-check-fill stat-card-bg-icon"></i>
-                <div class="stat-badge" style="background:rgba(0,201,177,0.13);color:#00c9b1;">
+                <div class="stat-badge" style="background:#e6f5f3;color:#059386;">
                     <i class="bi bi-calendar2-check-fill"></i>
                 </div>
                 <div class="stat-num">{{ $stat->count }}</div>
@@ -45,7 +45,7 @@
                             <div style="font-size:0.78rem;font-weight:700;color:var(--text-main);">{{ ucfirst($stat->status) }}</div>
                             <div style="font-size:0.67rem;color:var(--text-muted);">{{ $stat->count }} transactions</div>
                         </div>
-                        <div style="font-size:1rem;font-weight:800;color:#00c9b1;">${{ number_format($stat->total, 0) }}</div>
+                        <div style="font-size:1rem;font-weight:800;color:#059386;">SAR {{ number_format($stat->total, 0) }}</div>
                     </div>
                     @endforeach
                 </div>
@@ -141,8 +141,8 @@
     const dentistMonths     = @json($dentistGrowth->pluck('month')->reverse());
     const dentistCounts     = @json($dentistGrowth->pluck('count')->reverse());
 
-    const darkGrid   = 'rgba(255,255,255,0.06)';
-    const tickColor  = '#64748b';
+    const darkGrid   = 'rgba(0,50,99,0.08)';
+    const tickColor  = '#6c757d';
     const baseOpts = (extra) => ({
         responsive: true, maintainAspectRatio: false,
         plugins: { legend: { display: false } },
@@ -158,7 +158,7 @@
         data: {
             labels: appointmentMonths,
             datasets: [{ label: 'Appointments', data: appointmentCounts,
-                backgroundColor: 'rgba(0,201,177,0.25)', borderColor: '#00c9b1',
+                backgroundColor: 'rgba(5,147,134,0.2)', borderColor: '#059386',
                 borderWidth: 2, borderRadius: 6 }]
         },
         options: baseOpts({})
@@ -168,10 +168,10 @@
         type: 'line',
         data: {
             labels: paymentMonths,
-            datasets: [{ label: 'Revenue ($)', data: paymentTotals,
-                borderColor: '#60a5fa', backgroundColor: 'rgba(96,165,250,0.08)',
-                tension: 0.4, fill: true, pointBackgroundColor: '#60a5fa',
-                pointBorderColor: '#161f2e', pointBorderWidth: 2, pointRadius: 4 }]
+            datasets: [{ label: 'Revenue (SAR)', data: paymentTotals,
+                borderColor: '#0056b3', backgroundColor: 'rgba(0,86,179,0.06)',
+                tension: 0.4, fill: true, pointBackgroundColor: '#0056b3',
+                pointBorderColor: '#fff', pointBorderWidth: 2, pointRadius: 4 }]
         },
         options: baseOpts({})
     });
@@ -181,9 +181,9 @@
         data: {
             labels: patientMonths,
             datasets: [{ label: 'New Patients', data: patientCounts,
-                borderColor: '#4ade80', backgroundColor: 'rgba(74,222,128,0.08)',
-                tension: 0.4, fill: true, pointBackgroundColor: '#4ade80',
-                pointBorderColor: '#161f2e', pointBorderWidth: 2, pointRadius: 4 }]
+                borderColor: '#0f6b3a', backgroundColor: 'rgba(15,107,58,0.06)',
+                tension: 0.4, fill: true, pointBackgroundColor: '#0f6b3a',
+                pointBorderColor: '#fff', pointBorderWidth: 2, pointRadius: 4 }]
         },
         options: baseOpts({})
     });
@@ -193,9 +193,9 @@
         data: {
             labels: dentistMonths,
             datasets: [{ label: 'New Dentists', data: dentistCounts,
-                borderColor: '#facc15', backgroundColor: 'rgba(250,204,21,0.08)',
-                tension: 0.4, fill: true, pointBackgroundColor: '#facc15',
-                pointBorderColor: '#161f2e', pointBorderWidth: 2, pointRadius: 4 }]
+                borderColor: '#b86e00', backgroundColor: 'rgba(184,110,0,0.06)',
+                tension: 0.4, fill: true, pointBackgroundColor: '#b86e00',
+                pointBorderColor: '#fff', pointBorderWidth: 2, pointRadius: 4 }]
         },
         options: baseOpts({})
     });

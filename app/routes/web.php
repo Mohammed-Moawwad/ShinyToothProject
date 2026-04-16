@@ -44,6 +44,17 @@ Route::middleware('admin')->prefix('admin')->group(function () {
     Route::put('/patients/{id}', [AdminController::class, 'updatePatient'])->name('admin.patients.update');
     Route::delete('/patients/{id}', [AdminController::class, 'deletePatient'])->name('admin.patients.delete');
     Route::post('/patients/{patientId}/unblock', [AdminController::class, 'unblockPatient'])->name('admin.patients.unblock');
+
+    // Subscriptions management
+    Route::get('/subscriptions', [AdminSubscriptionController::class, 'index'])->name('admin.subscriptions.index');
+    Route::post('/subscriptions/{id}/approve-action', [AdminSubscriptionController::class, 'approveAction'])->name('admin.subscriptions.approve');
+    Route::post('/subscriptions/{id}/reject-action', [AdminSubscriptionController::class, 'rejectAction'])->name('admin.subscriptions.reject');
+    Route::post('/subscriptions/{id}/remove', [AdminSubscriptionController::class, 'remove'])->name('admin.subscriptions.remove');
+
+    // Vacation requests management
+    Route::get('/vacations', [AdminController::class, 'vacations'])->name('admin.vacations');
+    Route::post('/vacations/{id}/approve', [AdminController::class, 'approveVacation'])->name('admin.vacations.approve');
+    Route::post('/vacations/{id}/reject', [AdminController::class, 'rejectVacation'])->name('admin.vacations.reject');
 });
 
 // Public routes
@@ -52,18 +63,11 @@ Route::get('/services', [ServicesController::class, 'index']);
 Route::get('/services/{id}', [ServicesController::class, 'show'])->where('id', '[0-9]+');
 
 // ─── Authentication routes ──────────────────────────────────────────────
-Route::middleware('guest')->group(function () {
-    Route::get('/login', function () {
-        return view('auth.login');
-    })->name('login');
-
-    Route::get('/register', function () {
-        return view('auth.register');
-    })->name('register');
-
-    Route::post('/register', [AuthController::class, 'registerPatient'])->name('register.store');
-    Route::post('/login', [AuthController::class, 'loginPatient'])->name('login.store');
-});
+// Authentication pages — no middleware, controller handles all logic
+Route::get('/login',     fn() => view('auth.login'))->name('login');
+Route::get('/register',  fn() => view('auth.register'))->name('register');
+Route::post('/register', [AuthController::class, 'registerPatient'])->name('register.store');
+Route::post('/login',    [AuthController::class, 'loginPatient'])->name('login.store');
 
 // ─── Protected routes (after login) ──────────────────────────────────────
 Route::middleware('auth:sanctum')->group(function () {
@@ -129,9 +133,4 @@ Route::get('/doctor/vacations',                          [DoctorDashboardControl
 Route::post('/doctor/vacations/store',                   [DoctorDashboardController::class, 'storeVacation'])->name('doctor.vacations.store');
 Route::delete('/doctor/vacations/{id}/cancel',           [DoctorDashboardController::class, 'cancelVacation'])->name('doctor.vacations.cancel');
 
-// ─── Admin subscription management (dashboard-ready) ──────────────────
-Route::get('/admin/subscriptions',                         [AdminSubscriptionController::class, 'index'])->name('admin.subscriptions.index');
-Route::post('/admin/subscriptions/{id}/approve-action',    [AdminSubscriptionController::class, 'approveAction'])->name('admin.subscriptions.approve');
-Route::post('/admin/subscriptions/{id}/reject-action',     [AdminSubscriptionController::class, 'rejectAction'])->name('admin.subscriptions.reject');
-Route::post('/admin/subscriptions/{id}/remove',            [AdminSubscriptionController::class, 'remove'])->name('admin.subscriptions.remove');
-Route::post('/admin/patients/{patientId}/unblock',         [AdminSubscriptionController::class, 'unblockPatient'])->name('admin.patients.unblock');
+

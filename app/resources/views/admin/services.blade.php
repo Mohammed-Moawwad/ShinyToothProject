@@ -1,4 +1,4 @@
-﻿@extends('admin.layout')
+@extends('admin.layout')
 @section('page-title', 'Services Management')
 @section('content')
 <div class="container-fluid px-0">
@@ -38,7 +38,7 @@
                             </td>
                             <td>
                                 @if($service->price)
-                                    <strong style="color:#4ade80;">${{ number_format($service->price, 2) }}</strong>
+                                    <strong style="color:#059386;">SAR {{ number_format($service->price, 2) }}</strong>
                                 @else
                                     <span style="color:var(--text-muted);">N/A</span>
                                 @endif
@@ -47,7 +47,7 @@
                                 @if($service->duration_minutes)
                                     <span class="count-badge">{{ $service->duration_minutes }} min</span>
                                 @else
-                                    <span style="color:var(--text-muted);">—</span>
+                                    <span style="color:var(--text-muted);">�</span>
                                 @endif
                             </td>
                             <td>
@@ -85,7 +85,7 @@
             </table>
         </div>
         @if($services->total() > 0)
-            <div class="d-flex justify-content-center p-3">{{ $services->links('pagination::bootstrap-5') }}</div>
+            <div class="d-flex justify-content-center p-3">{{ $services->appends(['search' => $search])->links('pagination::bootstrap-5') }}</div>
         @endif
     </div>
 </div>

@@ -1,4 +1,4 @@
-﻿@extends('admin.layout')
+@extends('admin.layout')
 @section('page-title', 'Appointments Management')
 @section('content')
 <div class="container-fluid px-0">
@@ -6,34 +6,34 @@
     {{-- Status Stats --}}
     <div class="row g-3 mb-4">
         <div class="col-sm-6 col-xl-3">
-            <div class="stat-card" style="border-left:3px solid #facc15;">
+            <div class="stat-card" style="border-left:3px solid #b86e00;">
                 <i class="bi bi-hourglass-split stat-card-bg-icon"></i>
-                <div class="stat-badge" style="background:rgba(250,204,21,0.13);color:#facc15;"><i class="bi bi-hourglass-split"></i></div>
-                <div class="stat-num" style="color:#facc15;">{{ $statuses['pending'] ?? 0 }}</div>
+                <div class="stat-badge" style="background:#fff4e5;color:#b86e00;"><i class="bi bi-hourglass-split"></i></div>
+                <div class="stat-num" style="color:#b86e00;">{{ $statuses['pending'] ?? 0 }}</div>
                 <div class="stat-lbl">Pending</div>
             </div>
         </div>
         <div class="col-sm-6 col-xl-3">
-            <div class="stat-card" style="border-left:3px solid #60a5fa;">
+            <div class="stat-card" style="border-left:3px solid #0056b3;">
                 <i class="bi bi-check-circle stat-card-bg-icon"></i>
-                <div class="stat-badge" style="background:rgba(96,165,250,0.13);color:#60a5fa;"><i class="bi bi-check-circle"></i></div>
-                <div class="stat-num" style="color:#60a5fa;">{{ $statuses['confirmed'] ?? 0 }}</div>
+                <div class="stat-badge" style="background:#e7f1ff;color:#0056b3;"><i class="bi bi-check-circle"></i></div>
+                <div class="stat-num" style="color:#0056b3;">{{ $statuses['confirmed'] ?? 0 }}</div>
                 <div class="stat-lbl">Confirmed</div>
             </div>
         </div>
         <div class="col-sm-6 col-xl-3">
-            <div class="stat-card" style="border-left:3px solid #4ade80;">
+            <div class="stat-card" style="border-left:3px solid #0f6b3a;">
                 <i class="bi bi-check-double stat-card-bg-icon"></i>
-                <div class="stat-badge" style="background:rgba(74,222,128,0.13);color:#4ade80;"><i class="bi bi-check-double"></i></div>
-                <div class="stat-num" style="color:#4ade80;">{{ $statuses['completed'] ?? 0 }}</div>
+                <div class="stat-badge" style="background:#d4f5e4;color:#0f6b3a;"><i class="bi bi-check-double"></i></div>
+                <div class="stat-num" style="color:#059386;">{{ $statuses['completed'] ?? 0 }}</div>
                 <div class="stat-lbl">Completed</div>
             </div>
         </div>
         <div class="col-sm-6 col-xl-3">
-            <div class="stat-card" style="border-left:3px solid #f87171;">
+            <div class="stat-card" style="border-left:3px solid #c0392b;">
                 <i class="bi bi-x-circle stat-card-bg-icon"></i>
-                <div class="stat-badge" style="background:rgba(248,113,113,0.13);color:#f87171;"><i class="bi bi-x-circle"></i></div>
-                <div class="stat-num" style="color:#f87171;">{{ $statuses['cancelled'] ?? 0 }}</div>
+                <div class="stat-badge" style="background:#fde8e8;color:#c0392b;"><i class="bi bi-x-circle"></i></div>
+                <div class="stat-num" style="color:#c0392b;">{{ $statuses['cancelled'] ?? 0 }}</div>
                 <div class="stat-lbl">Cancelled</div>
             </div>
         </div>
@@ -41,36 +41,45 @@
 
     {{-- Filters --}}
     <div class="filter-panel mb-4">
-        <div class="row g-3">
-            <div class="col-md-4">
-                <label class="form-label">Search Patient</label>
-                <form method="GET" action="{{ route('admin.appointments') }}" class="d-flex gap-2">
-                    <input type="text" class="form-control" name="search" placeholder="Name or Email..." value="{{ $search }}">
-                    <button class="btn-primary" type="submit"><i class="bi bi-search"></i></button>
-                </form>
-            </div>
-            <div class="col-md-3">
-                <label class="form-label">Status</label>
-                <form method="GET" action="{{ route('admin.appointments') }}">
-                    <select class="form-select" name="status" onchange="this.form.submit()">
+        <form method="GET" action="{{ route('admin.appointments') }}">
+            <div class="row g-3">
+                <div class="col-md-3">
+                    <label class="form-label">Search Patient</label>
+                    <input type="text" class="form-control" name="search" placeholder="Patient name or email..." value="{{ $search }}">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Search Dentist</label>
+                    <input type="text" class="form-control" name="dentist" placeholder="Dentist name..." value="{{ $dentist }}">
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label">Date</label>
+                    <input type="date" class="form-control" name="date" value="{{ $date }}">
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label">Status</label>
+                    <select class="form-select" name="status">
                         <option value="all"       {{ $status === 'all'       ? 'selected' : '' }}>All Statuses</option>
                         <option value="pending"   {{ $status === 'pending'   ? 'selected' : '' }}>Pending</option>
                         <option value="confirmed" {{ $status === 'confirmed' ? 'selected' : '' }}>Confirmed</option>
                         <option value="completed" {{ $status === 'completed' ? 'selected' : '' }}>Completed</option>
                         <option value="cancelled" {{ $status === 'cancelled' ? 'selected' : '' }}>Cancelled</option>
                     </select>
-                </form>
-            </div>
-            <div class="col-md-3">
-                <label class="form-label">Sort By</label>
-                <form method="GET" action="{{ route('admin.appointments') }}">
-                    <select class="form-select" name="sort" onchange="this.form.submit()">
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label">Sort By</label>
+                    <select class="form-select" name="sort">
                         <option value="latest" {{ $sort === 'latest' ? 'selected' : '' }}>Latest First</option>
                         <option value="oldest" {{ $sort === 'oldest' ? 'selected' : '' }}>Oldest First</option>
                     </select>
-                </form>
+                </div>
+                <div class="col-12 d-flex gap-2">
+                    <button class="btn-primary" type="submit"><i class="bi bi-search me-1"></i>Search</button>
+                    @if($search || $dentist || $date || $status !== 'all')
+                        <a href="{{ route('admin.appointments') }}" class="btn" style="background:#f0f2f5;border:1px solid #dee2e6;color:#495057;padding:8px 16px;border-radius:10px;font-size:.85rem;text-decoration:none;"><i class="bi bi-x-lg me-1"></i>Clear</a>
+                    @endif
+                </div>
             </div>
-        </div>
+        </form>
     </div>
 
     {{-- Table --}}
@@ -124,7 +133,7 @@
                                                     <p><strong>Notes:</strong> {{ $appointment->notes }}</p>
                                                 @endif
                                                 @if($appointment->payment)
-                                                    <p><strong>Payment:</strong> {{ ucfirst($appointment->payment->status) }} — ${{ number_format($appointment->payment->amount, 2) }}</p>
+                                                    <p><strong>Payment:</strong> {{ ucfirst($appointment->payment->status) }} � SAR {{ number_format($appointment->payment->amount, 2) }}</p>
                                                 @endif
                                             </div>
                                         </div>
@@ -139,7 +148,7 @@
             </table>
         </div>
         @if($appointments->total() > 0)
-            <div class="d-flex justify-content-center p-3">{{ $appointments->links('pagination::bootstrap-5') }}</div>
+            <div class="d-flex justify-content-center p-3">{{ $appointments->appends(['search' => $search, 'dentist' => $dentist, 'date' => $date, 'status' => $status, 'sort' => $sort])->links('pagination::bootstrap-5') }}</div>
         @endif
     </div>
 </div>

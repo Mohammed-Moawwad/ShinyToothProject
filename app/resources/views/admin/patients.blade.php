@@ -1,4 +1,4 @@
-﻿@extends('admin.layout')
+@extends('admin.layout')
 @section('page-title', 'Patients Management')
 
 @section('extra-css')
@@ -10,13 +10,6 @@
 
 @section('content')
 <div class="container-fluid px-0">
-
-    {{-- Flash --}}
-    @if(session('success'))
-        <div style="background:rgba(74,222,128,0.1);border:1px solid rgba(74,222,128,0.3);color:#4ade80;padding:12px 18px;border-radius:10px;margin-bottom:20px;font-size:0.84rem;">
-            <i class="bi bi-check-circle me-2"></i>{{ session('success') }}
-        </div>
-    @endif
 
     {{-- Header row --}}
     <div class="d-flex justify-content-between align-items-center mb-4">
@@ -75,8 +68,8 @@
                                 {{ ucfirst($pt->gender) }}
                             </span>
                         </td>
-                        <td>{{ $pt->blood_type ?? '—' }}</td>
-                        <td>{{ $pt->date_of_birth?->format('d M Y') ?? '—' }}</td>
+                        <td>{{ $pt->blood_type ?? '�' }}</td>
+                        <td>{{ $pt->date_of_birth?->format('d M Y') ?? '�' }}</td>
                         <td><span class="count-badge">{{ $pt->appointments_count }}</span></td>
                         <td style="white-space:nowrap;">
                             <button class="btn-info me-1" data-bs-toggle="modal" data-bs-target="#editPatientModal{{ $pt->id }}">
@@ -127,7 +120,7 @@
                                                     <div>
                                                         <label class="form-label">Blood Type</label>
                                                         <select class="form-select" name="blood_type">
-                                                            <option value="">— Select —</option>
+                                                            <option value="">� Select �</option>
                                                             @foreach(['O+','O-','A+','A-','B+','B-','AB+','AB-'] as $bt)
                                                                 <option value="{{ $bt }}" {{ $pt->blood_type === $bt ? 'selected' : '' }}>{{ $bt }}</option>
                                                             @endforeach
@@ -152,7 +145,7 @@
                                                 </div>
                                             </div>
                                             <div class="modal-footer" style="border-top:1px solid var(--border);padding:14px 20px;display:flex;gap:10px;justify-content:flex-end;">
-                                                <button type="button" data-bs-dismiss="modal" style="background:rgba(255,255,255,0.06);border:1px solid var(--border);color:var(--text-muted);padding:7px 16px;border-radius:8px;cursor:pointer;font-size:0.82rem;">Cancel</button>
+                                                <button type="button" data-bs-dismiss="modal" style="background:#f0f2f5;border:1px solid #dee2e6;color:#495057;padding:8px 18px;border-radius:10px;cursor:pointer;font-size:.85rem;">Cancel</button>
                                                 <button type="submit" class="btn-primary">Save Changes</button>
                                             </div>
                                         </form>
@@ -168,7 +161,7 @@
             </table>
         </div>
         @if($patients->total() > 0)
-            <div class="d-flex justify-content-center p-3">{{ $patients->links('pagination::bootstrap-5') }}</div>
+            <div class="d-flex justify-content-center p-3">{{ $patients->appends(request()->query())->links('pagination::bootstrap-5') }}</div>
         @endif
     </div>
 </div>
@@ -185,7 +178,7 @@
                 @csrf
                 <div class="modal-body">
                     @if($errors->any())
-                        <div style="background:rgba(248,113,113,0.1);border:1px solid rgba(248,113,113,0.3);color:#f87171;padding:10px 14px;border-radius:8px;margin-bottom:14px;font-size:0.8rem;">
+                        <div style="background:#fde8e8;border:1px solid #f5b7b7;color:#c0392b;padding:10px 14px;border-radius:8px;margin-bottom:14px;font-size:0.8rem;">
                             <ul style="margin:0;padding-left:18px;">@foreach($errors->all() as $e)<li>{{ $e }}</li>@endforeach</ul>
                         </div>
                     @endif
@@ -220,7 +213,7 @@
                         <div>
                             <label class="form-label">Blood Type</label>
                             <select class="form-select" name="blood_type">
-                                <option value="">— Select —</option>
+                                <option value="">� Select �</option>
                                 @foreach(['O+','O-','A+','A-','B+','B-','AB+','AB-'] as $bt)
                                     <option value="{{ $bt }}" {{ old('blood_type') === $bt ? 'selected' : '' }}>{{ $bt }}</option>
                                 @endforeach
@@ -241,7 +234,7 @@
                     </div>
                 </div>
                 <div class="modal-footer" style="border-top:1px solid var(--border);padding:14px 20px;display:flex;gap:10px;justify-content:flex-end;">
-                    <button type="button" data-bs-dismiss="modal" style="background:rgba(255,255,255,0.06);border:1px solid var(--border);color:var(--text-muted);padding:7px 16px;border-radius:8px;cursor:pointer;font-size:0.82rem;">Cancel</button>
+                    <button type="button" data-bs-dismiss="modal" style="background:#f0f2f5;border:1px solid #dee2e6;color:#495057;padding:8px 18px;border-radius:10px;cursor:pointer;font-size:.85rem;">Cancel</button>
                     <button type="submit" class="btn-primary"><i class="bi bi-plus-lg me-1"></i>Add Patient</button>
                 </div>
             </form>

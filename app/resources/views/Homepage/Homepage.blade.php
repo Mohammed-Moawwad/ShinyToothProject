@@ -96,6 +96,21 @@
             position: relative;
             overflow: hidden;
         }
+        .hero-video-bg {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 0;
+            pointer-events: none;
+        }
+        .hero-video-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(0,32,80,.72) 0%, rgba(0,50,99,.65) 45%, rgba(4,122,110,.58) 80%, rgba(5,147,134,.52) 100%);
+            z-index: 1;
+        }
         .hero-circle-1 {
             position: absolute;
             top: -20%;
@@ -725,6 +740,13 @@
      HERO (part of "Who Are We") + TOOTH CHARACTERS
 ══════════════════════════════════════════════════════════════ --}}
 <section class="hero-section" id="who-we-are">
+    {{-- Background Video --}}
+    <video class="hero-video-bg" autoplay muted loop playsinline poster="{{ asset('images/hero-poster.jpg') }}">
+        <source src="{{ asset('videos/hero-bg.webm') }}" type="video/webm">
+        <source src="{{ asset('videos/hero-bg.mp4') }}"  type="video/mp4">
+    </video>
+    <div class="hero-video-overlay"></div>
+
     <div class="hero-circle-1"></div>
     <div class="hero-circle-2"></div>
 

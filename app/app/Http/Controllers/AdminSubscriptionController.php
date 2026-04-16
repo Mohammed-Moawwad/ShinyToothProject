@@ -19,8 +19,11 @@ class AdminSubscriptionController extends Controller
             'patient', 'dentist', 'switchToDentist', 'plan', 'bonus',
         ])->latest()->get();
 
-        // Return JSON for now; view comes with admin dashboard
-        return response()->json($subscriptions);
+        $pendingActions = $subscriptions->where('admin_action_status', '!=', 'none')->count();
+        $activeCount    = $subscriptions->where('status', 'active')->count();
+        $totalCount     = $subscriptions->count();
+
+        return view('admin.subscriptions', compact('subscriptions', 'pendingActions', 'activeCount', 'totalCount'));
     }
 
     /**

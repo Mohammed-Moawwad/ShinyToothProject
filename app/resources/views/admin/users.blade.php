@@ -1,10 +1,11 @@
-﻿@extends('admin.layout')
+@extends('admin.layout')
 @section('page-title', 'Users Management')
 
 @section('extra-css')
 <style>
-.tab-btn{display:inline-flex;align-items:center;gap:6px;padding:7px 18px;font-size:0.82rem;font-weight:600;color:var(--text-muted);background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:8px;text-decoration:none;transition:all .18s;}
-.tab-btn.active,.tab-btn:hover{background:rgba(0,201,177,0.13);border-color:rgba(0,201,177,0.4);color:var(--teal);}
+.tab-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 20px;font-size:0.85rem;font-weight:600;color:var(--text-muted);background:#f0f2f5;border:1px solid #dee2e6;border-radius:10px;text-decoration:none;transition:all .2s;}
+.tab-btn:hover{background:var(--teal-light);border-color:var(--teal);color:var(--teal);}
+.tab-btn.active{background:var(--teal);border-color:var(--teal);color:#fff;}
 .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
 .form-grid .full{grid-column:1/-1;}
 </style>
@@ -13,19 +14,12 @@
 @section('content')
 <div class="container-fluid px-0">
 
-    {{-- Flash --}}
-    @if(session('success'))
-        <div style="background:rgba(74,222,128,0.1);border:1px solid rgba(74,222,128,0.3);color:#4ade80;padding:12px 18px;border-radius:10px;margin-bottom:20px;font-size:0.84rem;">
-            <i class="bi bi-check-circle me-2"></i>{{ session('success') }}
-        </div>
-    @endif
-
     {{-- Stat Cards --}}
     <div class="row g-3 mb-4">
         <div class="col-sm-4">
             <div class="stat-card">
                 <i class="bi bi-people-fill stat-card-bg-icon"></i>
-                <div class="stat-badge" style="background:rgba(0,201,177,0.13);color:#00c9b1;"><i class="bi bi-people-fill"></i></div>
+                <div class="stat-badge" style="background:#e6f5f3;color:#059386;"><i class="bi bi-people-fill"></i></div>
                 <div class="stat-num">{{ $patientCount }}</div>
                 <div class="stat-lbl">Total Patients</div>
             </div>
@@ -33,7 +27,7 @@
         <div class="col-sm-4">
             <div class="stat-card">
                 <i class="bi bi-person-badge-fill stat-card-bg-icon"></i>
-                <div class="stat-badge" style="background:rgba(96,165,250,0.13);color:#60a5fa;"><i class="bi bi-person-badge-fill"></i></div>
+                <div class="stat-badge" style="background:#e7f1ff;color:#0056b3;"><i class="bi bi-person-badge-fill"></i></div>
                 <div class="stat-num">{{ $dentistCount }}</div>
                 <div class="stat-lbl">Total Doctors</div>
             </div>
@@ -41,7 +35,7 @@
         <div class="col-sm-4">
             <div class="stat-card">
                 <i class="bi bi-person-check-fill stat-card-bg-icon"></i>
-                <div class="stat-badge" style="background:rgba(167,139,250,0.13);color:#a78bfa;"><i class="bi bi-person-check-fill"></i></div>
+                <div class="stat-badge" style="background:#f0ecff;color:#6f42c1;"><i class="bi bi-person-check-fill"></i></div>
                 <div class="stat-num">{{ $patientCount + $dentistCount }}</div>
                 <div class="stat-lbl">Total Users</div>
             </div>
@@ -83,7 +77,7 @@
         </div>
     </div>
 
-    {{-- ═══ ALL TAB ═══ --}}
+    {{-- --- ALL TAB --- --}}
     @if($type === 'all')
     <div class="row g-3">
         {{-- Doctors panel --}}
@@ -114,7 +108,7 @@
                     </table>
                 </div>
                 @if($doctors instanceof \Illuminate\Pagination\LengthAwarePaginator && $doctors->total() > 0)
-                    <div class="d-flex justify-content-center p-2" style="font-size:0.8rem;">{{ $doctors->links('pagination::bootstrap-5') }}</div>
+                    <div class="d-flex justify-content-center p-2" style="font-size:0.8rem;">{{ $doctors->appends(request()->query())->links('pagination::bootstrap-5') }}</div>
                 @endif
             </div>
         </div>
@@ -143,14 +137,14 @@
                     </table>
                 </div>
                 @if($patients instanceof \Illuminate\Pagination\LengthAwarePaginator && $patients->total() > 0)
-                    <div class="d-flex justify-content-center p-2" style="font-size:0.8rem;">{{ $patients->links('pagination::bootstrap-5') }}</div>
+                    <div class="d-flex justify-content-center p-2" style="font-size:0.8rem;">{{ $patients->appends(request()->query())->links('pagination::bootstrap-5') }}</div>
                 @endif
             </div>
         </div>
     </div>
     @endif
 
-    {{-- ═══ DOCTORS TAB ═══ --}}
+    {{-- --- DOCTORS TAB --- --}}
     @if($type === 'dentists')
     <div class="filter-panel mb-3">
         <form method="GET" action="{{ route('admin.users') }}" class="d-flex gap-3 align-items-end flex-wrap">
@@ -183,8 +177,8 @@
                         <td><strong>{{ $doc->name }}</strong></td>
                         <td>{{ $doc->email }}</td>
                         <td>{{ $doc->phone }}</td>
-                        <td style="color:#4ade80;">${{ number_format($doc->salary,0) }}</td>
-                        <td>{{ $doc->experience_years ?? '—' }} yrs</td>
+                        <td style="color:#059386;">SAR {{ number_format($doc->salary,0) }}</td>
+                        <td>{{ $doc->experience_years ?? '�' }} yrs</td>
                         <td><span class="badge-status {{ $sc[$doc->status] ?? 'pending' }}">{{ ucfirst(str_replace('_',' ',$doc->status)) }}</span></td>
                         <td><span class="count-badge">{{ $doc->appointments_count }}</span></td>
                         <td style="white-space:nowrap;">
@@ -230,7 +224,7 @@
                                                 </div>
                                             </div>
                                             <div class="modal-footer" style="border-top:1px solid var(--border);padding:14px 20px;display:flex;gap:10px;justify-content:flex-end;">
-                                                <button type="button" data-bs-dismiss="modal" style="background:rgba(255,255,255,0.06);border:1px solid var(--border);color:var(--text-muted);padding:7px 16px;border-radius:8px;cursor:pointer;font-size:0.82rem;">Cancel</button>
+                                                <button type="button" data-bs-dismiss="modal" style="background:#f0f2f5;border:1px solid #dee2e6;color:#495057;padding:8px 18px;border-radius:10px;cursor:pointer;font-size:.85rem;">Cancel</button>
                                                 <button type="submit" class="btn-primary">Save Changes</button>
                                             </div>
                                         </form>
@@ -246,12 +240,12 @@
             </table>
         </div>
         @if($doctors instanceof \Illuminate\Pagination\LengthAwarePaginator && $doctors->total() > 0)
-            <div class="d-flex justify-content-center p-3">{{ $doctors->links('pagination::bootstrap-5') }}</div>
+            <div class="d-flex justify-content-center p-3">{{ $doctors->appends(request()->query())->links('pagination::bootstrap-5') }}</div>
         @endif
     </div>
     @endif
 
-    {{-- ═══ PATIENTS TAB ═══ --}}
+    {{-- --- PATIENTS TAB --- --}}
     @if($type === 'patients')
     <div class="filter-panel mb-3">
         <form method="GET" action="{{ route('admin.users') }}" class="d-flex gap-3 align-items-end flex-wrap">
@@ -284,8 +278,8 @@
                         <td>{{ $pt->email }}</td>
                         <td>{{ $pt->phone }}</td>
                         <td><span class="badge-status {{ $pt->gender==='male' ? 'confirmed' : 'pending' }}">{{ ucfirst($pt->gender) }}</span></td>
-                        <td>{{ $pt->blood_type ?? '—' }}</td>
-                        <td>{{ $pt->date_of_birth?->format('d M Y') ?? '—' }}</td>
+                        <td>{{ $pt->blood_type ?? '�' }}</td>
+                        <td>{{ $pt->date_of_birth?->format('d M Y') ?? '�' }}</td>
                         <td><span class="count-badge">{{ $pt->appointments_count }}</span></td>
                         <td style="white-space:nowrap;">
                             <button class="btn-info me-1" data-bs-toggle="modal" data-bs-target="#editPat{{ $pt->id }}">
@@ -323,7 +317,7 @@
                                                     <div>
                                                         <label class="form-label">Blood Type</label>
                                                         <select class="form-select" name="blood_type">
-                                                            <option value="">— Select —</option>
+                                                            <option value="">� Select �</option>
                                                             @foreach(['O+','O-','A+','A-','B+','B-','AB+','AB-'] as $bt)
                                                                 <option value="{{ $bt }}" {{ $pt->blood_type===$bt ?'selected':'' }}>{{ $bt }}</option>
                                                             @endforeach
@@ -336,7 +330,7 @@
                                                 </div>
                                             </div>
                                             <div class="modal-footer" style="border-top:1px solid var(--border);padding:14px 20px;display:flex;gap:10px;justify-content:flex-end;">
-                                                <button type="button" data-bs-dismiss="modal" style="background:rgba(255,255,255,0.06);border:1px solid var(--border);color:var(--text-muted);padding:7px 16px;border-radius:8px;cursor:pointer;font-size:0.82rem;">Cancel</button>
+                                                <button type="button" data-bs-dismiss="modal" style="background:#f0f2f5;border:1px solid #dee2e6;color:#495057;padding:8px 18px;border-radius:10px;cursor:pointer;font-size:.85rem;">Cancel</button>
                                                 <button type="submit" class="btn-primary">Save Changes</button>
                                             </div>
                                         </form>
@@ -352,7 +346,7 @@
             </table>
         </div>
         @if($patients instanceof \Illuminate\Pagination\LengthAwarePaginator && $patients->total() > 0)
-            <div class="d-flex justify-content-center p-3">{{ $patients->links('pagination::bootstrap-5') }}</div>
+            <div class="d-flex justify-content-center p-3">{{ $patients->appends(request()->query())->links('pagination::bootstrap-5') }}</div>
         @endif
     </div>
     @endif
@@ -368,11 +362,11 @@
                 <h5 class="modal-title"><i class="bi bi-plus-circle me-2"></i>Add New Doctor</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
-            <form method="POST" action="{{ route('admin.doctors.store') }}">
+            <form method="POST" action="{{ route('admin.doctors.store') }}" enctype="multipart/form-data">
                 @csrf
                 <div class="modal-body">
                     @if($errors->any())
-                        <div style="background:rgba(248,113,113,0.1);border:1px solid rgba(248,113,113,0.3);color:#f87171;padding:10px 14px;border-radius:8px;margin-bottom:14px;font-size:0.8rem;">
+                        <div style="background:#fde8e8;border:1px solid #f5b7b7;color:#c0392b;padding:10px 14px;border-radius:8px;margin-bottom:14px;font-size:0.8rem;">
                             <ul style="margin:0;padding-left:18px;">@foreach($errors->all() as $e)<li>{{ $e }}</li>@endforeach</ul>
                         </div>
                     @endif
@@ -395,10 +389,18 @@
                         <div><label class="form-label">University</label><input type="text" class="form-control" name="university" value="{{ old('university') }}"></div>
                         <div><label class="form-label">Nationality</label><input type="text" class="form-control" name="nationality" value="{{ old('nationality') }}"></div>
                         <div class="full"><label class="form-label">Place of Birth</label><input type="text" class="form-control" name="place_of_birth" value="{{ old('place_of_birth') }}"></div>
+                        <div class="full">
+                            <label class="form-label">Profile Image</label>
+                            <input type="file" class="form-control" name="image" accept="image/jpeg,image/png,image/webp" id="doctorImageInputUsers">
+                            <div id="doctorImagePreviewUsers" style="display:none;margin-top:10px;">
+                                <img id="doctorImageThumbUsers" src="" alt="Preview" style="width:80px;height:80px;border-radius:50%;object-fit:cover;border:2px solid var(--teal);">
+                            </div>
+                            <small style="color:var(--text-muted);font-size:0.75rem;">JPG, PNG or WEBP · max 2 MB (optional)</small>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer" style="border-top:1px solid var(--border);padding:14px 20px;display:flex;gap:10px;justify-content:flex-end;">
-                    <button type="button" data-bs-dismiss="modal" style="background:rgba(255,255,255,0.06);border:1px solid var(--border);color:var(--text-muted);padding:7px 16px;border-radius:8px;cursor:pointer;font-size:0.82rem;">Cancel</button>
+                    <button type="button" data-bs-dismiss="modal" style="background:#f0f2f5;border:1px solid #dee2e6;color:#495057;padding:8px 18px;border-radius:10px;cursor:pointer;font-size:.85rem;">Cancel</button>
                     <button type="submit" class="btn-primary"><i class="bi bi-plus-lg me-1"></i>Add Doctor</button>
                 </div>
             </form>
@@ -423,7 +425,7 @@
                 @csrf
                 <div class="modal-body">
                     @if($errors->any())
-                        <div style="background:rgba(248,113,113,0.1);border:1px solid rgba(248,113,113,0.3);color:#f87171;padding:10px 14px;border-radius:8px;margin-bottom:14px;font-size:0.8rem;">
+                        <div style="background:#fde8e8;border:1px solid #f5b7b7;color:#c0392b;padding:10px 14px;border-radius:8px;margin-bottom:14px;font-size:0.8rem;">
                             <ul style="margin:0;padding-left:18px;">@foreach($errors->all() as $e)<li>{{ $e }}</li>@endforeach</ul>
                         </div>
                     @endif
@@ -443,7 +445,7 @@
                         <div>
                             <label class="form-label">Blood Type</label>
                             <select class="form-select" name="blood_type">
-                                <option value="">— Select —</option>
+                                <option value="">� Select �</option>
                                 @foreach(['O+','O-','A+','A-','B+','B-','AB+','AB-'] as $bt)
                                     <option value="{{ $bt }}" {{ old('blood_type')===$bt ?'selected':'' }}>{{ $bt }}</option>
                                 @endforeach
@@ -455,7 +457,7 @@
                     </div>
                 </div>
                 <div class="modal-footer" style="border-top:1px solid var(--border);padding:14px 20px;display:flex;gap:10px;justify-content:flex-end;">
-                    <button type="button" data-bs-dismiss="modal" style="background:rgba(255,255,255,0.06);border:1px solid var(--border);color:var(--text-muted);padding:7px 16px;border-radius:8px;cursor:pointer;font-size:0.82rem;">Cancel</button>
+                    <button type="button" data-bs-dismiss="modal" style="background:#f0f2f5;border:1px solid #dee2e6;color:#495057;padding:8px 18px;border-radius:10px;cursor:pointer;font-size:.85rem;">Cancel</button>
                     <button type="submit" class="btn-primary"><i class="bi bi-plus-lg me-1"></i>Add Patient</button>
                 </div>
             </form>
@@ -466,5 +468,16 @@
 <script>document.addEventListener('DOMContentLoaded',function(){new bootstrap.Modal(document.getElementById('addPatientModal')).show();});</script>
 @endif
 @endif
-
+<script>
+    document.getElementById('doctorImageInputUsers').addEventListener('change', function() {
+        const preview = document.getElementById('doctorImagePreviewUsers');
+        const img = document.getElementById('doctorImageThumbUsers');
+        if (this.files && this.files[0]) {
+            img.src = URL.createObjectURL(this.files[0]);
+            preview.style.display = 'block';
+        } else {
+            preview.style.display = 'none';
+        }
+    });
+</script>
 @endsection

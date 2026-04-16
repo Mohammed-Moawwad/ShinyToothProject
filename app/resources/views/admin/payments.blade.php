@@ -1,4 +1,4 @@
-﻿@extends('admin.layout')
+@extends('admin.layout')
 @section('page-title', 'Payments & Financial Reports')
 @section('content')
 <div class="container-fluid px-0">
@@ -6,26 +6,26 @@
     {{-- Financial Overview --}}
     <div class="row g-3 mb-3">
         <div class="col-sm-4">
-            <div class="stat-card" style="border-left:3px solid #4ade80;">
+            <div class="stat-card" style="border-left:3px solid #0f6b3a;">
                 <i class="bi bi-cash-stack stat-card-bg-icon"></i>
-                <div class="stat-badge" style="background:rgba(74,222,128,0.13);color:#4ade80;"><i class="bi bi-cash-stack"></i></div>
-                <div class="stat-num" style="color:#4ade80;">${{ number_format($totalRevenue, 0) }}</div>
+                <div class="stat-badge" style="background:#d4f5e4;color:#0f6b3a;"><i class="bi bi-cash-stack"></i></div>
+                <div class="stat-num" style="color:#059386;">SAR {{ number_format($totalRevenue, 0) }}</div>
                 <div class="stat-lbl">Total Revenue</div>
             </div>
         </div>
         <div class="col-sm-4">
-            <div class="stat-card" style="border-left:3px solid #facc15;">
+            <div class="stat-card" style="border-left:3px solid #b86e00;">
                 <i class="bi bi-hourglass-split stat-card-bg-icon"></i>
-                <div class="stat-badge" style="background:rgba(250,204,21,0.13);color:#facc15;"><i class="bi bi-hourglass-split"></i></div>
-                <div class="stat-num" style="color:#facc15;">${{ number_format($pendingAmount, 0) }}</div>
+                <div class="stat-badge" style="background:#fff4e5;color:#b86e00;"><i class="bi bi-hourglass-split"></i></div>
+                <div class="stat-num" style="color:#b86e00;">SAR {{ number_format($pendingAmount, 0) }}</div>
                 <div class="stat-lbl">Pending Payments</div>
             </div>
         </div>
         <div class="col-sm-4">
-            <div class="stat-card" style="border-left:3px solid #f87171;">
+            <div class="stat-card" style="border-left:3px solid #c0392b;">
                 <i class="bi bi-x-circle stat-card-bg-icon"></i>
-                <div class="stat-badge" style="background:rgba(248,113,113,0.13);color:#f87171;"><i class="bi bi-x-circle"></i></div>
-                <div class="stat-num" style="color:#f87171;">${{ number_format($failedAmount, 0) }}</div>
+                <div class="stat-badge" style="background:#fde8e8;color:#c0392b;"><i class="bi bi-x-circle"></i></div>
+                <div class="stat-num" style="color:#c0392b;">SAR {{ number_format($failedAmount, 0) }}</div>
                 <div class="stat-lbl">Failed Payments</div>
             </div>
         </div>
@@ -36,7 +36,7 @@
         <div class="col-sm-4">
             <div class="stat-card">
                 <i class="bi bi-check-double stat-card-bg-icon"></i>
-                <div class="stat-badge" style="background:rgba(0,201,177,0.13);color:#00c9b1;"><i class="bi bi-check-double"></i></div>
+                <div class="stat-badge" style="background:#e6f5f3;color:#059386;"><i class="bi bi-check-double"></i></div>
                 <div class="stat-num">{{ $statuses['completed'] ?? 0 }}</div>
                 <div class="stat-lbl">Completed</div>
             </div>
@@ -44,7 +44,7 @@
         <div class="col-sm-4">
             <div class="stat-card">
                 <i class="bi bi-hourglass stat-card-bg-icon"></i>
-                <div class="stat-badge" style="background:rgba(96,165,250,0.13);color:#60a5fa;"><i class="bi bi-hourglass"></i></div>
+                <div class="stat-badge" style="background:#e7f1ff;color:#0056b3;"><i class="bi bi-hourglass"></i></div>
                 <div class="stat-num">{{ $statuses['pending'] ?? 0 }}</div>
                 <div class="stat-lbl">Pending</div>
             </div>
@@ -52,7 +52,7 @@
         <div class="col-sm-4">
             <div class="stat-card">
                 <i class="bi bi-x-circle-fill stat-card-bg-icon"></i>
-                <div class="stat-badge" style="background:rgba(248,113,113,0.13);color:#f87171;"><i class="bi bi-x-circle-fill"></i></div>
+                <div class="stat-badge" style="background:#fde8e8;color:#c0392b;"><i class="bi bi-x-circle-fill"></i></div>
                 <div class="stat-num">{{ $statuses['failed'] ?? 0 }}</div>
                 <div class="stat-lbl">Failed</div>
             </div>
@@ -121,11 +121,11 @@
                                 @if($payment->appointment)
                                     {{ $payment->appointment->appointment_date->format('M d, Y') }}<br>
                                     <span style="font-size:0.75rem;color:var(--text-muted);">{{ $payment->appointment->service->name ?? '' }}</span>
-                                @else — @endif
+                                @else � @endif
                             </td>
-                            <td><strong style="color:#4ade80;">${{ number_format($payment->amount, 2) }}</strong></td>
-                            <td>{{ $payment->payment_date?->format('M d, Y') ?? '—' }}</td>
-                            <td>{{ ucfirst($payment->payment_method ?? '—') }}</td>
+                            <td><strong style="color:#059386;">SAR {{ number_format($payment->amount, 2) }}</strong></td>
+                            <td>{{ $payment->payment_date?->format('M d, Y') ?? '�' }}</td>
+                            <td>{{ ucfirst($payment->payment_method ?? '�') }}</td>
                             <td><span class="badge-status {{ strtolower($payment->status) }}">{{ ucfirst($payment->status) }}</span></td>
                             <td>
                                 <button class="btn-info" data-bs-toggle="modal" data-bs-target="#payModal{{ $payment->id }}">
@@ -141,7 +141,7 @@
                                             <div class="modal-body">
                                                 <p><strong>Patient:</strong> {{ $payment->patient->name ?? 'N/A' }}</p>
                                                 <p><strong>Email:</strong> {{ $payment->patient->email ?? 'N/A' }}</p>
-                                                <p><strong>Amount:</strong> ${{ number_format($payment->amount, 2) }}</p>
+                                                <p><strong>Amount:</strong> SAR {{ number_format($payment->amount, 2) }}</p>
                                                 <p><strong>Method:</strong> {{ ucfirst($payment->payment_method ?? 'N/A') }}</p>
                                                 <p><strong>Date:</strong> {{ $payment->payment_date?->format('M d, Y H:i') ?? 'N/A' }}</p>
                                                 <p><strong>Status:</strong> {{ ucfirst($payment->status) }}</p>
@@ -162,7 +162,7 @@
             </table>
         </div>
         @if($payments->total() > 0)
-            <div class="d-flex justify-content-center p-3">{{ $payments->links('pagination::bootstrap-5') }}</div>
+            <div class="d-flex justify-content-center p-3">{{ $payments->appends(['search' => $search, 'status' => $status, 'date_from' => $dateFrom, 'date_to' => $dateTo])->links('pagination::bootstrap-5') }}</div>
         @endif
     </div>
 </div>

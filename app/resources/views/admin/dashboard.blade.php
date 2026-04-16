@@ -10,7 +10,7 @@
         <div class="col-sm-6 col-xl-3">
             <div class="stat-card">
                 <i class="bi bi-people-fill stat-card-bg-icon"></i>
-                <div class="stat-badge" style="background:rgba(0,201,177,0.13);color:#00c9b1;">
+                <div class="stat-badge" style="background:#e6f5f3; color:#059386;">
                     <i class="bi bi-people-fill"></i>
                 </div>
                 <div class="stat-num">{{ $totalPatients }}</div>
@@ -21,7 +21,7 @@
         <div class="col-sm-6 col-xl-3">
             <div class="stat-card">
                 <i class="bi bi-person-badge-fill stat-card-bg-icon"></i>
-                <div class="stat-badge" style="background:rgba(96,165,250,0.13);color:#60a5fa;">
+                <div class="stat-badge" style="background:#e7f1ff; color:#0056b3;">
                     <i class="bi bi-person-badge-fill"></i>
                 </div>
                 <div class="stat-num">{{ $totalDentists }}</div>
@@ -32,7 +32,7 @@
         <div class="col-sm-6 col-xl-3">
             <div class="stat-card">
                 <i class="bi bi-calendar2-check-fill stat-card-bg-icon"></i>
-                <div class="stat-badge" style="background:rgba(192,132,252,0.13);color:#c084fc;">
+                <div class="stat-badge" style="background:#f0ecff; color:#6f42c1;">
                     <i class="bi bi-calendar2-check-fill"></i>
                 </div>
                 <div class="stat-num">{{ $totalAppointments }}</div>
@@ -43,10 +43,10 @@
         <div class="col-sm-6 col-xl-3">
             <div class="stat-card">
                 <i class="bi bi-cash-stack stat-card-bg-icon"></i>
-                <div class="stat-badge" style="background:rgba(74,222,128,0.13);color:#4ade80;">
+                <div class="stat-badge" style="background:#d4f5e4; color:#0f6b3a;">
                     <i class="bi bi-cash-stack"></i>
                 </div>
-                <div class="stat-num">${{ number_format($totalRevenue, 0) }}</div>
+                <div class="stat-num">SAR {{ number_format($totalRevenue, 0) }}</div>
                 <div class="stat-lbl">Total Revenue</div>
                 <div class="stat-hint">All collected payments</div>
             </div>
@@ -56,45 +56,45 @@
     {{-- Row 2: Status KPIs --}}
     <div class="row g-3 mb-4">
         <div class="col-sm-6 col-xl-3">
-            <div class="stat-card" style="border-left: 3px solid #4ade80;">
+            <div class="stat-card" style="border-left: 3px solid #0f6b3a;">
                 <i class="bi bi-check-circle-fill stat-card-bg-icon"></i>
-                <div class="stat-badge" style="background:rgba(74,222,128,0.13);color:#4ade80;">
+                <div class="stat-badge" style="background:#d4f5e4; color:#0f6b3a;">
                     <i class="bi bi-check-circle-fill"></i>
                 </div>
-                <div class="stat-num" style="color:#4ade80;">{{ $completedAppointments }}</div>
+                <div class="stat-num" style="color:#0f6b3a;">{{ $completedAppointments }}</div>
                 <div class="stat-lbl">Completed</div>
                 <div class="stat-hint">Successfully done</div>
             </div>
         </div>
         <div class="col-sm-6 col-xl-3">
-            <div class="stat-card" style="border-left: 3px solid #f87171;">
+            <div class="stat-card" style="border-left: 3px solid #c0392b;">
                 <i class="bi bi-x-circle-fill stat-card-bg-icon"></i>
-                <div class="stat-badge" style="background:rgba(248,113,113,0.13);color:#f87171;">
+                <div class="stat-badge" style="background:#fde8e8; color:#c0392b;">
                     <i class="bi bi-x-circle-fill"></i>
                 </div>
-                <div class="stat-num" style="color:#f87171;">{{ $cancelledAppointments }}</div>
+                <div class="stat-num" style="color:#c0392b;">{{ $cancelledAppointments }}</div>
                 <div class="stat-lbl">Cancelled</div>
                 <div class="stat-hint">Appointments cancelled</div>
             </div>
         </div>
         <div class="col-sm-6 col-xl-3">
-            <div class="stat-card" style="border-left: 3px solid #facc15;">
+            <div class="stat-card" style="border-left: 3px solid #b86e00;">
                 <i class="bi bi-hourglass-split stat-card-bg-icon"></i>
-                <div class="stat-badge" style="background:rgba(250,204,21,0.13);color:#facc15;">
+                <div class="stat-badge" style="background:#fff4e5; color:#b86e00;">
                     <i class="bi bi-hourglass-split"></i>
                 </div>
-                <div class="stat-num" style="color:#facc15;">${{ number_format($pendingPayments, 0) }}</div>
+                <div class="stat-num" style="color:#b86e00;">SAR {{ number_format($pendingPayments, 0) }}</div>
                 <div class="stat-lbl">Pending Payments</div>
                 <div class="stat-hint">Awaiting collection</div>
             </div>
         </div>
         <div class="col-sm-6 col-xl-3">
-            <div class="stat-card" style="border-left: 3px solid #60a5fa;">
+            <div class="stat-card" style="border-left: 3px solid #0056b3;">
                 <i class="bi bi-person-circle stat-card-bg-icon"></i>
-                <div class="stat-badge" style="background:rgba(96,165,250,0.13);color:#60a5fa;">
+                <div class="stat-badge" style="background:#e7f1ff; color:#0056b3;">
                     <i class="bi bi-person-circle"></i>
                 </div>
-                <div class="stat-num" style="color:#60a5fa;">{{ $totalUsers }}</div>
+                <div class="stat-num" style="color:#0056b3;">{{ $totalUsers }}</div>
                 <div class="stat-lbl">Total Users</div>
                 <div class="stat-hint">System accounts</div>
             </div>
@@ -102,14 +102,14 @@
     </div>
 
     {{-- Row 3: Tables --}}
-    <div class="row g-3">
-        <div class="col-lg-6">
+    <div class="row g-4">
+        <div class="col-lg-7">
             <div class="panel">
                 <div class="panel-head">
                     <div class="panel-head-title">
                         <i class="bi bi-calendar2-check-fill"></i>Recent Appointments
                     </div>
-                    <a href="{{ route('admin.appointments') }}" class="view-all-link">View All &rarr;</a>
+                    <a href="{{ route('admin.appointments') }}" class="view-all-link">View All</a>
                 </div>
                 <table class="data-table">
                     <thead>
@@ -123,7 +123,12 @@
                     <tbody>
                         @forelse($recentAppointments as $appointment)
                             <tr>
-                                <td><strong>{{ $appointment->patient->name ?? 'N/A' }}</strong></td>
+                                <td>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <span class="patient-avatar">{{ strtoupper(substr($appointment->patient->name ?? 'P', 0, 1)) }}</span>
+                                        <strong>{{ $appointment->patient->name ?? 'N/A' }}</strong>
+                                    </div>
+                                </td>
                                 <td>{{ $appointment->dentist->name ?? 'N/A' }}</td>
                                 <td>{{ $appointment->appointment_date->format('M d, Y') }}</td>
                                 <td>
@@ -134,8 +139,11 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="4" class="text-center py-4" style="color:var(--text-muted);">
-                                    No appointments yet
+                                <td colspan="4">
+                                    <div class="empty-state">
+                                        <i class="bi bi-calendar-x d-block"></i>
+                                        <p class="mb-0">No appointments yet</p>
+                                    </div>
                                 </td>
                             </tr>
                         @endforelse
@@ -144,29 +152,35 @@
             </div>
         </div>
 
-        <div class="col-lg-6">
+        <div class="col-lg-5">
             <div class="panel">
                 <div class="panel-head">
                     <div class="panel-head-title">
                         <i class="bi bi-credit-card-2-front-fill"></i>Recent Payments
                     </div>
-                    <a href="{{ route('admin.payments') }}" class="view-all-link">View All &rarr;</a>
+                    <a href="{{ route('admin.payments') }}" class="view-all-link">View All</a>
                 </div>
                 <table class="data-table">
                     <thead>
                         <tr>
                             <th>Patient</th>
                             <th>Amount</th>
-                            <th>Date</th>
                             <th>Status</th>
                         </tr>
                     </thead>
                     <tbody>
                         @forelse($recentPayments as $payment)
                             <tr>
-                                <td><strong>{{ $payment->patient->name ?? 'N/A' }}</strong></td>
-                                <td>${{ number_format($payment->amount, 2) }}</td>
-                                <td>{{ $payment->payment_date?->format('M d, Y') ?? 'N/A' }}</td>
+                                <td>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <span class="patient-avatar">{{ strtoupper(substr($payment->patient->name ?? 'P', 0, 1)) }}</span>
+                                        <div>
+                                            <strong>{{ $payment->patient->name ?? 'N/A' }}</strong>
+                                            <div style="font-size:.78rem;color:#6c757d;">{{ $payment->payment_date?->format('M d, Y') ?? 'N/A' }}</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td><strong style="color:#059386;">SAR {{ number_format($payment->amount, 2) }}</strong></td>
                                 <td>
                                     <span class="badge-status {{ strtolower($payment->status) }}">
                                         {{ ucfirst($payment->status) }}
@@ -175,8 +189,11 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="4" class="text-center py-4" style="color:var(--text-muted);">
-                                    No payments yet
+                                <td colspan="3">
+                                    <div class="empty-state">
+                                        <i class="bi bi-credit-card d-block"></i>
+                                        <p class="mb-0">No payments yet</p>
+                                    </div>
                                 </td>
                             </tr>
                         @endforelse

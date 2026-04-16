@@ -8,6 +8,7 @@ use App\Models\Dentist;
 use App\Models\Appointment;
 use App\Models\Payment;
 use App\Models\Service;
+use App\Models\VacationRequest;
 use Illuminate\Http\Request;
 
 class AdminController extends Controller
@@ -136,9 +137,11 @@ class AdminController extends Controller
      */
     public function appointments(Request $request)
     {
-        $search = $request->input('search', '');
-        $status = $request->input('status', 'all');
-        $sort = $request->input('sort', 'latest');
+        $search  = $request->input('search', '');
+        $status  = $request->input('status', 'all');
+        $sort    = $request->input('sort', 'latest');
+        $dentist = $request->input('dentist', '');
+        $date    = $request->input('date', '');
 
         $query = Appointment::with(['patient', 'dentist', 'service', 'payment']);
 
@@ -147,6 +150,16 @@ class AdminController extends Controller
                 $q->where('name', 'like', "%{$search}%")
                   ->orWhere('email', 'like', "%{$search}%");
             });
+        }
+
+        if ($dentist) {
+            $query->whereHas('dentist', function ($q) use ($dentist) {
+                $q->where('name', 'like', "%{$dentist}%");
+            });
+        }
+
+        if ($date) {
+            $query->whereDate('appointment_date', $date);
         }
 
         if ($status !== 'all') {
@@ -162,7 +175,7 @@ class AdminController extends Controller
         $appointments = $query->paginate(15);
 
         $statuses = [
-            'pending' => Appointment::where('status', 'pending')->count(),
+            'pending'   => Appointment::where('status', 'pending')->count(),
             'confirmed' => Appointment::where('status', 'confirmed')->count(),
             'completed' => Appointment::where('status', 'completed')->count(),
             'cancelled' => Appointment::where('status', 'cancelled')->count(),
@@ -170,9 +183,11 @@ class AdminController extends Controller
 
         return view('admin.appointments', [
             'appointments' => $appointments,
-            'status' => $status,
-            'search' => $search,
-            'sort' => $sort,
+            'status'  => $status,
+            'search'  => $search,
+            'sort'    => $sort,
+            'dentist' => $dentist,
+            'date'    => $date,
             'statuses' => $statuses,
         ]);
     }
@@ -371,7 +386,13 @@ class AdminController extends Controller
             'university'       => 'nullable|string|max:255',
             'nationality'      => 'nullable|string|max:100',
             'place_of_birth'   => 'nullable|string|max:255',
+            'image'            => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
+
+        if ($request->hasFile('image')) {
+            $path = $request->file('image')->store('images/doctors', 'public');
+            $validated['image'] = 'storage/' . $path;
+        }
 
         $validated['password'] = bcrypt($validated['password']);
         Dentist::create($validated);
@@ -510,5 +531,55 @@ class AdminController extends Controller
         $patient->update(['booking_blocked' => false]);
 
         return redirect()->back()->with('success', 'Patient unblocked successfully.');
+    }
+
+    // ─── Vacation Requests Management ───────────────────────────────────
+
+    public function vacations(Request $request)
+    {
+        $status = $request->input('status', 'all');
+
+        $query = VacationRequest::with('dentist')->orderByDesc('created_at');
+
+        if ($status !== 'all') {
+            $query->where('status', $status);
+        }
+
+        $vacations = $query->get();
+
+        $pendingCount  = VacationRequest::where('status', 'pending')->count();
+        $approvedCount = VacationRequest::where('status', 'approved')->count();
+        $totalCount    = VacationRequest::count();
+
+        return view('admin.vacations', compact('vacations', 'status', 'pendingCount', 'approvedCount', 'totalCount'));
+    }
+
+    public function approveVacation($id)
+    {
+        $vacation = VacationRequest::findOrFail($id);
+
+        if ($vacation->status !== 'pending') {
+            return back()->with('error', 'This request is not pending.');
+        }
+
+        $vacation->update(['status' => 'approved']);
+
+        return back()->with('success', 'Vacation request approved.');
+    }
+
+    public function rejectVacation(Request $request, $id)
+    {
+        $vacation = VacationRequest::findOrFail($id);
+
+        if ($vacation->status !== 'pending') {
+            return back()->with('error', 'This request is not pending.');
+        }
+
+        $vacation->update([
+            'status'     => 'rejected',
+            'admin_note' => $request->input('admin_note', ''),
+        ]);
+
+        return back()->with('success', 'Vacation request rejected.');
     }
 }
