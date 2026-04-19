@@ -32,7 +32,14 @@ class WebAuthController extends Controller
         Auth::guard('web')->login($patient);
         $request->session()->regenerate();
 
-        return redirect('/admin/dashboard');
+        // Check if the user is an admin
+        $adminEmail = env('ADMIN_EMAIL', 'admin@shinytooth.com');
+        if ($patient->email === $adminEmail) {
+            return redirect('/admin/dashboard');
+        }
+
+        // Regular patient, redirect to patient dashboard
+        return redirect('/patient/dashboard');
     }
 
     /**

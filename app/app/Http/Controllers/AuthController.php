@@ -98,11 +98,15 @@ class AuthController extends Controller
         Auth::guard('web')->login($patient);
         $request->session()->regenerate();
 
+        // Check if this is an admin account
+        $adminEmail = env('ADMIN_EMAIL', 'admin@shinytooth.com');
+        $redirectPath = $patient->email === $adminEmail ? '/admin/dashboard' : '/patient/dashboard';
+
         return response()->json([
             'patient' => $patient,
             'token'   => $token,
             'user_type' => 'patient',
-            'redirect' => '/patient/dashboard',
+            'redirect' => $redirectPath,
         ]);
     }
 
