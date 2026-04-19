@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\DoctorSubscription;
 use App\Models\Patient;
+use App\Models\Dentist;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class AdminSubscriptionController extends Controller
 {
@@ -13,17 +15,71 @@ class AdminSubscriptionController extends Controller
      * GET /admin/subscriptions
      * (Stub — view will be built with admin dashboard)
      */
-    public function index()
+    public function index(Request $request)
     {
-        $subscriptions = DoctorSubscription::with([
-            'patient', 'dentist', 'switchToDentist', 'plan', 'bonus',
-        ])->latest()->get();
+        $statusFilter  = $request->input('status', '');
+        $dentistFilter = $request->input('dentist_id', '');
 
-        $pendingActions = $subscriptions->where('admin_action_status', '!=', 'none')->count();
-        $activeCount    = $subscriptions->where('status', 'active')->count();
-        $totalCount     = $subscriptions->count();
+        $query = DoctorSubscription::with([
+            'patient', 'dentist', 'switchToDentist', 'plan.items', 'bonus', 'rating',
+        ]);
 
-        return view('admin.subscriptions', compact('subscriptions', 'pendingActions', 'activeCount', 'totalCount'));
+        if ($statusFilter) {
+            $query->where('status', $statusFilter);
+        }
+        if ($dentistFilter) {
+            $query->where('dentist_id', $dentistFilter);
+        }
+
+        $subscriptions = $query->latest()->get();
+
+        // ── Status breakdown (always from full table, unaffected by filters) ──
+        $statusCounts = DoctorSubscription::selectRaw('status, COUNT(*) as cnt')
+            ->groupBy('status')->get()->keyBy('status');
+
+        $totalCount     = DoctorSubscription::count();
+        $activeCount    = $statusCounts['active']->cnt    ?? 0;
+        $pendingCount   = $statusCounts['pending']->cnt   ?? 0;
+        $completedCount = $statusCounts['completed']->cnt ?? 0;
+        $cancelledCount = ($statusCounts['cancelled']->cnt ?? 0)
+                        + ($statusCounts['removed']->cnt  ?? 0)
+                        + ($statusCounts['rejected']->cnt ?? 0);
+        $pendingActions = DoctorSubscription::where('admin_action_status', '!=', 'none')->count();
+
+        // ── Financial stats ──────────────────────────────────────────────────
+        $totalRevenue = DB::table('subscription_plans')
+            ->join('doctor_subscriptions', 'doctor_subscriptions.id', '=', 'subscription_plans.subscription_id')
+            ->whereIn('doctor_subscriptions.status', ['active', 'completed'])
+            ->sum('subscription_plans.total_price');
+
+        $totalBonuses = DB::table('subscription_bonuses')->sum('bonus_amount');
+
+        // ── Ratings ──────────────────────────────────────────────────────────
+        $avgRating  = round(DB::table('subscription_ratings')->avg('rating') ?? 0, 1);
+        $ratingDist = DB::table('subscription_ratings')
+            ->select('rating', DB::raw('COUNT(*) as cnt'))
+            ->groupBy('rating')
+            ->get()->keyBy('rating');
+
+        // ── Top dentists by subscription count ───────────────────────────────
+        $topDentists = DB::table('doctor_subscriptions')
+            ->join('dentists', 'dentists.id', '=', 'doctor_subscriptions.dentist_id')
+            ->select('dentists.name', DB::raw('COUNT(doctor_subscriptions.id) as sub_count'))
+            ->groupBy('dentists.id', 'dentists.name')
+            ->orderByDesc('sub_count')
+            ->limit(5)
+            ->get();
+
+        // ── All dentists for filter dropdown ─────────────────────────────────
+        $dentists = Dentist::orderBy('name')->get(['id', 'name']);
+
+        return view('admin.subscriptions', compact(
+            'subscriptions', 'statusFilter', 'dentistFilter', 'dentists',
+            'totalCount', 'activeCount', 'pendingCount', 'completedCount',
+            'cancelledCount', 'pendingActions',
+            'totalRevenue', 'totalBonuses', 'avgRating', 'ratingDist',
+            'topDentists'
+        ));
     }
 
     /**

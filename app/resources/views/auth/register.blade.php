@@ -346,7 +346,8 @@
         box-shadow: 0 8px 24px rgba(5, 147, 134, 0.35);
     }
 
-    .btn-auth:disabled {
+    .btn-auth:disabled,
+    .btn-auth.btn-auth-notready {
         opacity: 0.5;
         cursor: not-allowed;
         background: linear-gradient(90deg, #999999 0%, #666666 100%) !important;
@@ -526,9 +527,17 @@
                 <a href="/#who-we-are" class="nav-link-custom">Who are we</a>
                 <a href="/#contact"    class="nav-link-custom">Contact us</a>
             </div>
-            <div class="d-flex align-items-center gap-2">
-                <a href="/login"    class="btn-nav-login">Login</a>
-                <a href="/register" class="btn-nav-signup">Sign Up</a>
+            <div class="d-flex align-items-center gap-2" id="nav-auth-area">
+                <a href="/login"    class="btn-nav-login" id="nav-login-btn">Login</a>
+                <a href="/register" class="btn-nav-signup" id="nav-signup-btn">Sign Up</a>
+                <a href="/patient/dashboard" id="nav-user-btn" style="display:none; align-items:center; gap:9px; background:#fff; border:1.5px solid #fff; border-radius:50px; padding:5px 14px 5px 5px; text-decoration:none; transition:all .2s; box-shadow:0 2px 8px rgba(0,0,0,.12);" title="My Dashboard"
+                   onmouseover="this.style.background='#f0f6ff'" onmouseout="this.style.background='#fff'">
+                    <div style="width:32px; height:32px; border-radius:50%; background:linear-gradient(135deg,#059386,#003263); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                        <i class="bi bi-person-fill" style="color:#fff; font-size:.95rem;"></i>
+                    </div>
+                    <span id="nav-user-name" style="color:#003263; font-size:.85rem; font-weight:600; max-width:110px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">My Account</span>
+                    <i class="bi bi-grid-fill" style="color:#059386; font-size:.75rem;"></i>
+                </a>
             </div>
         </div>
     </div>
@@ -575,7 +584,7 @@
 
             <div id="register-error" class="alert-danger"></div>
 
-            <form id="register-form">
+            <form id="register-form" method="POST" action="{{ route('register.store') }}">
                 @csrf
 
                 <!-- Full Name (Single Field) -->
@@ -590,7 +599,7 @@
                     <label for="phone" class="form-label">Phone Number</label>
                     <input type="tel" class="form-control" id="phone" name="phone" placeholder="05X XXXX XXXX" pattern="05[0-9]{8}" maxlength="10" inputmode="numeric" required>
                     <small style="color:#059386; font-size:0.8rem; margin-top:0.3rem; display:block;">Only 10 numbers (e.g: 0512345678)</small>
-                    <small class="error-text" id="phone-error">Phone must start with 05 followed by 8 digits</small>
+                    <small class="error-text" id="phone-error"></small>
                 </div>
 
                 <!-- Nationality -->
@@ -690,7 +699,7 @@
                     <small class="error-text" id="passwordConfirm-error"></small>
                 </div>
 
-                <button type="submit" id="register-btn" class="btn-auth" disabled>Create Account</button>
+                <button type="submit" id="register-btn" class="btn-auth btn-auth-notready">Create Account</button>
             </form>
         </div>
     </div>
@@ -745,7 +754,7 @@
     </div>
 </footer>
 
-<script src="{{ asset('js/auth.js') }}"></script>
+<script src="{{ asset('js/auth.js') }}?v={{ time() }}"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         // Image Carousel - pick a random image on load
@@ -760,6 +769,25 @@
         }
 
         setupRegisterForm();
+
+        // Toggle navbar auth buttons based on login state
+        const token = localStorage.getItem('auth_token');
+        if (token) {
+            const loginBtn  = document.getElementById('nav-login-btn');
+            const signupBtn = document.getElementById('nav-signup-btn');
+            const userBtn   = document.getElementById('nav-user-btn');
+            if (loginBtn)  loginBtn.style.display  = 'none';
+            if (signupBtn) signupBtn.style.display = 'none';
+            if (userBtn) {
+                userBtn.style.display = 'inline-flex';
+                try {
+                    const userData = JSON.parse(localStorage.getItem('user_data') || '{}');
+                    const firstName = (userData.name || '').split(' ')[0];
+                    const nameEl = document.getElementById('nav-user-name');
+                    if (nameEl && firstName) nameEl.textContent = firstName;
+                } catch(e) {}
+            }
+        }
     });
 </script>
 @endsection

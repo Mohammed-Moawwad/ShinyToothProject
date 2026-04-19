@@ -14,32 +14,323 @@
 @section('content')
 <div class="container-fluid px-0">
 
-    {{-- Stat Cards --}}
+    {{-- Stat Cards — change based on active tab --}}
     <div class="row g-3 mb-4">
-        <div class="col-sm-4">
-            <div class="stat-card">
-                <i class="bi bi-people-fill stat-card-bg-icon"></i>
-                <div class="stat-badge" style="background:#e6f5f3;color:#059386;"><i class="bi bi-people-fill"></i></div>
-                <div class="stat-num">{{ $patientCount }}</div>
-                <div class="stat-lbl">Total Patients</div>
+
+        @if($type === 'all')
+            <div class="col-sm-4">
+                <div class="stat-card">
+                    <i class="bi bi-people-fill stat-card-bg-icon"></i>
+                    <div class="stat-badge" style="background:#e6f5f3;color:#059386;"><i class="bi bi-people-fill"></i></div>
+                    <div class="stat-num">{{ $patientCount }}</div>
+                    <div class="stat-lbl">Total Patients</div>
+                </div>
             </div>
-        </div>
-        <div class="col-sm-4">
-            <div class="stat-card">
-                <i class="bi bi-person-badge-fill stat-card-bg-icon"></i>
-                <div class="stat-badge" style="background:#e7f1ff;color:#0056b3;"><i class="bi bi-person-badge-fill"></i></div>
-                <div class="stat-num">{{ $dentistCount }}</div>
-                <div class="stat-lbl">Total Doctors</div>
+            <div class="col-sm-4">
+                <div class="stat-card">
+                    <i class="bi bi-person-badge-fill stat-card-bg-icon"></i>
+                    <div class="stat-badge" style="background:#e7f1ff;color:#0056b3;"><i class="bi bi-person-badge-fill"></i></div>
+                    <div class="stat-num">{{ $dentistCount }}</div>
+                    <div class="stat-lbl">Total Doctors</div>
+                </div>
             </div>
-        </div>
-        <div class="col-sm-4">
-            <div class="stat-card">
-                <i class="bi bi-person-check-fill stat-card-bg-icon"></i>
-                <div class="stat-badge" style="background:#f0ecff;color:#6f42c1;"><i class="bi bi-person-check-fill"></i></div>
-                <div class="stat-num">{{ $patientCount + $dentistCount }}</div>
-                <div class="stat-lbl">Total Users</div>
+            <div class="col-sm-4">
+                <div class="stat-card">
+                    <i class="bi bi-person-check-fill stat-card-bg-icon"></i>
+                    <div class="stat-badge" style="background:#f0ecff;color:#6f42c1;"><i class="bi bi-person-check-fill"></i></div>
+                    <div class="stat-num">{{ $patientCount + $dentistCount }}</div>
+                    <div class="stat-lbl">Total Users</div>
+                </div>
             </div>
-        </div>
+
+        @elseif($type === 'dentists')
+            {{-- Row 1: Status counts --}}
+            <div class="col-6 col-sm-3">
+                <div class="stat-card">
+                    <i class="bi bi-person-badge-fill stat-card-bg-icon"></i>
+                    <div class="stat-badge" style="background:#e7f1ff;color:#0056b3;"><i class="bi bi-person-badge-fill"></i></div>
+                    <div class="stat-num">{{ $stats['doctors']['total'] }}</div>
+                    <div class="stat-lbl">Total Doctors</div>
+                </div>
+            </div>
+            <div class="col-6 col-sm-3">
+                <div class="stat-card" style="border-left:3px solid #059386;">
+                    <i class="bi bi-check-circle-fill stat-card-bg-icon"></i>
+                    <div class="stat-badge" style="background:#d4f5e4;color:#0f6b3a;"><i class="bi bi-check-circle-fill"></i></div>
+                    <div class="stat-num" style="color:#059386;">{{ $stats['doctors']['active'] }}</div>
+                    <div class="stat-lbl">Active</div>
+                </div>
+            </div>
+            <div class="col-6 col-sm-3">
+                <div class="stat-card" style="border-left:3px solid #c0392b;">
+                    <i class="bi bi-x-circle-fill stat-card-bg-icon"></i>
+                    <div class="stat-badge" style="background:#fde8e8;color:#c0392b;"><i class="bi bi-x-circle-fill"></i></div>
+                    <div class="stat-num" style="color:#c0392b;">{{ $stats['doctors']['inactive'] }}</div>
+                    <div class="stat-lbl">Inactive</div>
+                </div>
+            </div>
+            <div class="col-6 col-sm-3">
+                <div class="stat-card" style="border-left:3px solid #b86e00;">
+                    <i class="bi bi-hourglass-split stat-card-bg-icon"></i>
+                    <div class="stat-badge" style="background:#fff4e5;color:#b86e00;"><i class="bi bi-hourglass-split"></i></div>
+                    <div class="stat-num" style="color:#b86e00;">{{ $stats['doctors']['on_leave'] }}</div>
+                    <div class="stat-lbl">On Leave</div>
+                </div>
+            </div>
+            {{-- Row 2: Averages --}}
+            <div class="col-6 col-sm-3">
+                <div class="stat-card" style="border-left:3px solid #6f42c1;">
+                    <i class="bi bi-mortarboard-fill stat-card-bg-icon"></i>
+                    <div class="stat-badge" style="background:#f0ecff;color:#6f42c1;"><i class="bi bi-mortarboard-fill"></i></div>
+                    <div class="stat-num" style="color:#6f42c1;">{{ $stats['doctors']['avg_experience'] }} <small style="font-size:.55em;">yrs</small></div>
+                    <div class="stat-lbl">Avg. Experience</div>
+                </div>
+            </div>
+            <div class="col-6 col-sm-3">
+                <div class="stat-card" style="border-left:3px solid #059386;">
+                    <i class="bi bi-cash-stack stat-card-bg-icon"></i>
+                    <div class="stat-badge" style="background:#e6f5f3;color:#059386;"><i class="bi bi-cash-stack"></i></div>
+                    <div class="stat-num" style="color:#059386;">SAR {{ number_format($stats['doctors']['avg_salary']) }}</div>
+                    <div class="stat-lbl">Avg. Salary</div>
+                </div>
+            </div>
+            {{-- Row 3: Breakdown panels --}}
+            @if($stats['doctors']['specializations']->isNotEmpty())
+            <div class="col-12 col-md-6">
+                <div class="panel" style="margin-bottom:0;">
+                    <div class="panel-head"><div class="panel-head-title"><i class="bi bi-diagram-3-fill"></i> Doctors by Specialization</div></div>
+                    <div style="padding:12px 16px;">
+                        @foreach($stats['doctors']['specializations'] as $spec)
+                        @php $pct = $stats['doctors']['total'] > 0 ? round(($spec->dentists_count / $stats['doctors']['total']) * 100) : 0; @endphp
+                        <div style="margin-bottom:10px;">
+                            <div class="d-flex justify-content-between mb-1" style="font-size:.8rem;">
+                                <span>{{ $spec->name }}</span>
+                                <span style="color:var(--text-muted);">{{ $spec->dentists_count }} ({{ $pct }}%)</span>
+                            </div>
+                            <div style="background:#e9ecef;border-radius:4px;height:6px;">
+                                <div style="background:var(--teal);width:{{ $pct }}%;height:6px;border-radius:4px;"></div>
+                            </div>
+                        </div>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+            @endif
+            @if($stats['doctors']['nationalities']->isNotEmpty())
+            <div class="col-12 col-md-6">
+                <div class="panel" style="margin-bottom:0;">
+                    <div class="panel-head"><div class="panel-head-title"><i class="bi bi-globe2"></i> Top Nationalities (Doctors)</div></div>
+                    <div style="padding:12px 16px;">
+                        @foreach($stats['doctors']['nationalities'] as $nat)
+                        @php $pct = $stats['doctors']['total'] > 0 ? round(($nat->total / $stats['doctors']['total']) * 100) : 0; @endphp
+                        <div style="margin-bottom:10px;">
+                            <div class="d-flex justify-content-between mb-1" style="font-size:.8rem;">
+                                <span>{{ $nat->nationality }}</span>
+                                <span style="color:var(--text-muted);">{{ $nat->total }} ({{ $pct }}%)</span>
+                            </div>
+                            <div style="background:#e9ecef;border-radius:4px;height:6px;">
+                                <div style="background:#0056b3;width:{{ $pct }}%;height:6px;border-radius:4px;"></div>
+                            </div>
+                        </div>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+            @endif
+            {{-- Leaderboards row --}}
+            <div class="col-12">
+                <div class="row g-3">
+                    {{-- Top Rated --}}
+                    <div class="col-12 col-md-4">
+                        <div class="panel" style="margin-bottom:0;height:100%;">
+                            <div class="panel-head"><div class="panel-head-title"><i class="bi bi-star-fill" style="color:#f5a623;"></i> Top 3 by Rating</div></div>
+                            <div style="padding:12px 16px;">
+                                @forelse($stats['doctors']['top_rated'] as $i => $doc)
+                                <div class="d-flex align-items-center gap-3" style="padding:8px 0;{{ !$loop->last ? 'border-bottom:1px solid var(--border);' : '' }}">
+                                    <span style="font-size:1.2rem;font-weight:800;color:{{ $i===0 ? '#f5a623' : ($i===1 ? '#9e9e9e' : '#cd7f32') }};min-width:22px;">#{{ $i+1 }}</span>
+                                    @if($doc->image)
+                                        <img src="{{ asset($doc->image) }}" style="width:38px;height:38px;border-radius:50%;object-fit:cover;border:2px solid var(--teal);">
+                                    @else
+                                        <div style="width:38px;height:38px;border-radius:50%;background:var(--teal-light);display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--teal);font-size:.9rem;">{{ strtoupper(substr($doc->name,0,1)) }}</div>
+                                    @endif
+                                    <div style="flex:1;min-width:0;">
+                                        <div style="font-weight:600;font-size:.85rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ $doc->name }}</div>
+                                        <div style="font-size:.75rem;color:var(--text-muted);">
+                                            @for($s=1;$s<=5;$s++)<i class="bi bi-star{{ $s <= round($doc->avg_rating) ? '-fill' : '' }}" style="color:#f5a623;font-size:.65rem;"></i>@endfor
+                                            {{ $doc->avg_rating }} <span style="color:#ccc;">({{ $doc->rating_count }})</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                @empty
+                                <p style="color:var(--text-muted);font-size:.82rem;text-align:center;padding:20px 0;">No ratings yet</p>
+                                @endforelse
+                            </div>
+                        </div>
+                    </div>
+                    {{-- Highest Salary --}}
+                    <div class="col-12 col-md-4">
+                        <div class="panel" style="margin-bottom:0;height:100%;">
+                            <div class="panel-head"><div class="panel-head-title"><i class="bi bi-arrow-up-circle-fill" style="color:#059386;"></i> Highest Salaries</div></div>
+                            <div style="padding:12px 16px;">
+                                @foreach($stats['doctors']['highest_salary'] as $i => $doc)
+                                <div class="d-flex align-items-center gap-3" style="padding:8px 0;{{ !$loop->last ? 'border-bottom:1px solid var(--border);' : '' }}">
+                                    <span style="font-size:1.2rem;font-weight:800;color:#059386;min-width:22px;">#{{ $i+1 }}</span>
+                                    @if($doc->image)
+                                        <img src="{{ asset($doc->image) }}" style="width:38px;height:38px;border-radius:50%;object-fit:cover;border:2px solid var(--teal);">
+                                    @else
+                                        <div style="width:38px;height:38px;border-radius:50%;background:var(--teal-light);display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--teal);font-size:.9rem;">{{ strtoupper(substr($doc->name,0,1)) }}</div>
+                                    @endif
+                                    <div style="flex:1;min-width:0;">
+                                        <div style="font-weight:600;font-size:.85rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ $doc->name }}</div>
+                                        <div style="font-size:.8rem;color:#059386;font-weight:700;">SAR {{ number_format($doc->salary) }}</div>
+                                    </div>
+                                </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
+                    {{-- Lowest Salary --}}
+                    <div class="col-12 col-md-4">
+                        <div class="panel" style="margin-bottom:0;height:100%;">
+                            <div class="panel-head"><div class="panel-head-title"><i class="bi bi-arrow-down-circle-fill" style="color:#c0392b;"></i> Lowest Salaries</div></div>
+                            <div style="padding:12px 16px;">
+                                @foreach($stats['doctors']['lowest_salary'] as $i => $doc)
+                                <div class="d-flex align-items-center gap-3" style="padding:8px 0;{{ !$loop->last ? 'border-bottom:1px solid var(--border);' : '' }}">
+                                    <span style="font-size:1.2rem;font-weight:800;color:#c0392b;min-width:22px;">#{{ $i+1 }}</span>
+                                    @if($doc->image)
+                                        <img src="{{ asset($doc->image) }}" style="width:38px;height:38px;border-radius:50%;object-fit:cover;border:2px solid #c0392b;">
+                                    @else
+                                        <div style="width:38px;height:38px;border-radius:50%;background:#fde8e8;display:flex;align-items:center;justify-content:center;font-weight:700;color:#c0392b;font-size:.9rem;">{{ strtoupper(substr($doc->name,0,1)) }}</div>
+                                    @endif
+                                    <div style="flex:1;min-width:0;">
+                                        <div style="font-weight:600;font-size:.85rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ $doc->name }}</div>
+                                        <div style="font-size:.8rem;color:#c0392b;font-weight:700;">SAR {{ number_format($doc->salary) }}</div>
+                                    </div>
+                                </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        @elseif($type === 'patients')
+            {{-- Row 1: Core counts --}}
+            <div class="col-6 col-sm-3">
+                <div class="stat-card">
+                    <i class="bi bi-people-fill stat-card-bg-icon"></i>
+                    <div class="stat-badge" style="background:#e6f5f3;color:#059386;"><i class="bi bi-people-fill"></i></div>
+                    <div class="stat-num">{{ $stats['patients']['total'] }}</div>
+                    <div class="stat-lbl">Total Patients</div>
+                </div>
+            </div>
+            <div class="col-6 col-sm-3">
+                <div class="stat-card" style="border-left:3px solid #0056b3;">
+                    <i class="bi bi-gender-male stat-card-bg-icon"></i>
+                    <div class="stat-badge" style="background:#e7f1ff;color:#0056b3;"><i class="bi bi-gender-male"></i></div>
+                    <div class="stat-num" style="color:#0056b3;">{{ $stats['patients']['male'] }}</div>
+                    <div class="stat-lbl">Male</div>
+                </div>
+            </div>
+            <div class="col-6 col-sm-3">
+                <div class="stat-card" style="border-left:3px solid #c86b9e;">
+                    <i class="bi bi-gender-female stat-card-bg-icon"></i>
+                    <div class="stat-badge" style="background:#fce8f5;color:#c86b9e;"><i class="bi bi-gender-female"></i></div>
+                    <div class="stat-num" style="color:#c86b9e;">{{ $stats['patients']['female'] }}</div>
+                    <div class="stat-lbl">Female</div>
+                </div>
+            </div>
+            <div class="col-6 col-sm-3">
+                <div class="stat-card" style="border-left:3px solid #c0392b;">
+                    <i class="bi bi-shield-x-fill stat-card-bg-icon"></i>
+                    <div class="stat-badge" style="background:#fde8e8;color:#c0392b;"><i class="bi bi-shield-x-fill"></i></div>
+                    <div class="stat-num" style="color:#c0392b;">{{ $stats['patients']['blocked'] }}</div>
+                    <div class="stat-lbl">Blocked</div>
+                </div>
+            </div>
+            {{-- Row 2: Engagement --}}
+            <div class="col-6 col-sm-3">
+                <div class="stat-card" style="border-left:3px solid #059386;">
+                    <i class="bi bi-calendar2-check-fill stat-card-bg-icon"></i>
+                    <div class="stat-badge" style="background:#e6f5f3;color:#059386;"><i class="bi bi-calendar2-check-fill"></i></div>
+                    <div class="stat-num" style="color:#059386;">{{ $stats['patients']['with_appts'] }}</div>
+                    <div class="stat-lbl">Have Appointments</div>
+                </div>
+            </div>
+            <div class="col-6 col-sm-3">
+                <div class="stat-card" style="border-left:3px solid #6f42c1;">
+                    <i class="bi bi-person-slash stat-card-bg-icon"></i>
+                    <div class="stat-badge" style="background:#f0ecff;color:#6f42c1;"><i class="bi bi-person-slash"></i></div>
+                    <div class="stat-num" style="color:#6f42c1;">{{ $stats['patients']['total'] - $stats['patients']['with_appts'] }}</div>
+                    <div class="stat-lbl">No Appointments Yet</div>
+                </div>
+            </div>
+            {{-- Row 3: Breakdown panels --}}
+            @if($stats['patients']['blood_types']->isNotEmpty())
+            <div class="col-12 col-md-6">
+                <div class="panel" style="margin-bottom:0;">
+                    <div class="panel-head"><div class="panel-head-title"><i class="bi bi-droplet-fill" style="color:#c0392b;"></i> Patients by Blood Type</div></div>
+                    <div style="padding:12px 16px;">
+                        @foreach($stats['patients']['blood_types'] as $bt)
+                        @php $pct = $stats['patients']['total'] > 0 ? round(($bt->total / $stats['patients']['total']) * 100) : 0; @endphp
+                        <div style="margin-bottom:10px;">
+                            <div class="d-flex justify-content-between mb-1" style="font-size:.8rem;">
+                                <span style="font-weight:600;">{{ $bt->blood_type }}</span>
+                                <span style="color:var(--text-muted);">{{ $bt->total }} ({{ $pct }}%)</span>
+                            </div>
+                            <div style="background:#e9ecef;border-radius:4px;height:6px;">
+                                <div style="background:#c0392b;width:{{ $pct }}%;height:6px;border-radius:4px;"></div>
+                            </div>
+                        </div>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+            @endif
+            @if($stats['patients']['nationalities']->isNotEmpty())
+            <div class="col-12 col-md-6">
+                <div class="panel" style="margin-bottom:0;">
+                    <div class="panel-head"><div class="panel-head-title"><i class="bi bi-globe2"></i> Top Nationalities (Patients)</div></div>
+                    <div style="padding:12px 16px;">
+                        @foreach($stats['patients']['nationalities'] as $nat)
+                        @php $pct = $stats['patients']['total'] > 0 ? round(($nat->total / $stats['patients']['total']) * 100) : 0; @endphp
+                        <div style="margin-bottom:10px;">
+                            <div class="d-flex justify-content-between mb-1" style="font-size:.8rem;">
+                                <span>{{ $nat->nationality }}</span>
+                                <span style="color:var(--text-muted);">{{ $nat->total }} ({{ $pct }}%)</span>
+                            </div>
+                            <div style="background:#e9ecef;border-radius:4px;height:6px;">
+                                <div style="background:#059386;width:{{ $pct }}%;height:6px;border-radius:4px;"></div>
+                            </div>
+                        </div>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+            @endif
+            {{-- Most Booking Patients --}}
+            @if(isset($stats['patients']['most_booking']) && $stats['patients']['most_booking']->isNotEmpty())
+            <div class="col-12 col-md-6">
+                <div class="panel" style="margin-bottom:0;">
+                    <div class="panel-head"><div class="panel-head-title"><i class="bi bi-trophy-fill" style="color:#f5a623;"></i> Most Active Patients (by Bookings)</div></div>
+                    <div style="padding:12px 16px;">
+                        @foreach($stats['patients']['most_booking'] as $i => $pat)
+                        <div class="d-flex align-items-center gap-3" style="padding:8px 0;{{ !$loop->last ? 'border-bottom:1px solid var(--border);' : '' }}">
+                            <span style="font-size:1.2rem;font-weight:800;color:{{ $i===0 ? '#f5a623' : ($i===1 ? '#9e9e9e' : '#cd7f32') }};min-width:22px;">#{{ $i+1 }}</span>
+                            <div style="width:38px;height:38px;border-radius:50%;background:#e6f5f3;display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--teal);font-size:.9rem;">{{ strtoupper(substr($pat->name,0,1)) }}</div>
+                            <div style="flex:1;min-width:0;">
+                                <div style="font-weight:600;font-size:.85rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ $pat->name }}</div>
+                                <div style="font-size:.75rem;color:var(--text-muted);">{{ $pat->email }}</div>
+                            </div>
+                            <span class="count-badge" style="font-size:.85rem;padding:4px 10px;">{{ $pat->appt_count }} appts</span>
+                        </div>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+            @endif
+        @endif
+
     </div>
 
     {{-- Tab bar + search + add button --}}

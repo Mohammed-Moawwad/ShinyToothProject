@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\PatientDashboardController;
+use App\Http\Controllers\PatientProfileController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ServicesController;
 use App\Http\Controllers\BookingController;
@@ -30,7 +32,9 @@ Route::middleware('admin')->prefix('admin')->group(function () {
     Route::get('/appointments/dentist/{dentistId}', [AdminController::class, 'appointmentsByDentist'])->name('admin.appointments.by-dentist');
     Route::get('/payments', [AdminController::class, 'payments'])->name('admin.payments');
     Route::get('/services', [AdminController::class, 'services'])->name('admin.services');
+    Route::post('/services', [AdminController::class, 'storeService'])->name('admin.services.store');
     Route::get('/analytics', [AdminController::class, 'analytics'])->name('admin.analytics');
+    Route::get('/analytics/report/generate', [AdminController::class, 'generateReport'])->name('admin.analytics.report');
 
     // Doctors CRUD
     Route::get('/doctors', [AdminController::class, 'doctors'])->name('admin.doctors');
@@ -70,10 +74,11 @@ Route::post('/register', [AuthController::class, 'registerPatient'])->name('regi
 Route::post('/login',    [AuthController::class, 'loginPatient'])->name('login.store');
 
 // ─── Protected routes (after login) ──────────────────────────────────────
-Route::middleware('auth:sanctum')->group(function () {
-    Route::get('/patient/dashboard', function () {
-        return view('patient.dashboard');
-    })->name('patient.dashboard');
+Route::middleware('auth')->group(function () {
+    Route::get('/patient/dashboard', [PatientDashboardController::class, 'index'])->name('patient.dashboard');
+    Route::get('/patient/profile', [PatientProfileController::class, 'show'])->name('patient.profile');
+    Route::put('/patient/profile', [PatientProfileController::class, 'update'])->name('patient.profile.update');
+    Route::get('/my-subscription', [SubscriptionController::class, 'mySubscription'])->name('subscriptions.my');
 
     Route::get('/dentist/dashboard', function () {
         return view('dentist.dashboard');
@@ -93,7 +98,6 @@ Route::get('/doctors/{id}', [DoctorController::class, 'show'])->where('id', '[0-
 
 // ─── Patient subscription actions ──────────────────────────────────────
 Route::post('/subscriptions/request',              [SubscriptionController::class, 'sendRequest'])->name('subscriptions.request');
-Route::get('/my-subscription',                     [SubscriptionController::class, 'mySubscription'])->name('subscriptions.my');
 Route::post('/subscriptions/{id}/cancel-request',  [SubscriptionController::class, 'requestCancel'])->name('subscriptions.cancel');
 Route::post('/subscriptions/{id}/switch-request',  [SubscriptionController::class, 'requestSwitch'])->name('subscriptions.switch');
 Route::post('/subscriptions/{id}/rate',            [SubscriptionController::class, 'ratePlan'])->name('subscriptions.rate');

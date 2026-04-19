@@ -335,9 +335,17 @@
                 <a href="/#who-we-are" class="nav-link-custom">Who are we</a>
                 <a href="/#contact"    class="nav-link-custom">Contact us</a>
             </div>
-            <div class="d-flex align-items-center gap-2">
-                <a href="/login"    class="btn-nav-login">Login</a>
-                <a href="/register" class="btn-nav-signup">Sign Up</a>
+            <div class="d-flex align-items-center gap-2" id="nav-auth-area">
+                <a href="/login"    class="btn-nav-login" id="nav-login-btn">Login</a>
+                <a href="/register" class="btn-nav-signup" id="nav-signup-btn">Sign Up</a>
+                <a href="/patient/dashboard" id="nav-user-btn" style="display:none; align-items:center; gap:9px; background:#fff; border:1.5px solid #fff; border-radius:50px; padding:5px 14px 5px 5px; text-decoration:none; transition:all .2s; box-shadow:0 2px 8px rgba(0,0,0,.12);" title="My Dashboard"
+                   onmouseover="this.style.background='#f0f6ff'" onmouseout="this.style.background='#fff'">
+                    <div style="width:32px; height:32px; border-radius:50%; background:linear-gradient(135deg,#059386,#003263); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                        <i class="bi bi-person-fill" style="color:#fff; font-size:.95rem;"></i>
+                    </div>
+                    <span id="nav-user-name" style="color:#003263; font-size:.85rem; font-weight:600; max-width:110px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">My Account</span>
+                    <i class="bi bi-grid-fill" style="color:#059386; font-size:.75rem;"></i>
+                </a>
             </div>
         </div>
     </div>
@@ -491,6 +499,9 @@
                     if (response.ok) {
                         localStorage.setItem('auth_token', data.token);
                         localStorage.setItem('user_type', data.user_type);
+                        localStorage.setItem('user_role', data.user_type);
+                        const userData = data.patient || data.dentist || null;
+                        if (userData) localStorage.setItem('user_data', JSON.stringify(userData));
                         const redirect = data.redirect || (data.user_type === 'dentist' ? '/doctor/dashboard' : '/patient/dashboard');
                         window.location.href = redirect;
                     } else {
@@ -516,6 +527,24 @@
                 passwordIcon.classList.toggle('bi-eye', !isPassword);
                 passwordIcon.classList.toggle('bi-eye-slash', isPassword);
             });
+        }
+        // Toggle navbar auth buttons based on login state
+        const authToken = localStorage.getItem('auth_token');
+        if (authToken) {
+            const loginBtn  = document.getElementById('nav-login-btn');
+            const signupBtn = document.getElementById('nav-signup-btn');
+            const userBtn   = document.getElementById('nav-user-btn');
+            if (loginBtn)  loginBtn.style.display  = 'none';
+            if (signupBtn) signupBtn.style.display = 'none';
+            if (userBtn) {
+                userBtn.style.display = 'inline-flex';
+                try {
+                    const userData = JSON.parse(localStorage.getItem('user_data') || '{}');
+                    const firstName = (userData.name || '').split(' ')[0];
+                    const nameEl = document.getElementById('nav-user-name');
+                    if (nameEl && firstName) nameEl.textContent = firstName;
+                } catch(e) {}
+            }
         }
     });
 </script>

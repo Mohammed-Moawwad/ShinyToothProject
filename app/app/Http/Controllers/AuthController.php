@@ -33,10 +33,24 @@ class AuthController extends Controller
         $data['name'] = $data['full_name'];
         unset($data['full_name']);
 
-        $data['password'] = Hash::make($data['password']);
+        // Ensure address is never null (DB column is NOT NULL)
+        $data['address'] = $data['address'] ?? '';
+
+        // Password is hashed automatically by the Patient model's 'hashed' cast
         $patient = Patient::create($data);
 
         $token = $patient->createToken('patient-token')->plainTextToken;
+
+        // Always create web session when session is available (web routes)
+        if ($request->hasSession()) {
+            Auth::guard('web')->login($patient);
+            $request->session()->regenerate();
+        }
+
+        // If this is a web form submission (not API/JSON), redirect instead
+        if (!$request->expectsJson() && !$request->is('api/*')) {
+            return redirect('/patient/dashboard');
+        }
 
         return response()->json([
             'patient' => $patient,
@@ -80,19 +94,9 @@ class AuthController extends Controller
 
         $token = $patient->createToken('patient-token')->plainTextToken;
 
-        // Check if this is the admin account — also establish a web session
-        $adminEmail = env('ADMIN_EMAIL', 'admin@shinytooth.com');
-        if ($patient->email === $adminEmail) {
-            Auth::guard('web')->login($patient);
-            $request->session()->regenerate();
-
-            return response()->json([
-                'patient'   => $patient,
-                'token'     => $token,
-                'user_type' => 'admin',
-                'redirect'  => '/admin/dashboard',
-            ]);
-        }
+        // Establish a web session for all patients (needed for dashboard)
+        Auth::guard('web')->login($patient);
+        $request->session()->regenerate();
 
         return response()->json([
             'patient' => $patient,
@@ -129,7 +133,7 @@ class AuthController extends Controller
             'nationality'    => 'nullable|string|max:100',
         ]);
 
-        $data['password'] = Hash::make($data['password']);
+        // Password is hashed automatically by the Dentist model's 'hashed' cast
         $dentist = Dentist::create($data);
 
         $token = $dentist->createToken('dentist-token')->plainTextToken;

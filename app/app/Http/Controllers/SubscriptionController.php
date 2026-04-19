@@ -7,6 +7,7 @@ use App\Models\DoctorSubscription;
 use App\Models\Patient;
 use App\Models\SubscriptionRating;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class SubscriptionController extends Controller
 {
@@ -57,8 +58,8 @@ class SubscriptionController extends Controller
      */
     public function mySubscription(Request $request)
     {
-        // For now, get patient_id from query param; will use auth later
-        $patientId = $request->query('patient');
+        $patient = Auth::user();
+        $patientId = $patient->id;
 
         $subscription = DoctorSubscription::with([
             'dentist.specializations',
@@ -71,7 +72,7 @@ class SubscriptionController extends Controller
             ->latest()
             ->first();
 
-        return view('patient.subscription', compact('subscription', 'patientId'));
+        return view('patient.subscription', compact('subscription', 'patientId', 'patient'));
     }
 
     /**
