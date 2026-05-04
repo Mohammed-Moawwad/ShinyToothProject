@@ -497,11 +497,11 @@
                     const data = await response.json();
 
                     if (response.ok) {
-                        localStorage.setItem('auth_token', data.token);
-                        localStorage.setItem('user_type', data.user_type);
-                        localStorage.setItem('user_role', data.user_type);
+                        sessionStorage.setItem('auth_token', data.token);
+                        sessionStorage.setItem('user_type', data.user_type);
+                        sessionStorage.setItem('user_role', data.user_type);
                         const userData = data.patient || data.dentist || null;
-                        if (userData) localStorage.setItem('user_data', JSON.stringify(userData));
+                        if (userData) sessionStorage.setItem('user_data', JSON.stringify(userData));
                         const redirect = data.redirect || (data.user_type === 'dentist' ? '/doctor/dashboard' : '/patient/dashboard');
                         window.location.href = redirect;
                     } else {
@@ -529,7 +529,12 @@
             });
         }
         // Toggle navbar auth buttons based on login state
-        const authToken = localStorage.getItem('auth_token');
+        // Use sessionStorage so auth doesn't persist on "first visit"
+        ;['auth_token','user_type','user_role','user_data'].forEach((k) => {
+            try { localStorage.removeItem(k); } catch(e) {}
+        });
+
+        const authToken = sessionStorage.getItem('auth_token');
         if (authToken) {
             const loginBtn  = document.getElementById('nav-login-btn');
             const signupBtn = document.getElementById('nav-signup-btn');
@@ -539,7 +544,7 @@
             if (userBtn) {
                 userBtn.style.display = 'inline-flex';
                 try {
-                    const userData = JSON.parse(localStorage.getItem('user_data') || '{}');
+                    const userData = JSON.parse(sessionStorage.getItem('user_data') || '{}');
                     const firstName = (userData.name || '').split(' ')[0];
                     const nameEl = document.getElementById('nav-user-name');
                     if (nameEl && firstName) nameEl.textContent = firstName;

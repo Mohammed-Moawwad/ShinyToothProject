@@ -412,6 +412,12 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
     function doLogout() {
+        sessionStorage.removeItem('auth_token');
+        sessionStorage.removeItem('user_type');
+        sessionStorage.removeItem('user_role');
+        sessionStorage.removeItem('user_data');
+
+        // Clear legacy keys too
         localStorage.removeItem('auth_token');
         localStorage.removeItem('user_type');
         localStorage.removeItem('user_role');

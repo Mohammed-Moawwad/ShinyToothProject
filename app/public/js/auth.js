@@ -458,21 +458,21 @@ function isValidSaudiPhone(phone) {
  * Get Stored Auth Token
  */
 function getAuthToken() {
-    return localStorage.getItem("auth_token");
+    return sessionStorage.getItem("auth_token");
 }
 
 /**
  * Get Stored User Role
  */
 function getUserRole() {
-    return localStorage.getItem("user_role");
+    return sessionStorage.getItem("user_role");
 }
 
 /**
  * Get Stored User Data
  */
 function getUserData() {
-    const data = localStorage.getItem("user_data");
+    const data = sessionStorage.getItem("user_data");
     return data ? JSON.parse(data) : null;
 }
 
@@ -487,8 +487,15 @@ function isAuthenticated() {
  * Logout User
  */
 function logout() {
+    sessionStorage.removeItem("auth_token");
+    sessionStorage.removeItem("user_role");
+    sessionStorage.removeItem("user_type");
+    sessionStorage.removeItem("user_data");
+
+    // Clear legacy keys too
     localStorage.removeItem("auth_token");
     localStorage.removeItem("user_role");
+    localStorage.removeItem("user_type");
     localStorage.removeItem("user_data");
     window.location.href = "/login";
 }

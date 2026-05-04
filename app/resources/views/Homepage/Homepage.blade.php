@@ -1695,7 +1695,13 @@ window.addEventListener('scroll', function () {
 <script>
 // Toggle navbar auth buttons based on login state
 (function() {
-    const token = localStorage.getItem('auth_token');
+    // Use sessionStorage so users aren't "stuck logged in" on first visit.
+    // Clear legacy localStorage auth keys (from older builds).
+    ['auth_token','user_type','user_role','user_data'].forEach((k) => {
+        try { localStorage.removeItem(k); } catch(e) {}
+    });
+
+    const token = sessionStorage.getItem('auth_token');
     if (token) {
         const loginBtn  = document.getElementById('nav-login-btn');
         const signupBtn = document.getElementById('nav-signup-btn');
@@ -1706,7 +1712,7 @@ window.addEventListener('scroll', function () {
             userBtn.style.display = 'inline-flex';
             // Populate name from localStorage
             try {
-                const userData = JSON.parse(localStorage.getItem('user_data') || '{}');
+                const userData = JSON.parse(sessionStorage.getItem('user_data') || '{}');
                 const firstName = (userData.name || '').split(' ')[0];
                 const nameEl = document.getElementById('nav-user-name');
                 if (nameEl && firstName) nameEl.textContent = firstName;
@@ -1714,7 +1720,7 @@ window.addEventListener('scroll', function () {
         }
 
         // Direct to correct dashboard based on user type
-        const userType = localStorage.getItem('user_type') || localStorage.getItem('user_role');
+        const userType = sessionStorage.getItem('user_type') || sessionStorage.getItem('user_role');
         if (userBtn && userType === 'dentist') {
             userBtn.href = '/doctor/dashboard';
         }
