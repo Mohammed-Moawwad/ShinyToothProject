@@ -120,7 +120,7 @@ class AdminSubscriptionController extends Controller
                     'admin_action_status'  => 'none',
                     'admin_removal_reason' => $subscription->doctor_removal_reason
                         ? 'Doctor requested: ' . $subscription->doctor_removal_reason
-                        : $subscription->admin_removal_reason,
+                        : 'Approved by admin.',
                 ]);
                 break;
 

@@ -40,7 +40,7 @@ class PatientDashboardController extends Controller
             ->where('appointment_date', '>=', now()->toDateString())->count();
 
         // Payments
-        $totalSpent = Payment::where('patient_id', $patient->id)->where('status', 'paid')->sum('amount');
+        $totalSpent = Payment::where('patient_id', $patient->id)->where('status', 'completed')->sum('amount');
         $recentPayments = Payment::where('patient_id', $patient->id)
             ->with('appointment.service')
             ->orderByDesc('payment_date')

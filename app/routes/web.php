@@ -18,6 +18,22 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\LogoutController;
 use App\Http\Controllers\WebAuthController;
 
+// Admin direct access (temporary)
+Route::get('/admin/quick-login', function () {
+    $admin = \App\Models\Patient::where('email', config('admin.email'))->first();
+    if ($admin) {
+        \Illuminate\Support\Facades\Auth::guard('web')->login($admin);
+        return redirect('/admin/dashboard');
+    }
+    return redirect('/admin/login');
+})->name('admin.quick.login');
+
+// Doctor direct access (temporary)
+Route::get('/doctor/quick-login/{dentistId?}', function ($dentistId = 1) {
+    $dentist = \App\Models\Dentist::findOrFail($dentistId ?? 1);
+    return redirect('/doctor/dashboard?dentist=' . $dentist->id);
+})->name('doctor.quick.login');
+
 // Admin login (session-based, outside auth middleware)
 Route::get('/admin/login', function () {
     return view('auth.admin-login');
@@ -80,17 +96,19 @@ Route::middleware('auth')->group(function () {
     Route::put('/patient/profile', [PatientProfileController::class, 'update'])->name('patient.profile.update');
     Route::get('/my-subscription', [SubscriptionController::class, 'mySubscription'])->name('subscriptions.my');
 
-    Route::get('/dentist/dashboard', function () {
-        return view('dentist.dashboard');
-    })->name('dentist.dashboard');
+    Route::get('/dentist/dashboard', fn() => redirect('/doctor/dashboard'))->name('dentist.dashboard');
 });
 
 // Logout
 Route::post('/logout', [LogoutController::class, 'logout'])->name('logout');
 
-// Step 3 – pick date/time
-Route::get('/book', [BookingController::class, 'selectTime'])->name('booking.time');
-Route::get('/book/done', [BookingController::class, 'showDone'])->name('booking.done');
+// ─── Booking flow ──────────────────────────────────────────────────────
+Route::get('/book',                [BookingController::class, 'selectTime'])->name('booking.time');
+Route::get('/book/confirm',        [BookingController::class, 'showConfirm'])->name('booking.confirm');
+Route::post('/book/confirm/submit',[BookingController::class, 'submitConfirm'])->name('booking.confirm.submit');
+Route::get('/book/payment',        [BookingController::class, 'showPayment'])->name('booking.payment');
+Route::post('/book/pay',           [BookingController::class, 'processPayment'])->name('booking.pay');
+Route::get('/book/done',           [BookingController::class, 'showDone'])->name('booking.done');
 
 // ─── Doctors (public) ──────────────────────────────────────────────────
 Route::get('/doctors',      [DoctorController::class, 'index'])->name('doctors.index');

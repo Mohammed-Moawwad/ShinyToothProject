@@ -30,6 +30,10 @@ class VacationRequest extends Model
 
     public function getDaysCountAttribute(): int
     {
+        if (is_null($this->end_date)) {
+            return 1;
+        }
+
         return $this->start_date->diffInDays($this->end_date) + 1;
     }
 }

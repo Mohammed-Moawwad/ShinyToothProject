@@ -99,7 +99,7 @@ class AuthController extends Controller
         $request->session()->regenerate();
 
         // Check if this is an admin account
-        $adminEmail = env('ADMIN_EMAIL', 'admin@shinytooth.com');
+        $adminEmail = config('admin.email');
         $redirectPath = $patient->email === $adminEmail ? '/admin/dashboard' : '/patient/dashboard';
 
         return response()->json([

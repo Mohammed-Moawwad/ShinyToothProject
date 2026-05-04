@@ -417,8 +417,8 @@
             <div class="d-none d-md-flex align-items-center gap-1">
                 <a href="/"         class="nav-link-custom">Home</a>
                 <a href="/services" class="nav-link-custom" style="background:rgba(255,255,255,.15);">Services</a>
-                <a href="#doctors"  class="nav-link-custom">Doctors</a>
-                <a href="#contact"  class="nav-link-custom">Contact us</a>
+                <a href="/doctors"  class="nav-link-custom">Doctors</a>
+                <a href="/#contact" class="nav-link-custom">Contact us</a>
             </div>
             <div class="d-flex align-items-center gap-2">
                 <a href="/login"    class="btn-nav-login">Login</a>
@@ -547,7 +547,7 @@
                             <img src="/{{ $dentist->image }}" alt="{{ $dentist->name }}" class="doctor-strip-avatar">
                         @else
                             <div class="doctor-strip-initials">
-                                {{ strtoupper(substr($dentist->name, 3, 1)) }}{{ strtoupper(substr(strrchr($dentist->name, ' '), 1, 1)) }}
+                                {{ strtoupper(substr($dentist->name, 0, 1)) }}{{ strtoupper(substr(strrchr($dentist->name, ' '), 1, 1)) }}
                             </div>
                         @endif
                         <div>

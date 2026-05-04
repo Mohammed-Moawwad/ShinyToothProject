@@ -33,7 +33,7 @@ class WebAuthController extends Controller
         $request->session()->regenerate();
 
         // Check if the user is an admin
-        $adminEmail = env('ADMIN_EMAIL', 'admin@shinytooth.com');
+        $adminEmail = config('admin.email');
         if ($patient->email === $adminEmail) {
             return redirect('/admin/dashboard');
         }

@@ -60,16 +60,16 @@
             <div class="stat-card" style="border-left:3px solid #b86e00;">
                 <i class="bi bi-hourglass-split stat-card-bg-icon"></i>
                 <div class="stat-badge" style="background:#fff4e5;color:#b86e00;"><i class="bi bi-hourglass-split"></i></div>
-                <div class="stat-num" style="color:#b86e00;">{{ $statuses['pending'] ?? 0 }}</div>
-                <div class="stat-lbl">Pending</div>
+                <div class="stat-num" style="color:#b86e00;">{{ $statuses['scheduled'] ?? 0 }}</div>
+                <div class="stat-lbl">Scheduled</div>
             </div>
         </div>
         <div class="col-6 col-xl-3">
             <div class="stat-card" style="border-left:3px solid #0056b3;">
                 <i class="bi bi-check-circle stat-card-bg-icon"></i>
                 <div class="stat-badge" style="background:#e7f1ff;color:#0056b3;"><i class="bi bi-check-circle"></i></div>
-                <div class="stat-num" style="color:#0056b3;">{{ $statuses['confirmed'] ?? 0 }}</div>
-                <div class="stat-lbl">Confirmed</div>
+                <div class="stat-num" style="color:#0056b3;">{{ $statuses['no_show'] ?? 0 }}</div>
+                <div class="stat-lbl">No-Show</div>
             </div>
         </div>
         <div class="col-6 col-xl-3">
@@ -210,8 +210,8 @@
                     <label class="form-label">Status</label>
                     <select class="form-select" name="status">
                         <option value="all"       {{ $status === 'all'       ? 'selected' : '' }}>All Statuses</option>
-                        <option value="pending"   {{ $status === 'pending'   ? 'selected' : '' }}>Pending</option>
-                        <option value="confirmed" {{ $status === 'confirmed' ? 'selected' : '' }}>Confirmed</option>
+                        <option value="scheduled" {{ $status === 'scheduled' ? 'selected' : '' }}>Scheduled</option>
+                        <option value="no_show"   {{ $status === 'no_show'   ? 'selected' : '' }}>No-Show</option>
                         <option value="completed" {{ $status === 'completed' ? 'selected' : '' }}>Completed</option>
                         <option value="cancelled" {{ $status === 'cancelled' ? 'selected' : '' }}>Cancelled</option>
                     </select>
