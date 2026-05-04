@@ -500,8 +500,14 @@
                         sessionStorage.setItem('auth_token', data.token);
                         sessionStorage.setItem('user_type', data.user_type);
                         sessionStorage.setItem('user_role', data.user_type);
+                        localStorage.setItem('auth_token', data.token);
+                        localStorage.setItem('user_type', data.user_type);
+                        localStorage.setItem('user_role', data.user_type);
                         const userData = data.patient || data.dentist || null;
-                        if (userData) sessionStorage.setItem('user_data', JSON.stringify(userData));
+                        if (userData) {
+                            sessionStorage.setItem('user_data', JSON.stringify(userData));
+                            localStorage.setItem('user_data', JSON.stringify(userData));
+                        }
                         const redirect = data.redirect || (data.user_type === 'dentist' ? '/doctor/dashboard' : '/patient/dashboard');
                         window.location.href = redirect;
                     } else {
@@ -529,12 +535,17 @@
             });
         }
         // Toggle navbar auth buttons based on login state
-        // Use sessionStorage so auth doesn't persist on "first visit"
+        // Keep local + session storage in sync (patients also get a Laravel web session)
         ;['auth_token','user_type','user_role','user_data'].forEach((k) => {
-            try { localStorage.removeItem(k); } catch(e) {}
+            try {
+                const v = localStorage.getItem(k);
+                if (v !== null && sessionStorage.getItem(k) === null) {
+                    sessionStorage.setItem(k, v);
+                }
+            } catch(e) {}
         });
 
-        const authToken = sessionStorage.getItem('auth_token');
+        const authToken = sessionStorage.getItem('auth_token') || localStorage.getItem('auth_token');
         if (authToken) {
             const loginBtn  = document.getElementById('nav-login-btn');
             const signupBtn = document.getElementById('nav-signup-btn');
@@ -544,7 +555,7 @@
             if (userBtn) {
                 userBtn.style.display = 'inline-flex';
                 try {
-                    const userData = JSON.parse(sessionStorage.getItem('user_data') || '{}');
+                    const userData = JSON.parse(sessionStorage.getItem('user_data') || localStorage.getItem('user_data') || '{}');
                     const firstName = (userData.name || '').split(' ')[0];
                     const nameEl = document.getElementById('nav-user-name');
                     if (nameEl && firstName) nameEl.textContent = firstName;

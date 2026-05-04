@@ -713,9 +713,34 @@
                 <a href="#doctors"  class="nav-link-custom">Doctors</a>
                 <a href="#contact"  class="nav-link-custom">Contact us</a>
             </div>
-            <div class="d-flex align-items-center gap-2">
-                <a href="/login"    class="btn-nav-login">Login</a>
-                <a href="/register" class="btn-nav-signup">Sign Up</a>
+            <div class="d-flex align-items-center gap-2" id="nav-auth-area">
+                @auth
+                    @php
+                        $u = auth()->user();
+                        $isAdminPatient = $u && $u->email === config('admin.email');
+                        $dashHref = $isAdminPatient ? '/admin/dashboard' : '/patient/dashboard';
+                        $displayName = $u?->name ?? 'My Account';
+                    @endphp
+                    <a href="{{ $dashHref }}" id="nav-user-btn" style="display:inline-flex; align-items:center; gap:9px; background:#fff; border:1.5px solid #fff; border-radius:50px; padding:5px 14px 5px 5px; text-decoration:none; transition:all .2s; box-shadow:0 2px 8px rgba(0,0,0,.12);" title="My Dashboard"
+                       onmouseover="this.style.background='#f0f6ff'" onmouseout="this.style.background='#fff'">
+                        <div style="width:32px; height:32px; border-radius:50%; background:linear-gradient(135deg,#059386,#003263); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                            <i class="bi bi-person-fill" style="color:#fff; font-size:.95rem;"></i>
+                        </div>
+                        <span id="nav-user-name" style="color:#003263; font-size:.85rem; font-weight:600; max-width:110px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">{{ explode(' ', $displayName)[0] }}</span>
+                        <i class="bi bi-grid-fill" style="color:#059386; font-size:.75rem;"></i>
+                    </a>
+                @else
+                    <a href="/login"    class="btn-nav-login" id="nav-login-btn">Login</a>
+                    <a href="/register" class="btn-nav-signup" id="nav-signup-btn">Sign Up</a>
+                    <a href="/patient/dashboard" id="nav-user-btn" style="display:none; align-items:center; gap:9px; background:#fff; border:1.5px solid #fff; border-radius:50px; padding:5px 14px 5px 5px; text-decoration:none; transition:all .2s; box-shadow:0 2px 8px rgba(0,0,0,.12);" title="My Dashboard"
+                       onmouseover="this.style.background='#f0f6ff'" onmouseout="this.style.background='#fff'">
+                        <div style="width:32px; height:32px; border-radius:50%; background:linear-gradient(135deg,#059386,#003263); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                            <i class="bi bi-person-fill" style="color:#fff; font-size:.95rem;"></i>
+                        </div>
+                        <span id="nav-user-name" style="color:#003263; font-size:.85rem; font-weight:600; max-width:110px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">My Account</span>
+                        <i class="bi bi-grid-fill" style="color:#059386; font-size:.75rem;"></i>
+                    </a>
+                @endauth
             </div>
         </div>
     </div>
@@ -1139,7 +1164,8 @@ $content = $serviceContent[$service->name]
 
                 {{-- Select button → goes to booking step 2 --}}
                 <a href="/book?service={{ $service->id }}&dentist={{ $dentist->id }}"
-                   class="btn-select-doctor mt-2">
+                   class="btn-select-doctor mt-2"
+                   data-requires-auth="1">
                     Select This Doctor <i class="bi bi-arrow-right-circle-fill"></i>
                 </a>
             </div>
@@ -1235,10 +1261,126 @@ $content = $serviceContent[$service->name]
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
+    window.SERVER_LOGGED_IN = @json(auth()->check());
     /* Sticky nav shrink on scroll */
     window.addEventListener('scroll', () => {
         document.getElementById('mainNav').classList.toggle('scrolled', window.scrollY > 50);
     });
+
+    /* Navbar auth (client token fallback) */
+    (function () {
+        if (window.SERVER_LOGGED_IN) return;
+
+        function syncClientAuth() {
+            ['auth_token','user_type','user_role','user_data'].forEach((k) => {
+                try {
+                    const v = localStorage.getItem(k);
+                    if (v !== null && sessionStorage.getItem(k) === null) {
+                        sessionStorage.setItem(k, v);
+                    }
+                } catch (e) {}
+            });
+        }
+        syncClientAuth();
+
+        const token = sessionStorage.getItem('auth_token') || localStorage.getItem('auth_token');
+        if (!token) return;
+
+        const loginBtn  = document.getElementById('nav-login-btn');
+        const signupBtn = document.getElementById('nav-signup-btn');
+        const userBtn   = document.getElementById('nav-user-btn');
+        if (loginBtn)  loginBtn.style.display  = 'none';
+        if (signupBtn) signupBtn.style.display = 'none';
+        if (userBtn)   userBtn.style.display = 'inline-flex';
+
+        try {
+            const raw = sessionStorage.getItem('user_data') || localStorage.getItem('user_data') || '{}';
+            const userData = JSON.parse(raw);
+            const firstName = (userData.name || '').split(' ')[0];
+            const nameEl = document.getElementById('nav-user-name');
+            if (nameEl && firstName) nameEl.textContent = firstName;
+        } catch (e) {}
+
+        const userType = sessionStorage.getItem('user_type') || sessionStorage.getItem('user_role')
+            || localStorage.getItem('user_type') || localStorage.getItem('user_role');
+        if (userBtn && userType === 'dentist') {
+            userBtn.href = '/doctor/dashboard';
+        }
+    })();
+
+    /* Block booking for guests */
+    (function () {
+        const requiresAuthLinks = document.querySelectorAll('a[data-requires-auth="1"]');
+        if (!requiresAuthLinks.length) return;
+
+        function isLoggedIn() {
+            try {
+                if (window.SERVER_LOGGED_IN) return true;
+                return !!(sessionStorage.getItem('auth_token') || localStorage.getItem('auth_token'));
+            } catch (e) {
+                return false;
+            }
+        }
+
+        const modalEl = document.getElementById('authRequiredModal');
+        const authModal = modalEl ? new bootstrap.Modal(modalEl) : null;
+
+        requiresAuthLinks.forEach((link) => {
+            link.addEventListener('click', (e) => {
+                if (isLoggedIn()) return;
+
+                e.preventDefault();
+                e.stopPropagation();
+
+                // Set return URL so after login/register user can continue
+                const returnUrlInput = document.getElementById('authReturnUrl');
+                if (returnUrlInput) returnUrlInput.value = link.getAttribute('href') || '/';
+
+                if (authModal) authModal.show();
+                else alert('You need to create an account or log in to book an appointment.');
+            });
+        });
+    })();
+</script>
+
+<!-- Auth Required Modal -->
+<div class="modal fade" id="authRequiredModal" tabindex="-1" aria-labelledby="authRequiredModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" style="border-radius:16px; overflow:hidden;">
+      <div class="modal-header" style="background:linear-gradient(90deg,#003263,#059386); border:none;">
+        <h5 class="modal-title text-white fw-bold" id="authRequiredModalLabel">
+          Sign in required
+        </h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" style="padding:18px 20px;">
+        <p class="mb-0" style="color:#475569;">
+          You need to <strong>create an account</strong> or <strong>log in</strong> to book an appointment.
+        </p>
+        <input type="hidden" id="authReturnUrl" value="/" />
+      </div>
+      <div class="modal-footer" style="border:none; padding:14px 20px 18px;">
+        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Not now</button>
+        <a class="btn btn-outline-primary" href="/login" id="authLoginLink">Log in</a>
+        <a class="btn btn-primary" href="/register" id="authRegisterLink">Sign up</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Append return URL to auth links when modal opens
+  (function () {
+    const modalEl = document.getElementById('authRequiredModal');
+    if (!modalEl) return;
+    modalEl.addEventListener('show.bs.modal', () => {
+      const returnUrl = document.getElementById('authReturnUrl')?.value || '/';
+      const login = document.getElementById('authLoginLink');
+      const reg = document.getElementById('authRegisterLink');
+      if (login) login.href = '/login?return=' + encodeURIComponent(returnUrl);
+      if (reg) reg.href = '/register?return=' + encodeURIComponent(returnUrl);
+    });
+  })();
 </script>
 
 </body>

@@ -102,13 +102,15 @@ Route::middleware('auth')->group(function () {
 // Logout
 Route::post('/logout', [LogoutController::class, 'logout'])->name('logout');
 
-// ─── Booking flow ──────────────────────────────────────────────────────
-Route::get('/book',                [BookingController::class, 'selectTime'])->name('booking.time');
-Route::get('/book/confirm',        [BookingController::class, 'showConfirm'])->name('booking.confirm');
-Route::post('/book/confirm/submit',[BookingController::class, 'submitConfirm'])->name('booking.confirm.submit');
-Route::get('/book/payment',        [BookingController::class, 'showPayment'])->name('booking.payment');
-Route::post('/book/pay',           [BookingController::class, 'processPayment'])->name('booking.pay');
-Route::get('/book/done',           [BookingController::class, 'showDone'])->name('booking.done');
+// ─── Booking flow (must be logged in) ──────────────────────────────────
+Route::middleware('auth')->group(function () {
+    Route::get('/book',                 [BookingController::class, 'selectTime'])->name('booking.time');
+    Route::get('/book/confirm',         [BookingController::class, 'showConfirm'])->name('booking.confirm');
+    Route::post('/book/confirm/submit', [BookingController::class, 'submitConfirm'])->name('booking.confirm.submit');
+    Route::get('/book/payment',         [BookingController::class, 'showPayment'])->name('booking.payment');
+    Route::post('/book/pay',            [BookingController::class, 'processPayment'])->name('booking.pay');
+    Route::get('/book/done',            [BookingController::class, 'showDone'])->name('booking.done');
+});
 
 // ─── Doctors (public) ──────────────────────────────────────────────────
 Route::get('/doctors',      [DoctorController::class, 'index'])->name('doctors.index');

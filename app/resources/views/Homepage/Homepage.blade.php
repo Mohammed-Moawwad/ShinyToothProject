@@ -861,16 +861,33 @@
 
             {{-- Auth Buttons --}}
             <div class="d-flex align-items-center gap-2" id="nav-auth-area">
-                <a href="/login"    class="btn-nav-login" id="nav-login-btn">Login</a>
-                <a href="/register" class="btn-nav-signup" id="nav-signup-btn">Sign Up</a>
-                <a href="/patient/dashboard" id="nav-user-btn" style="display:none; align-items:center; gap:9px; background:#fff; border:1.5px solid #fff; border-radius:50px; padding:5px 14px 5px 5px; text-decoration:none; transition:all .2s; box-shadow:0 2px 8px rgba(0,0,0,.12);" title="My Dashboard"
-                   onmouseover="this.style.background='#f0f6ff'" onmouseout="this.style.background='#fff'">
-                    <div style="width:32px; height:32px; border-radius:50%; background:linear-gradient(135deg,#059386,#003263); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-                        <i class="bi bi-person-fill" style="color:#fff; font-size:.95rem;"></i>
-                    </div>
-                    <span id="nav-user-name" style="color:#003263; font-size:.85rem; font-weight:600; max-width:110px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">My Account</span>
-                    <i class="bi bi-grid-fill" style="color:#059386; font-size:.75rem;"></i>
-                </a>
+                @auth
+                    @php
+                        $u = auth()->user();
+                        $isAdminPatient = $u && $u->email === config('admin.email');
+                        $dashHref = $isAdminPatient ? '/admin/dashboard' : '/patient/dashboard';
+                        $displayName = $u?->name ?? 'My Account';
+                    @endphp
+                    <a href="{{ $dashHref }}" id="nav-user-btn" style="display:inline-flex; align-items:center; gap:9px; background:#fff; border:1.5px solid #fff; border-radius:50px; padding:5px 14px 5px 5px; text-decoration:none; transition:all .2s; box-shadow:0 2px 8px rgba(0,0,0,.12);" title="My Dashboard"
+                       onmouseover="this.style.background='#f0f6ff'" onmouseout="this.style.background='#fff'">
+                        <div style="width:32px; height:32px; border-radius:50%; background:linear-gradient(135deg,#059386,#003263); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                            <i class="bi bi-person-fill" style="color:#fff; font-size:.95rem;"></i>
+                        </div>
+                        <span id="nav-user-name" style="color:#003263; font-size:.85rem; font-weight:600; max-width:110px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">{{ explode(' ', $displayName)[0] }}</span>
+                        <i class="bi bi-grid-fill" style="color:#059386; font-size:.75rem;"></i>
+                    </a>
+                @else
+                    <a href="/login"    class="btn-nav-login" id="nav-login-btn">Login</a>
+                    <a href="/register" class="btn-nav-signup" id="nav-signup-btn">Sign Up</a>
+                    <a href="/patient/dashboard" id="nav-user-btn" style="display:none; align-items:center; gap:9px; background:#fff; border:1.5px solid #fff; border-radius:50px; padding:5px 14px 5px 5px; text-decoration:none; transition:all .2s; box-shadow:0 2px 8px rgba(0,0,0,.12);" title="My Dashboard"
+                       onmouseover="this.style.background='#f0f6ff'" onmouseout="this.style.background='#fff'">
+                        <div style="width:32px; height:32px; border-radius:50%; background:linear-gradient(135deg,#059386,#003263); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                            <i class="bi bi-person-fill" style="color:#fff; font-size:.95rem;"></i>
+                        </div>
+                        <span id="nav-user-name" style="color:#003263; font-size:.85rem; font-weight:600; max-width:110px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">My Account</span>
+                        <i class="bi bi-grid-fill" style="color:#059386; font-size:.75rem;"></i>
+                    </a>
+                @endauth
             </div>
 
         </div>
@@ -1695,13 +1712,23 @@ window.addEventListener('scroll', function () {
 <script>
 // Toggle navbar auth buttons based on login state
 (function() {
-    // Use sessionStorage so users aren't "stuck logged in" on first visit.
-    // Clear legacy localStorage auth keys (from older builds).
-    ['auth_token','user_type','user_role','user_data'].forEach((k) => {
-        try { localStorage.removeItem(k); } catch(e) {}
-    });
+    const serverLoggedIn = @json(auth()->check());
+    if (serverLoggedIn) return;
 
-    const token = sessionStorage.getItem('auth_token');
+    function syncClientAuth() {
+        const keys = ['auth_token','user_type','user_role','user_data'];
+        keys.forEach((k) => {
+            try {
+                const v = localStorage.getItem(k);
+                if (v !== null && sessionStorage.getItem(k) === null) {
+                    sessionStorage.setItem(k, v);
+                }
+            } catch (e) {}
+        });
+    }
+    syncClientAuth();
+
+    const token = sessionStorage.getItem('auth_token') || localStorage.getItem('auth_token');
     if (token) {
         const loginBtn  = document.getElementById('nav-login-btn');
         const signupBtn = document.getElementById('nav-signup-btn');
@@ -1712,7 +1739,8 @@ window.addEventListener('scroll', function () {
             userBtn.style.display = 'inline-flex';
             // Populate name from localStorage
             try {
-                const userData = JSON.parse(sessionStorage.getItem('user_data') || '{}');
+                const raw = sessionStorage.getItem('user_data') || localStorage.getItem('user_data') || '{}';
+                const userData = JSON.parse(raw);
                 const firstName = (userData.name || '').split(' ')[0];
                 const nameEl = document.getElementById('nav-user-name');
                 if (nameEl && firstName) nameEl.textContent = firstName;
@@ -1720,7 +1748,8 @@ window.addEventListener('scroll', function () {
         }
 
         // Direct to correct dashboard based on user type
-        const userType = sessionStorage.getItem('user_type') || sessionStorage.getItem('user_role');
+        const userType = sessionStorage.getItem('user_type') || sessionStorage.getItem('user_role')
+            || localStorage.getItem('user_type') || localStorage.getItem('user_role');
         if (userBtn && userType === 'dentist') {
             userBtn.href = '/doctor/dashboard';
         }

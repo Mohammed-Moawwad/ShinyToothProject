@@ -221,11 +221,18 @@ function setupRegisterForm() {
                 throw new Error(msg);
             }
 
+            // Store auth in sessionStorage so homepage header updates correctly
+            // (and users aren't unintentionally kept logged in across browser restarts).
+            sessionStorage.setItem("auth_token", data.token);
+            sessionStorage.setItem("user_role", "patient");
+            sessionStorage.setItem("user_type", "patient");
             localStorage.setItem("auth_token", data.token);
             localStorage.setItem("user_role", "patient");
             localStorage.setItem("user_type", "patient");
-            if (data.patient)
+            if (data.patient) {
+                sessionStorage.setItem("user_data", JSON.stringify(data.patient));
                 localStorage.setItem("user_data", JSON.stringify(data.patient));
+            }
 
             window.location.href = "/patient/dashboard";
         } catch (error) {
@@ -458,21 +465,22 @@ function isValidSaudiPhone(phone) {
  * Get Stored Auth Token
  */
 function getAuthToken() {
-    return sessionStorage.getItem("auth_token");
+    return sessionStorage.getItem("auth_token") || localStorage.getItem("auth_token");
 }
 
 /**
  * Get Stored User Role
  */
 function getUserRole() {
-    return sessionStorage.getItem("user_role");
+    return sessionStorage.getItem("user_role") || localStorage.getItem("user_role");
 }
 
 /**
  * Get Stored User Data
  */
 function getUserData() {
-    const data = sessionStorage.getItem("user_data");
+    const data =
+        sessionStorage.getItem("user_data") || localStorage.getItem("user_data");
     return data ? JSON.parse(data) : null;
 }
 

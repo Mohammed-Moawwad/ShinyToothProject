@@ -62,6 +62,9 @@ function setupLoginForm() {
                 // Store token and user type
                 sessionStorage.setItem("auth_token", data.token);
                 sessionStorage.setItem("user_type", data.user_type);
+                localStorage.setItem("auth_token", data.token);
+                localStorage.setItem("user_type", data.user_type);
+                localStorage.setItem("user_role", data.user_type);
 
                 // Redirect to appropriate dashboard
                 const redirectUrl =
@@ -133,6 +136,9 @@ function setupRegisterForm() {
                 // Store token
                 sessionStorage.setItem("auth_token", resultData.token);
                 sessionStorage.setItem("user_type", "patient");
+                localStorage.setItem("auth_token", resultData.token);
+                localStorage.setItem("user_type", "patient");
+                localStorage.setItem("user_role", "patient");
                 // Redirect to dashboard
                 window.location.href = "/patient/dashboard";
             } else {
