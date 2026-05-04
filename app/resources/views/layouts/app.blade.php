@@ -72,7 +72,7 @@
                         <a class="nav-link" href="/services">Services</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/dentists">Our Dentists</a>
+                        <a class="nav-link" href="/doctors">Our Dentists</a>
                     </li>
                     
                     @auth
@@ -81,8 +81,8 @@
                                 {{ Auth::user()->name ?? 'User' }}
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end">
-                                <li><a class="dropdown-item" href="/dashboard">Dashboard</a></li>
-                                <li><a class="dropdown-item" href="/appointments">My Appointments</a></li>
+                        <li><a class="dropdown-item" href="{{ route('patient.dashboard') }}">Dashboard</a></li>
+                                <li><a class="dropdown-item" href="{{ route('subscriptions.my') }}">My Subscription</a></li>
                                 <li><hr class="dropdown-divider"></li>
                                 <li>
                                     <form action="/logout" method="POST" style="display: inline;">
@@ -155,7 +155,7 @@
                     <ul class="list-unstyled">
                         <li style="margin-bottom: 0.8rem;"><a href="/" class="text-decoration-none" style="color: rgba(255,255,255,.85); transition: color .2s;">Home</a></li>
                         <li style="margin-bottom: 0.8rem;"><a href="/services" class="text-decoration-none" style="color: rgba(255,255,255,.85); transition: color .2s;">Services</a></li>
-                        <li><a href="/dentists" class="text-decoration-none" style="color: rgba(255,255,255,.85); transition: color .2s;">Dentists</a></li>
+                        <li><a href="/doctors" class="text-decoration-none" style="color: rgba(255,255,255,.85); transition: color .2s;">Dentists</a></li>
                     </ul>
                 </div>
                 

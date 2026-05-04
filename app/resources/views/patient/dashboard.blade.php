@@ -4,6 +4,15 @@
 @section('page-title', 'Dashboard Overview')
 
 @section('content')
+@if($patient->booking_blocked)
+<div class="alert mb-4 d-flex align-items-start gap-3" style="background:#fff3cd; border:1.5px solid #ffc107; border-radius:14px; padding:16px 20px;">
+    <i class="bi bi-exclamation-triangle-fill" style="color:#e65c00; font-size:1.4rem; flex-shrink:0; margin-top:2px;"></i>
+    <div>
+        <div class="fw-bold" style="color:#7c3a00; font-size:.95rem;">Booking Restricted</div>
+        <div style="color:#7c3a00; font-size:.85rem; margin-top:2px;">Your account has been restricted from booking new appointments due to repeated no-shows. Please contact the clinic to resolve this.</div>
+    </div>
+</div>
+@endif
 <!-- ── STAT CARDS ─────────────────────────────────────── -->
 <div class="row g-3 mb-4">
     <div class="col-xl-3 col-md-6">
@@ -42,7 +51,7 @@
         <div class="dash-card" id="my-appointments">
             <div class="card-header-custom">
                 <h6><i class="bi bi-calendar-event me-2" style="color:var(--teal);"></i>Upcoming Appointments</h6>
-                <a href="/services" class="btn btn-sm btn-outline-teal">Book New</a>
+                <a href="/services" class="btn btn-sm btn-outline-teal" @if($patient->booking_blocked) style="pointer-events:none; opacity:.45;" title="Booking restricted" @endif>Book New</a>
             </div>
 
             @if($upcomingAppointments->count())
@@ -78,14 +87,13 @@
                 <div class="empty-state">
                     <i class="bi bi-calendar-x d-block"></i>
                     <p class="mb-2">No upcoming appointments</p>
-                    <a href="/services" class="btn btn-sm btn-teal">Book Now</a>
+                    <a href="/services" class="btn btn-sm btn-teal" @if($patient->booking_blocked) style="pointer-events:none; opacity:.45;" title="Booking restricted" @endif>Book Now</a>
                 </div>
             @endif
         </div>
     </div>
 
-    <!-- ── SECOND ROW: HISTORY + PAYMENTS ─────────────────── -->
-<div class="row g-4 mt-0">
+    <!-- ── SECOND ROW: HISTORY ─────────────────── -->
     <div class="col-lg-12">
         <div class="dash-card">
             <div class="card-header-custom">
@@ -139,7 +147,8 @@
         </div>
     </div>
 
-    <div class="col-lg-5">
+    <!-- ── RECENT PAYMENTS ─────────────────── -->
+    <div class="col-lg-12">
         <div class="dash-card">
             <div class="card-header-custom">
                 <h6><i class="bi bi-credit-card me-2" style="color:#6f42c1;"></i>Recent Payments</h6>

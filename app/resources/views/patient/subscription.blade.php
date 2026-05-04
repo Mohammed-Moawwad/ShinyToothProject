@@ -218,7 +218,7 @@
                                     @else {{ $item->order_index }} @endif
                                 </div>
                                 <div>
-                                    <div class="plan-service-name">{{ $item->service ? $item->service->service_name : 'Service' }}</div>
+                                    <div class="plan-service-name">{{ $item->service ? $item->service->name : 'Service' }}</div>
                                     @if ($item->assignedDentist && $item->assignedDentist->id !== ($doc ? $doc->id : null))
                                         <div class="plan-service-doc"><i class="bi bi-person-fill"></i> Dr. {{ $item->assignedDentist->name }}</div>
                                     @endif
@@ -368,8 +368,15 @@
                 @csrf
                 <div class="modal-body" style="padding:28px;">
                     <p class="text-muted mb-3" style="font-size:.9rem;">An admin will review your request.</p>
-                    <label class="form-label fw-semibold" style="color:var(--dark-blue);">New Doctor ID</label>
-                    <input type="number" name="switch_to_dentist_id" class="form-control mb-3" required placeholder="Enter dentist ID" style="border-radius:12px; border:2px solid #e8edf2;">
+                    <label class="form-label fw-semibold" style="color:var(--dark-blue);">Select New Doctor</label>
+                    <select name="switch_to_dentist_id" class="form-control mb-3" required style="border-radius:12px; border:2px solid #e8edf2;">
+                        <option value="">— Choose a doctor —</option>
+                        @foreach ($dentists as $d)
+                            @if (!$subscription || $d->id !== $subscription->dentist_id)
+                                <option value="{{ $d->id }}">Dr. {{ $d->name }}</option>
+                            @endif
+                        @endforeach
+                    </select>
                     <label class="form-label fw-semibold" style="color:var(--dark-blue);">Reason for switching</label>
                     <textarea name="reason" class="form-control" rows="3" required placeholder="Describe your reason..." style="border-radius:12px; border:2px solid #e8edf2;"></textarea>
                 </div>

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Appointment;
+use App\Models\Dentist;
 use App\Models\DoctorSubscription;
 use App\Models\Patient;
 use App\Models\SubscriptionRating;
@@ -72,7 +73,9 @@ class SubscriptionController extends Controller
             ->latest()
             ->first();
 
-        return view('patient.subscription', compact('subscription', 'patientId', 'patient'));
+        $dentists = Dentist::orderBy('name')->get(['id', 'name']);
+
+        return view('patient.subscription', compact('subscription', 'patientId', 'patient', 'dentists'));
     }
 
     /**
@@ -87,8 +90,8 @@ class SubscriptionController extends Controller
 
         $subscription = DoctorSubscription::findOrFail($id);
 
-        if ($subscription->status !== 'active') {
-            return back()->with('error', 'Only active subscriptions can be cancelled.');
+        if (! in_array($subscription->status, ['active', 'idle'])) {
+            return back()->with('error', 'Only active or paused subscriptions can be cancelled.');
         }
 
         $subscription->update([

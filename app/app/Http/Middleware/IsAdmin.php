@@ -21,7 +21,7 @@ class IsAdmin
         }
 
         // Define admin email - change this to your admin email
-        $adminEmail = env('ADMIN_EMAIL', 'admin@shinytooth.com');
+        $adminEmail = config('admin.email');
 
         if (auth()->guard('web')->user()->email !== $adminEmail) {
             abort(403, 'Access denied. Admin only.');

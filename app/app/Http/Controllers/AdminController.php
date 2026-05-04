@@ -22,7 +22,7 @@ class AdminController extends Controller
     public function index()
     {
         try {
-            $adminEmail = env('ADMIN_EMAIL', 'admin@shinytooth.com');
+            $adminEmail = config('admin.email');
 
             // Get statistics
             $totalPatients     = Patient::where('email', '!=', $adminEmail)->count();
@@ -89,7 +89,7 @@ class AdminController extends Controller
         $statusFilter = $request->input('status', 'all');
         $genderFilter = $request->input('gender', 'all');
 
-        $adminEmail = env('ADMIN_EMAIL', 'admin@shinytooth.com');
+        $adminEmail = config('admin.email');
 
         $patientCount = Patient::where('email', '!=', $adminEmail)->count();
         $dentistCount = Dentist::count();
@@ -245,10 +245,10 @@ class AdminController extends Controller
 
         $total = Appointment::count();
         $statuses = [
-            'pending'   => Appointment::where('status', 'pending')->count(),
-            'confirmed' => Appointment::where('status', 'confirmed')->count(),
+            'scheduled' => Appointment::where('status', 'scheduled')->count(),
             'completed' => Appointment::where('status', 'completed')->count(),
             'cancelled' => Appointment::where('status', 'cancelled')->count(),
+            'no_show'   => Appointment::where('status', 'no_show')->count(),
         ];
 
         $apptStats = [
@@ -1064,7 +1064,7 @@ class AdminController extends Controller
 
     public function storePatient(Request $request)
     {
-        $adminEmail = env('ADMIN_EMAIL', 'admin@shinytooth.com');
+        $adminEmail = config('admin.email');
 
         $validated = $request->validate([
             'name'          => 'required|string|max:255',

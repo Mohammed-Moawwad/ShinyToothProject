@@ -22,8 +22,8 @@ class DoctorSubscriptionController extends Controller
             ->latest()
             ->get();
 
-        // Return JSON for now; view comes with doctor dashboard
-        return response()->json($subscriptions);
+        // Redirect to the full subscriptions view (implemented in DoctorDashboardController)
+        return redirect('/doctor/subscriptions-view?dentist=' . $dentistId);
     }
 
     /**

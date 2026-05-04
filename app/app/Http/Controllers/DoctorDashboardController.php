@@ -21,7 +21,9 @@ class DoctorDashboardController extends Controller
      */
     private function dentist(Request $request): Dentist
     {
-        return Dentist::findOrFail($request->query('dentist', 1));
+        $id = $request->query('dentist');
+        abort_if(!$id, 400, 'A dentist ID is required. Please log in again.');
+        return Dentist::findOrFail($id);
     }
 
     /* ─── OVERVIEW ──────────────────────────────────────────── */
@@ -120,7 +122,7 @@ class DoctorDashboardController extends Controller
             $query->whereIn('status', ['rejected', 'cancelled', 'switched', 'removed']);
         }
 
-        $subscriptions = $query->latest()->get();
+        $subscriptions = $query->latest()->paginate(15)->withQueryString();
 
         return view('doctor.subscriptions', compact('dentist', 'subscriptions', 'filter'));
     }

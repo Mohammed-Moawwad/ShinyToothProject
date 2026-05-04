@@ -436,9 +436,9 @@
 
         <div class="dash-content">
             {{-- Flash messages --}}
-            @if(session('success'))
+            @if(session('success') || session('report_success'))
                 <div class="alert alert-success alert-dismissible fade show" role="alert" style="border-radius:12px; border:none; background:#d4f5e4; color:#0f6b3a;">
-                    <i class="bi bi-check-circle-fill me-2"></i> {{ session('success') }}
+                    <i class="bi bi-check-circle-fill me-2"></i> {{ session('success') ?? session('report_success') }}
                     <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                 </div>
             @endif
