@@ -219,6 +219,140 @@
             color: rgba(255,255,255,.72);
             margin-top: 4px;
         }
+
+        .hero-offer-card {
+            background: rgba(255,255,255,.13);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255,255,255,.22);
+            border-radius: 22px;
+            padding: 22px;
+            box-shadow: 0 20px 60px rgba(0,0,0,.25);
+            position: relative;
+            overflow: hidden;
+        }
+        .hero-offer-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 20% 10%, rgba(125,232,220,.25), transparent 55%),
+                        radial-gradient(circle at 80% 85%, rgba(255,255,255,.10), transparent 55%);
+            pointer-events: none;
+        }
+        .hero-offer-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            position: relative;
+            z-index: 1;
+            margin-bottom: 14px;
+        }
+        .hero-offer-kicker {
+            font-size: .78rem;
+            letter-spacing: .14em;
+            text-transform: uppercase;
+            color: rgba(255,255,255,.75);
+            font-weight: 800;
+        }
+        .hero-offer-badge {
+            background: linear-gradient(90deg, rgba(5,147,134,.9), rgba(125,232,220,.9));
+            color: #003263;
+            font-weight: 900;
+            font-size: .72rem;
+            padding: 6px 10px;
+            border-radius: 999px;
+            border: 1px solid rgba(255,255,255,.22);
+            box-shadow: 0 10px 22px rgba(5,147,134,.25);
+            white-space: nowrap;
+        }
+        .hero-offer-title {
+            position: relative;
+            z-index: 1;
+            font-size: 1.25rem;
+            font-weight: 900;
+            line-height: 1.2;
+            margin: 0 0 10px;
+            color: #fff;
+        }
+        .hero-offer-sub {
+            position: relative;
+            z-index: 1;
+            color: rgba(255,255,255,.72);
+            font-size: .9rem;
+            line-height: 1.6;
+            margin: 0 0 14px;
+        }
+        .hero-offer-list {
+            position: relative;
+            z-index: 1;
+            display: grid;
+            gap: 10px;
+            margin: 0 0 16px;
+            padding: 0;
+            list-style: none;
+        }
+        .hero-offer-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 10px 12px;
+            border-radius: 14px;
+            background: rgba(0,0,0,.12);
+            border: 1px solid rgba(255,255,255,.12);
+        }
+        .hero-offer-link {
+            color: #fff;
+            text-decoration: none;
+            font-weight: 800;
+            font-size: .92rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            min-width: 0;
+        }
+        .hero-offer-link span {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            display: inline-block;
+            max-width: 100%;
+        }
+        .hero-offer-link:hover { text-decoration: underline; color: #fff; }
+        .hero-offer-pill {
+            font-size: .72rem;
+            font-weight: 900;
+            letter-spacing: .08em;
+            text-transform: uppercase;
+            padding: 5px 10px;
+            border-radius: 999px;
+            background: rgba(255,255,255,.14);
+            border: 1px solid rgba(255,255,255,.18);
+            color: rgba(255,255,255,.85);
+            white-space: nowrap;
+        }
+        .hero-offer-cta {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            border-radius: 14px;
+            padding: 12px 14px;
+            background: #fff;
+            color: var(--dark-blue);
+            font-weight: 900;
+            text-decoration: none;
+            transition: transform .2s, box-shadow .2s;
+            box-shadow: 0 10px 22px rgba(0,0,0,.18);
+        }
+        .hero-offer-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 18px 44px rgba(0,0,0,.25);
+            color: var(--dark-blue);
+        }
         .hero-image-wrap { position: relative; text-align: center; }
         .hero-tooth-main {
             max-height: 430px;
@@ -761,8 +895,51 @@
     <div class="container position-relative" style="z-index:2;">
         <div class="row align-items-center g-5 py-5">
 
-            {{-- Center: text --}}
-            <div class="col-lg-12 text-center">
+            {{-- Left: offers promo --}}
+            <div class="col-lg-4 order-2 order-lg-1">
+                <div class="hero-offer-card fade-up">
+                    <div class="hero-offer-top">
+                        <div class="hero-offer-kicker">Special Offers</div>
+                        <div class="hero-offer-badge"><i class="bi bi-fire"></i> Limited</div>
+                    </div>
+                    <h3 class="hero-offer-title">Save on top services</h3>
+                    <p class="hero-offer-sub">
+                        Tap an offer to view the service details and book in seconds.
+                    </p>
+
+                    @php
+                        $offers = collect($services ?? [])->take(3)->values();
+                        $offerLabels = ['Up to 25% off', 'Free consult', 'Bundle deal'];
+                    @endphp
+
+                    <ul class="hero-offer-list">
+                        @forelse ($offers as $idx => $svc)
+                            <li class="hero-offer-item">
+                                <a class="hero-offer-link" href="/services/{{ $svc->id }}">
+                                    <i class="bi bi-tag-fill" style="color:#7de8dc;"></i>
+                                    <span>{{ $svc->name }}</span>
+                                </a>
+                                <span class="hero-offer-pill">{{ $offerLabels[$idx] ?? 'Offer' }}</span>
+                            </li>
+                        @empty
+                            <li class="hero-offer-item">
+                                <a class="hero-offer-link" href="/services">
+                                    <i class="bi bi-tag-fill" style="color:#7de8dc;"></i>
+                                    <span>Browse today’s offers</span>
+                                </a>
+                                <span class="hero-offer-pill">New</span>
+                            </li>
+                        @endforelse
+                    </ul>
+
+                    <a class="hero-offer-cta" href="/services">
+                        View all offers <i class="bi bi-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+
+            {{-- Right: main hero text --}}
+            <div class="col-lg-8 order-1 order-lg-2 text-center text-lg-start">
                 <div class="hero-badge" style="justify-content:center;">
                     <i class="bi bi-star-fill"></i>
                     Trusted by over 20,000 happy patients
@@ -777,14 +954,14 @@
                     comfortable environment — because you deserve a smile you're proud of every single day.
                 </p>
 
-                <div class="d-flex flex-wrap gap-3 mb-5 justify-content-center">
+                <div class="d-flex flex-wrap gap-3 mb-5 justify-content-center justify-content-lg-start">
                     <a href="/services" class="btn-hero-primary">
                         <i class="bi bi-calendar-check-fill"></i> Book Appointment
                     </a>
                 </div>
 
                 {{-- Stats row --}}
-                <div class="row g-3 justify-content-center">
+                <div class="row g-3 justify-content-center justify-content-lg-start">
                     <div class="col-4">
                         <div class="hero-stat">
                             <div class="num">20+</div>
